@@ -18,6 +18,7 @@ struct SpacesScreenCoordinatorParameters {
 
 enum SpacesScreenCoordinatorAction {
     case selectSpace(SpaceRoomListProxyProtocol)
+    case selectRoom(roomID: String)
     case showSettings
     case showCreateSpace
 }
@@ -25,31 +26,33 @@ enum SpacesScreenCoordinatorAction {
 final class SpacesScreenCoordinator: CoordinatorProtocol {
     private let parameters: SpacesScreenCoordinatorParameters
     private let viewModel: SpacesScreenViewModelProtocol
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
+
     private let actionsSubject: PassthroughSubject<SpacesScreenCoordinatorAction, Never> = .init()
     var actionsPublisher: AnyPublisher<SpacesScreenCoordinatorAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
-    
+
     init(parameters: SpacesScreenCoordinatorParameters) {
         self.parameters = parameters
-        
+
         viewModel = SpacesScreenViewModel(userSession: parameters.userSession,
                                           selectedSpacePublisher: parameters.selectedSpacePublisher,
                                           appSettings: parameters.appSettings,
                                           userIndicatorController: parameters.userIndicatorController)
     }
-    
+
     func start() {
         viewModel.actionsPublisher.sink { [weak self] action in
             MXLog.info("Coordinator: received view model action: \(action)")
-            
+
             guard let self else { return }
             switch action {
             case .selectSpace(let spaceRoomListProxy):
                 actionsSubject.send(.selectSpace(spaceRoomListProxy))
+            case .selectRoom(let roomID):
+                actionsSubject.send(.selectRoom(roomID: roomID))
             case .showSettings:
                 actionsSubject.send(.showSettings)
             case .showCreateSpace:
@@ -58,7 +61,7 @@ final class SpacesScreenCoordinator: CoordinatorProtocol {
         }
         .store(in: &cancellables)
     }
-    
+
     func toPresentable() -> AnyView {
         AnyView(SpacesScreen(context: viewModel.context))
     }

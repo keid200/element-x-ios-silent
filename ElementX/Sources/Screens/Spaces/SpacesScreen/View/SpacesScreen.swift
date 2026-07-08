@@ -41,7 +41,7 @@ struct SpacesScreen: View {
                     circlesSelector
                     header
                     contactsHeader
-                    spaces
+                    contacts
                 }
             }
         }
@@ -138,7 +138,7 @@ struct SpacesScreen: View {
                 ForEach(context.viewState.topLevelSpaces, id: \.id) { spaceServiceRoom in
                     let isSelected = spaceServiceRoom.id == selectedSpace?.id
                     Button {
-                        context.send(viewAction: .spaceAction(.select(spaceServiceRoom)))
+                        context.send(viewAction: .selectCircle(spaceServiceRoom))
                     } label: {
                         VStack(spacing: 5) {
                             RoomAvatarImage(avatar: spaceServiceRoom.avatar,
@@ -198,46 +198,76 @@ struct SpacesScreen: View {
         .padding(.vertical, 14)
     }
 
-    private var spaces: some View {
-        VStack(spacing: 10) {
-            ForEach(context.viewState.topLevelSpaces, id: \.id) { spaceServiceRoom in
-                Button {
-                    context.send(viewAction: .spaceAction(.select(spaceServiceRoom)))
-                } label: {
-                    HStack(spacing: 12) {
-                        RoomAvatarImage(avatar: spaceServiceRoom.avatar,
-                                        avatarSize: .user(on: .roomMembersList),
-                                        mediaProvider: context.mediaProvider)
-                            .accessibilityHidden(true)
-
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(spaceServiceRoom.name)
-                                .font(.compound.bodyLGSemibold)
-                                .foregroundStyle(.compound.textPrimary)
-                                .lineLimit(1)
-
-                            Text("\(spaceServiceRoom.joinedMembersCount) contacts")
-                                .font(.compound.bodySM)
-                                .foregroundStyle(.compound.textSecondary)
-                        }
-
-                        Spacer()
-
-                        CompoundIcon(\.chevronRight, size: .small, relativeTo: .compound.bodyMD)
-                            .foregroundStyle(silentBrandBlue)
-                    }
-                    .padding(14)
-                    .background(Color.compound.bgCanvasDefaultLevel1, in: RoundedRectangle(cornerRadius: 14))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(Color.compound.borderDisabled)
+    @ViewBuilder
+    private var contacts: some View {
+        if let circleMembers = context.viewState.circleMembers {
+            if circleMembers.isEmpty {
+                circleMessage("No contacts found")
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(Array(circleMembers.enumerated()), id: \.element.id) { index, member in
+                        circleMemberRow(member: member,
+                                        isLast: index == circleMembers.count - 1)
                     }
                 }
-                .buttonStyle(.plain)
+            }
+        } else {
+            circleMessage("Loading contacts...")
+        }
+    }
+
+    private func circleMemberRow(member: RoomMemberDetails, isLast: Bool) -> some View {
+        Button {
+            context.send(viewAction: .selectCircleMember(member))
+        } label: {
+            HStack(spacing: 12) {
+                LoadableAvatarImage(url: member.avatarURL,
+                                    name: member.name,
+                                    contentID: member.id,
+                                    avatarSize: .user(on: .roomMembersList),
+                                    mediaProvider: context.mediaProvider)
+                    .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(member.name ?? member.id)
+                        .font(.compound.bodyLGSemibold)
+                        .foregroundStyle(.compound.textPrimary)
+                        .lineLimit(1)
+
+                    Text(member.id)
+                        .font(.compound.bodySM)
+                        .foregroundStyle(.compound.textSecondary)
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                CompoundIcon(\.chat, size: .small, relativeTo: .compound.bodyMD)
+                    .foregroundStyle(silentBrandBlue)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.compound.bgCanvasDefault)
+            .overlay(alignment: .bottom) {
+                if !isLast {
+                    Rectangle()
+                        .fill(Color.compound.borderDisabled)
+                        .frame(height: 1 / UIScreen.main.scale)
+                        .padding(.leading, 60)
+                }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.bottom, 24)
+        .buttonStyle(.plain)
+    }
+
+    private func circleMessage(_ message: String) -> some View {
+        Text(message)
+            .font(.compound.bodyMD)
+            .foregroundStyle(.compound.textSecondary)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+            .background(Color.compound.bgCanvasDefault)
     }
 
     @ToolbarContentBuilder

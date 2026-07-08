@@ -433,6 +433,24 @@ private struct CallView: UIViewRepresentable {
               box-shadow: 0 10px 18px rgba(0, 0, 0, 0.24) !important;
             }
 
+            .header .leftNav,
+            .header .rightNav {
+              height: auto !important;
+              margin: 0 !important;
+              justify-content: center !important;
+            }
+
+            .header .rightNav {
+              position: absolute !important;
+              right: 12px !important;
+              bottom: 12px !important;
+              width: 32px !important;
+              height: 32px !important;
+              border-radius: 999px !important;
+              background: rgba(255, 255, 255, 0.16) !important;
+              box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24) !important;
+            }
+
             .roomHeaderInfo {
               display: flex !important;
               flex-direction: column !important;
@@ -470,6 +488,11 @@ private struct CallView: UIViewRepresentable {
               white-space: nowrap !important;
               overflow: hidden !important;
               text-overflow: ellipsis !important;
+            }
+
+            .fixedGrid,
+            .scrollingGrid {
+              inset-inline: 0 !important;
             }
 
             [data-testid="footer-container"] {
@@ -518,16 +541,42 @@ private struct CallView: UIViewRepresentable {
               box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.26) !important;
             }
 
+            [data-testid="footer-container"] button svg {
+              width: 24px !important;
+              height: 24px !important;
+            }
+
+            [data-testid="footer-container"] button[data-kind="primary"] {
+              background: rgba(30, 30, 30, 0.28) !important;
+            }
+
             [data-testid="incall_leave"] {
               background: #ec1238 !important;
               box-shadow: none !important;
             }
+
+            [data-testid="incall_leave"] svg {
+              color: #fff !important;
+            }
+
+            @media (max-width: 360px) {
+              [data-testid="footer-container"] .buttons {
+                gap: 12px !important;
+              }
+
+              [data-testid="footer-container"] button {
+                width: 42px !important;
+                height: 42px !important;
+                min-width: 42px !important;
+                min-height: 42px !important;
+              }
+            }
             `;
 
             const streamHtml = `
-            <span>#10$&0U0101A?! 11111E$1U100111 0 @UE11 0101#</span>
-            <span>%C EEU1!%0!? *$C$A 1 0000$!1!A#10*#?!U0$</span>
-            <span>0111%:*!1%A&E# 1#0L^#11#:C1?0:0 0@0*?0U0 $10</span>
+            <span>#10&#36;&amp;0U0101A?! 11111E&#36;1U100111 0 @UE11 0101#</span>
+            <span>%C EEU1!%0!? *&#36;C&#36;A 1 0000&#36;!1!A#10*#?!U0&#36;</span>
+            <span>0111%:*!1%A&amp;E# 1#0L^#11#:C1?0:0 0@0*?0U0 &#36;10</span>
             `;
 
             const apply = function() {
