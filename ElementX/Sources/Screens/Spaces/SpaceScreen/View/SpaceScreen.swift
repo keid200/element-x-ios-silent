@@ -9,6 +9,8 @@
 import Compound
 import SwiftUI
 
+private let silentBrandBlue = Color(red: 0.082, green: 0.333, blue: 0.878)
+
 struct SpaceScreen: View {
     @Bindable var context: SpaceScreenViewModel.Context
 
@@ -40,6 +42,10 @@ struct SpaceScreen: View {
         }
         .environment(\.editMode, .constant(context.viewState.editMode))
         .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
+        .toolbarBackground(silentBrandBlue, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .tint(.white)
         .toolbarRole(RoomHeaderView.toolbarRole)
         .navigationTitle(context.viewState.space.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -76,7 +82,7 @@ struct SpaceScreen: View {
         VStack(alignment: .leading, spacing: 0) {
             Text("Contacts")
                 .font(.compound.headingSMSemibold)
-                .foregroundStyle(.compound.textPrimary)
+                .foregroundStyle(silentBrandBlue)
                 .padding(.horizontal, 16)
                 .padding(.top, 18)
                 .padding(.bottom, 8)
@@ -95,7 +101,7 @@ struct SpaceScreen: View {
     var circleEmptyState: some View {
         VStack(spacing: 12) {
             CompoundIcon(\.userProfile, size: .custom(32), relativeTo: .compound.headingMD)
-                .foregroundStyle(.compound.iconAccentPrimary)
+                .foregroundStyle(silentBrandBlue)
 
             Text("No contacts found")
                 .font(.compound.bodyLGSemibold)
@@ -257,9 +263,9 @@ private struct CircleHeaderView: View {
 
                 Button(action: onEdit) {
                     CompoundIcon(\.edit, size: .medium, relativeTo: .compound.bodyMD)
-                        .foregroundStyle(.compound.iconAccentPrimary)
+                        .foregroundStyle(.white)
                         .frame(width: 38, height: 38)
-                        .background(Color.white.opacity(0.68), in: Circle())
+                        .background(silentBrandBlue, in: Circle())
                 }
                 .accessibilityLabel(L10n.commonSettings)
             }

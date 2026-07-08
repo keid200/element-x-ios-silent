@@ -12,15 +12,16 @@ import SentrySwiftUI
 import SwiftUI
 
 struct HomeScreen: View {
+    private let silentBrandBlue = Color(red: 0.082, green: 0.333, blue: 0.878)
     @ObservedObject var context: HomeScreenViewModel.Context
-    
+
     @State private var scrollViewAdapter = ScrollViewAdapter()
-    
+
     @Namespace private var navigationTransitionNamespace
     private enum NavigationTransitionSourceID {
         case spaceFilters
     }
-    
+
     var body: some View {
         HomeScreenContent(context: context, scrollViewAdapter: scrollViewAdapter)
             .alert(item: $context.alertInfo)
@@ -30,8 +31,11 @@ struct HomeScreen: View {
             .navigationTitle(title)
             .toolbar { toolbar }
             .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
+            .toolbarBackground(silentBrandBlue, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .tint(.white)
             .track(screen: .Home)
-            .toolbarBloom(hasSearchBar: true)
             .sentryTrace("\(Self.self)")
             .sheet(item: $context.spaceFiltersViewModel) { vm in
                 ChatsSpaceFiltersScreen(context: vm.context)
@@ -39,9 +43,9 @@ struct HomeScreen: View {
                                                 in: navigationTransitionNamespace))
             }
     }
-    
+
     // MARK: - Private
-    
+
     private var title: String {
         if let selectedSpace = context.viewState.selectedSpaceFilter {
             selectedSpace.room.name
@@ -49,14 +53,14 @@ struct HomeScreen: View {
             L10n.screenRoomlistMainSpaceTitle
         }
     }
-    
+
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
             settingsButton
                 .buttonStyle(.borderless)
         }
-        
+
         ToolbarItem(placement: .primaryAction) {
             if #available(iOS 26, *) {
                 newRoomButton
@@ -65,12 +69,12 @@ struct HomeScreen: View {
                     .buttonStyle(.compound(.super, size: .toolbarIcon))
             }
         }
-        
+
         if context.viewState.shouldShowSpaceFilters {
             if #available(iOS 26, *) {
                 ToolbarSpacer(.fixed, placement: .primaryAction)
             }
-            
+
             ToolbarItem(placement: .primaryAction) {
                 SpaceFiltersButton(selected: context.viewState.selectedSpaceFilter != nil) {
                     context.send(viewAction: .spaceFilters)
@@ -80,7 +84,7 @@ struct HomeScreen: View {
             }
         }
     }
-    
+
     private var settingsButton: some View {
         Button {
             context.send(viewAction: .showSettings)
@@ -97,7 +101,7 @@ struct HomeScreen: View {
         }
         .accessibilityLabel(L10n.commonSettings)
     }
-    
+
     @ViewBuilder
     private var newRoomButton: some View {
         switch context.viewState.roomListMode {
@@ -113,7 +117,7 @@ struct HomeScreen: View {
             EmptyView()
         }
     }
-    
+
     @ViewBuilder
     private func leaveRoomAlertActions(_ item: LeaveRoomAlertItem) -> some View {
         Button(item.cancelTitle, role: .cancel) { }
@@ -121,24 +125,24 @@ struct HomeScreen: View {
             context.send(viewAction: .confirmLeaveRoom(roomIdentifier: item.roomID))
         }
     }
-    
+
     private func leaveRoomAlertMessage(_ item: LeaveRoomAlertItem) -> some View {
         Text(item.subtitle)
     }
-    
+
     private struct SpaceFiltersButton: View {
         @Environment(\.isInSidebar) private var isInSidebar
-        
+
         var selected = false
         var action: () -> Void
-        
+
         /// Design prefers the custom style over the system's styling of a Toggle within a toolbar,
         /// however Glass isn't supported for toolbar buttons in the sidebar on iPadOS 26 (likely due
         /// to glass on glass being discouraged by Apple), so we need to handle our styling accordingly.
         var shouldUseGlassButtonStyle: Bool {
             !isInSidebar
         }
-        
+
         var body: some View {
             if #available(iOS 26, *), shouldUseGlassButtonStyle {
                 if selected {
@@ -158,7 +162,7 @@ struct HomeScreen: View {
                 }
             }
         }
-        
+
         private var content: some View {
             Button {
                 action()
@@ -178,7 +182,7 @@ struct HomeScreen_Previews: PreviewProvider, TestablePreview {
     static let loadingViewModel = viewModel(.skeletons)
     static let emptyViewModel = viewModel(.empty)
     static let loadedViewModel = viewModel(.rooms)
-    
+
     static var previews: some View {
         ElementNavigationStack {
             HomeScreen(context: loadingViewModel.context)
@@ -187,7 +191,7 @@ struct HomeScreen_Previews: PreviewProvider, TestablePreview {
             state.roomListMode == .skeletons
         })
         .previewDisplayName("Loading")
-        
+
         ElementNavigationStack {
             HomeScreen(context: emptyViewModel.context)
         }
@@ -195,7 +199,7 @@ struct HomeScreen_Previews: PreviewProvider, TestablePreview {
             state.roomListMode == .empty
         })
         .previewDisplayName("Empty")
-        
+
         ElementNavigationStack {
             HomeScreen(context: loadedViewModel.context)
         }
@@ -204,10 +208,10 @@ struct HomeScreen_Previews: PreviewProvider, TestablePreview {
         })
         .previewDisplayName("Loaded")
     }
-    
+
     static func viewModel(_ mode: HomeScreenRoomListMode) -> HomeScreenViewModel {
         let userID = "@alice:example.com"
-        
+
         let roomSummaryProviderState: RoomSummaryProviderMockConfigurationState = switch mode {
         case .skeletons:
             .loading
@@ -216,12 +220,12 @@ struct HomeScreen_Previews: PreviewProvider, TestablePreview {
         case .rooms:
             .loaded(.mockRooms)
         }
-        
+
         let clientProxy = ClientProxyMock(.init(userID: userID,
                                                 roomSummaryProvider: RoomSummaryProviderMock(.init(state: roomSummaryProviderState))))
-        
+
         let userSession = UserSessionMock(.init(clientProxy: clientProxy))
-        
+
         return HomeScreenViewModel(userSession: userSession,
                                    selectedRoomPublisher: CurrentValueSubject<String?, Never>(nil).asCurrentValuePublisher(),
                                    appSettings: .volatile(),
