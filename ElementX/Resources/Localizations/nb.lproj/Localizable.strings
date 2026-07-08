@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Du må verifisere alle eksisterende enheter og kontakter på nytt";
 "screen_encryption_reset_footer" = "Tilbakestill bare den digitale identiteten din hvis du ikke har tilgang til en annen bekreftet enhet og du ikke har gjenopprettingsnøkkelen din.";
 "screen_encryption_reset_title" = "Kan du ikke bekrefte? Du må tilbakestille den digitale identiteten din.";
-"screen_home_tab_chats" = "Chatter";
-"screen_home_tab_spaces" = "Områder";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Kan du ikke bekrefte?";
 "screen_identity_confirmation_create_new_recovery_key" = "Opprett en ny gjenopprettingsnøkkel";
 "screen_identity_confirmation_subtitle" = "Velg hvordan du vil verifisere deg for å sette opp sikker meldingsutveksling.";

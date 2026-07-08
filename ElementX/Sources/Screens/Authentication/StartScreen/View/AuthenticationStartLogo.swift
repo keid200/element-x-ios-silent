@@ -24,28 +24,20 @@ struct AuthenticationStartLogo: View {
         let imageSize: CGFloat
     }
     
-    private var sizeMetrics: SizeMetrics? {
-        size.map { customSize in
-            let scale = customSize / 158
-            return SizeMetrics(scale: scale,
-                               imageSize: hideBrandChrome ? customSize : 110 * scale)
-        }
+    private var sizeMetrics: SizeMetrics {
+        let resolvedSize = size ?? 124
+        let scale = resolvedSize / 158
+        return SizeMetrics(scale: scale,
+                           imageSize: hideBrandChrome ? resolvedSize : 110 * scale)
     }
     
     var body: some View {
-        if let sizeMetrics {
-            appLogoImage
-                .resizable()
-                .frame(width: sizeMetrics.imageSize, height: sizeMetrics.imageSize)
-                .modifier(AuthenticationBrandLogoModifier(scale: sizeMetrics.scale,
-                                                          hideBrandChrome: hideBrandChrome,
-                                                          isOnGradient: isOnGradient))
-        } else {
-            appLogoImage
-                .modifier(AuthenticationBrandLogoModifier(scale: 1,
-                                                          hideBrandChrome: hideBrandChrome,
-                                                          isOnGradient: isOnGradient))
-        }
+        appLogoImage
+            .resizable()
+            .frame(width: sizeMetrics.imageSize, height: sizeMetrics.imageSize)
+            .modifier(AuthenticationBrandLogoModifier(scale: sizeMetrics.scale,
+                                                      hideBrandChrome: hideBrandChrome,
+                                                      isOnGradient: isOnGradient))
     }
 }
 

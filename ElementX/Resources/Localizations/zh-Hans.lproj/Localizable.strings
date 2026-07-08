@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "你将需要再次验证所有现有设备与联系人";
 "screen_encryption_reset_footer" = "仅当你无法访问其它已登录的设备并且丢失了恢复密钥时才重置数字身份。";
 "screen_encryption_reset_title" = "无法确认？你需要重置数字身份。";
-"screen_home_tab_chats" = "聊天";
-"screen_home_tab_spaces" = "空间";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "无法确认？";
 "screen_identity_confirmation_create_new_recovery_key" = "创建新的恢复密钥";
 "screen_identity_confirmation_subtitle" = "选择验证方式以设置安全的消息传输。";

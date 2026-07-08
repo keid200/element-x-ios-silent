@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Barcha mavjud qurilma va kontaktlarni qayta tasdiqlashingiz kerak boʻladi";
 "screen_encryption_reset_footer" = "Agar boshqa tasdiqlangan qurilmaga kira olmasangiz va zaxira kalitingiz bo‘lmasa, raqamli identifikatoringizni asliga qaytaring.";
 "screen_encryption_reset_title" = "Tasdiqlay olmayapsizmi? Raqamli identifikatoringizni asliga qaytarishingiz kerak.";
-"screen_home_tab_chats" = "Suhbatlar";
-"screen_home_tab_spaces" = "Maydonlar";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Tasdiqlay olmayapsizmi?";
 "screen_identity_confirmation_create_new_recovery_key" = "Yangi tiklash kalitini yarating";
 "screen_identity_confirmation_subtitle" = "Xavfsiz xabar almashinuvni sozlash uchun tasdiqlash usulini tanlang.";

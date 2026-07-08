@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Zure gailu eta kontaktu guztiak berriro egiaztatu beharko dituzu";
 "screen_encryption_reset_footer" = "Only reset your digital identity if you don't have access to another verified device and you don't have your recovery key.";
 "screen_encryption_reset_title" = "Ezin duzu baieztatu? Zure identitatea berrezarri beharko duzu.";
-"screen_home_tab_chats" = "Txatak";
-"screen_home_tab_spaces" = "Spaces";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Ezin duzu baieztatu?";
 "screen_identity_confirmation_create_new_recovery_key" = "Sortu berreskuratze-gako berria";
 "screen_identity_confirmation_subtitle" = "Egiaztatu gailua mezularitza segurua konfiguratzeko.";

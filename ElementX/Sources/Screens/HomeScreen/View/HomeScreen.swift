@@ -47,11 +47,7 @@ struct HomeScreen: View {
     // MARK: - Private
 
     private var title: String {
-        if let selectedSpace = context.viewState.selectedSpaceFilter {
-            selectedSpace.room.name
-        } else {
-            L10n.screenRoomlistMainSpaceTitle
-        }
+        "Messages"
     }
 
     @ToolbarContentBuilder
@@ -70,19 +66,6 @@ struct HomeScreen: View {
             }
         }
 
-        if context.viewState.shouldShowSpaceFilters {
-            if #available(iOS 26, *) {
-                ToolbarSpacer(.fixed, placement: .primaryAction)
-            }
-
-            ToolbarItem(placement: .primaryAction) {
-                SpaceFiltersButton(selected: context.viewState.selectedSpaceFilter != nil) {
-                    context.send(viewAction: .spaceFilters)
-                }
-                .matchedTransitionSource(id: NavigationTransitionSourceID.spaceFilters,
-                                         in: navigationTransitionNamespace)
-            }
-        }
     }
 
     private var settingsButton: some View {

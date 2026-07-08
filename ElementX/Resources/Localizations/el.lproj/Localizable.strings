@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Θα χρειαστεί να επαληθεύσεις ξανά όλες τις υπάρχουσες συσκευές και επαφές σου";
 "screen_encryption_reset_footer" = "Επαναφέρετε την ψηφιακή σας ταυτότητα μόνο εάν δεν έχετε πρόσβαση σε άλλη επαληθευμένη συσκευή και δεν έχετε το κλειδί ανάκτησης.";
 "screen_encryption_reset_title" = "Δεν μπορείτε να επιβεβαιώσετε; Θα χρειαστεί να επαναφέρετε την ψηφιακή σας ταυτότητα.";
-"screen_home_tab_chats" = "Συνομιλίες";
-"screen_home_tab_spaces" = "Χώροι";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Δεν μπορείς να επιβεβαιώσεις;";
 "screen_identity_confirmation_create_new_recovery_key" = "Δημιουργία νέου κλειδιού ανάκτησης";
 "screen_identity_confirmation_subtitle" = "Επιλέξτε τον τρόπο επαλήθευσης για να ρυθμίσετε την ασφαλή ανταλλαγή μηνυμάτων.";

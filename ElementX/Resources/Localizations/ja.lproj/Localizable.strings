@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "すべての端末と連絡先を再度検証する必要があります";
 "screen_encryption_reset_footer" = "デジタルIDのリセットは、他のサインイン済みの端末と、回復鍵の両方へのアクセスを失った場合にのみ行ってください。";
 "screen_encryption_reset_title" = "認証できませんか？デジタルIDをリセットする必要があります。";
-"screen_home_tab_chats" = "チャット";
-"screen_home_tab_spaces" = "スペース";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "認証できませんか？";
 "screen_identity_confirmation_create_new_recovery_key" = "回復鍵を新規作成します";
 "screen_identity_confirmation_subtitle" = "安全なメッセージを設定するための検証方法を選択してください。";

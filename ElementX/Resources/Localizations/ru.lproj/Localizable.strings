@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Вам нужно будет заново подтвердить все существующие устройства и контакты.";
 "screen_encryption_reset_footer" = "Сбрасывайте ключ шифрования только в том случае, если у Вас нет доступа к другому устройству, на котором выполнен вход, и Вы потеряли ключ восстановления.";
 "screen_encryption_reset_title" = "Не можете подтвердить? Вам потребуется сбросить свою цифровую идентификацию.";
-"screen_home_tab_chats" = "Чаты";
-"screen_home_tab_spaces" = "Пространства";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Не можете подтвердить?";
 "screen_identity_confirmation_create_new_recovery_key" = "Создайте новый ключ восстановления";
 "screen_identity_confirmation_subtitle" = "Выберите способ подтверждения для настройки защищенного обмена сообщениями.";

@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Du måste verifiera alla dina befintliga enheter och kontakter igen";
 "screen_encryption_reset_footer" = "Återställ bara din identitet om du inte har tillgång till en annan inloggad enhet och du har tappat bort din återställningsnyckel.";
 "screen_encryption_reset_title" = "Återställ din identitet ifall du inte kan bekräfta på annat sätt";
-"screen_home_tab_chats" = "Alla chattar";
-"screen_home_tab_spaces" = "Utrymmen";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Kan du inte bekräfta?";
 "screen_identity_confirmation_create_new_recovery_key" = "Skapa en ny återställningsnyckel";
 "screen_identity_confirmation_subtitle" = "Verifiera den här enheten för att konfigurera säkra meddelanden.";

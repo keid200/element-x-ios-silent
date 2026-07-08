@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Budete muset znovu ověřit všechna stávající zařízení a kontakty";
 "screen_encryption_reset_footer" = "Digitální identitu resetujte pouze v případě, že nemáte přístup k jinému ověřenému zařízení a nemáte klíč pro obnovení.";
 "screen_encryption_reset_title" = "Nelze potvrdit? Budete muset resetovat svou digitální identitu.";
-"screen_home_tab_chats" = "Všechny chaty";
-"screen_home_tab_spaces" = "Prostory";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Nemůžete potvrdit?";
 "screen_identity_confirmation_create_new_recovery_key" = "Vytvoření nového klíče pro obnovení";
 "screen_identity_confirmation_subtitle" = "Vyberte způsob ověření pro nastavení zabezpečeného zasílání zpráv.";

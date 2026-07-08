@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Dovrai verificare nuovamente tutti i dispositivi e i contatti esistenti";
 "screen_encryption_reset_footer" = "Reimposta la tua identità digitale solo se non hai accesso a un altro dispositivo verificato e non disponi della tua chiave di recupero.";
 "screen_encryption_reset_title" = "Non riesci a confermare? Dovrai reimpostare la tua identità digitale.";
-"screen_home_tab_chats" = "Tutte le conversazioni";
-"screen_home_tab_spaces" = "Spazi";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Non puoi confermare?";
 "screen_identity_confirmation_create_new_recovery_key" = "Crea una nuova chiave di recupero";
 "screen_identity_confirmation_subtitle" = "Scegli come effettuare la verifica per configurare la messaggistica sicura.";

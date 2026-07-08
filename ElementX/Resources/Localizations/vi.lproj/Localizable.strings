@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Bạn sẽ cần xác minh lại tất cả các thiết bị và danh bạ hiện có của mình.";
 "screen_encryption_reset_footer" = "Chỉ nên đặt lại danh tính kỹ thuật số của bạn nếu bạn không có quyền truy cập vào thiết bị đã được xác minh khác và bạn không có khóa khôi phục.";
 "screen_encryption_reset_title" = "Không thể xác nhận? Bạn cần phải thiết lập lại danh tính kỹ thuật số của mình.";
-"screen_home_tab_chats" = "Cuộc trò chuyện";
-"screen_home_tab_spaces" = "Spaces";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Không thể xác nhận?";
 "screen_identity_confirmation_create_new_recovery_key" = "Tạo khóa khôi phục mới";
 "screen_identity_confirmation_subtitle" = "Chọn phương thức xác minh để bật nhắn tin bảo mật.";

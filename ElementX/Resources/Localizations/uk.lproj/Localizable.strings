@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Вам потрібно буде повторно звірити всі наявні пристрої та контакти";
 "screen_encryption_reset_footer" = "Скидайте свою цифрову ідентичність лише якщо у вас немає доступу до іншого звіреного пристрою та ключа відновлення.";
 "screen_encryption_reset_title" = "Не можете підтвердити? Вам доведеться скинути свою цифрову ідентичність.";
-"screen_home_tab_chats" = "Бесіди";
-"screen_home_tab_spaces" = "Простори";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Не можете підтвердити?";
 "screen_identity_confirmation_create_new_recovery_key" = "Створити новий ключ відновлення";
 "screen_identity_confirmation_subtitle" = "Виберіть спосіб звіряння, щоб налаштувати безпечний обмін повідомленнями.";

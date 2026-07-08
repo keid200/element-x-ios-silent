@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Wymagana będzie ponowna weryfikacja istniejących urządzeń i kontaktów";
 "screen_encryption_reset_footer" = "Zresetuj swoją tożsamość tylko wtedy, gdy nie posiadasz dostępu do żadnego innego zweryfikowanego urządzenia i straciłeś swój klucz przywracania.";
 "screen_encryption_reset_title" = "Nie możesz potwierdzić? Zresetuj swoją tożsamość cyfrową.";
-"screen_home_tab_chats" = "Wszystkie czaty";
-"screen_home_tab_spaces" = "Przestrzenie";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Nie możesz potwierdzić?";
 "screen_identity_confirmation_create_new_recovery_key" = "Utwórz nowy klucz przywracania";
 "screen_identity_confirmation_subtitle" = "Wybierz sposób weryfikacji, aby skonfigurować bezpieczne wiadomości.";

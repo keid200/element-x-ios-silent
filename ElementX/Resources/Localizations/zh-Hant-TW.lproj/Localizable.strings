@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "您將需要再次驗證所有現有裝置與聯絡人";
 "screen_encryption_reset_footer" = "僅當您無法存取其他已驗證的裝置且沒有還原金鑰時才重設您的數位身份。";
 "screen_encryption_reset_title" = "無法確認？您需要重設數位身份。";
-"screen_home_tab_chats" = "所有聊天室";
-"screen_home_tab_spaces" = "空間";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "無法確認？";
 "screen_identity_confirmation_create_new_recovery_key" = "建立新的復原金鑰";
 "screen_identity_confirmation_subtitle" = "選擇驗證方式以設定安全訊息傳遞。";

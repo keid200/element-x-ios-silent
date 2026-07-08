@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Sinun on vahvistettava kaikki olemassa olevat laitteesi ja yhteystietosi uudelleen";
 "screen_encryption_reset_footer" = "Nollaa digitaalinen identiteettisi vain, jos et voi käyttää toista vahvistettua laitetta, ja olet kadottanut palautusavaimesi.";
 "screen_encryption_reset_title" = "Etkö voi vahvistaa? Sinun on nollattava digitaalinen identiteettisi.";
-"screen_home_tab_chats" = "Keskustelut";
-"screen_home_tab_spaces" = "Tilat";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Etkö voi vahvistaa?";
 "screen_identity_confirmation_create_new_recovery_key" = "Luo uusi palautusavain";
 "screen_identity_confirmation_subtitle" = "Valitse vahvistustapa suojatun viestinnän määrittämiseksi.";

@@ -49,9 +49,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
                                            bindings: .init(filtersState: .init(appSettings: appSettings))),
                    mediaProvider: userSession.mediaProvider)
         
-        if appSettings.globalSearchEnabled, #available(iOS 26.0, *) {
-            state.isRoomListSearchEnabled = false
-        }
+        state.isRoomListSearchEnabled = false
         
         userSession.clientProxy.userProfilePublisher
             .receive(on: DispatchQueue.main)
@@ -99,7 +97,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             .sink { [weak self] filters in
                 guard let self else { return }
                 
-                state.shouldShowSpaceFilters = !filters.isEmpty
+                state.shouldShowSpaceFilters = false
                 
                 if let selectedSpaceFilter = spaceFilterSubject.value,
                    !filters.contains(selectedSpaceFilter) {
@@ -202,25 +200,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         case .startChat:
             actionsSubject.send(.presentStartChatScreen)
         case .spaceFilters:
-            if spaceFilterSubject.value != nil {
-                spaceFilterSubject.send(nil)
-            } else {
-                state.bindings.spaceFiltersViewModel = ChatsSpaceFiltersScreenViewModel(spaceService: userSession.clientProxy.spaceService,
-                                                                                        mediaProvider: userSession.mediaProvider)
-                
-                state.bindings.spaceFiltersViewModel?.actionsPublisher.sink { [weak self] action in
-                    guard let self else { return }
-                    
-                    switch action {
-                    case .confirm(let spaceServiceFilter):
-                        spaceFilterSubject.send(spaceServiceFilter)
-                        state.bindings.spaceFiltersViewModel = nil
-                    case .cancel:
-                        state.bindings.spaceFiltersViewModel = nil
-                    }
-                }
-                .store(in: &cancellables)
-            }
+            spaceFilterSubject.send(nil)
         case .markRoomAsUnread(let roomIdentifier):
             Task {
                 guard case let .joined(roomProxy) = await userSession.clientProxy.roomForIdentifier(roomIdentifier) else {
@@ -282,20 +262,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     // MARK: - Private
     
     private func updateFilter() {
-        if state.shouldHideRoomList {
-            roomSummaryProvider?.setFilter(.excludeAll)
-        } else {
-            if state.bindings.isSearchFieldFocused {
-                roomSummaryProvider?.setFilter(.search(query: state.bindings.searchQuery))
-            } else {
-                if let spaceFilter = spaceFilterSubject.value {
-                    roomSummaryProvider?.setFilter(.rooms(roomsIDs: spaceFilter.descendants,
-                                                          filters: state.bindings.filtersState.activeFilters.set))
-                } else {
-                    roomSummaryProvider?.setFilter(.all(filters: state.bindings.filtersState.activeFilters.set))
-                }
-            }
-        }
+        roomSummaryProvider?.setFilter(.all(filters: []))
     }
     
     private func setupRoomListSubscriptions() {

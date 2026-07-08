@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Anda perlu memverifikasi semua perangkat dan kontak yang ada lagi";
 "screen_encryption_reset_footer" = "Hanya atur ulang identitas Anda jika Anda tidak memiliki akses ke perangkat lain yang masuk dan Anda kehilangan kunci pemulihan.";
 "screen_encryption_reset_title" = "Tidak dapat mengonfirmasi? Anda perlu mengatur ulang identitas Anda.";
-"screen_home_tab_chats" = "Semua Obrolan";
-"screen_home_tab_spaces" = "Space";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Tidak dapat mengonfirmasi?";
 "screen_identity_confirmation_create_new_recovery_key" = "Buat kunci pemulihan baru";
 "screen_identity_confirmation_subtitle" = "Pilih cara verifikasi untuk mengatur pengiriman pesan yang aman.";

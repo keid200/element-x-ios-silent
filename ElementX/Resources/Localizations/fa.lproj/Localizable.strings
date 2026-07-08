@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "لازم است دوباره همهٔ آشنایان و افزاره‌های موجودتان را تأیید کنید";
 "screen_encryption_reset_footer" = "فقط اگر به افزاره‌ای وارد شده از پیش دسترسی ندارید و کلید بازیابیتان را گم کرده‌اید بازنشانی کنید.";
 "screen_encryption_reset_title" = "نمی‌توانید تأیید کنید؟ لازم است هویتتان را بازنشانی کنید.";
-"screen_home_tab_chats" = "گپ‌ها";
-"screen_home_tab_spaces" = "فضاها";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "نمی‌توانید تأیید کنید؟";
 "screen_identity_confirmation_create_new_recovery_key" = "ایجاد کلید بازیابی جدید";
 "screen_identity_confirmation_subtitle" = "گزینش چگونگی تأیید برای برپایی پیام‌رسانی امن.";

@@ -96,21 +96,9 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         spacesTabDetails = .init(tag: HomeTab.spaces, title: "Circles", icon: \.space, selectedIcon: \.spaceSolid)
         spacesTabDetails.navigationSplitCoordinator = spacesSplitCoordinator
 
-        if flowParameters.appSettings.globalSearchEnabled, #available(iOS 26.0, *) {
-            let searchCoordinator = SearchScreenCoordinator(parameters: .init(roomSummaryProvider: flowParameters.userSession.clientProxy.alternateRoomSummaryProvider,
-                                                                              clientProxy: flowParameters.userSession.clientProxy,
-                                                                              mediaProvider: flowParameters.userSession.mediaProvider))
-            let searchStackCoordinator = NavigationStackCoordinator()
-            searchStackCoordinator.setRootCoordinator(searchCoordinator)
-
-            searchScreenCoordinator = searchCoordinator
-            searchTabNavigationStackCoordinator = searchStackCoordinator
-            searchTabDetails = .init(tag: HomeTab.search, title: UntranslatedL10n.screenHomeTabSearch, icon: \.search, selectedIcon: \.search, isSearch: true)
-        } else {
-            searchScreenCoordinator = nil
-            searchTabNavigationStackCoordinator = nil
-            searchTabDetails = nil
-        }
+        searchScreenCoordinator = nil
+        searchTabNavigationStackCoordinator = nil
+        searchTabDetails = nil
 
         onboardingStackCoordinator = NavigationStackCoordinator()
         onboardingFlowCoordinator = OnboardingFlowCoordinator(isNewLogin: isNewLogin,
@@ -119,8 +107,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                                                               flowParameters: flowParameters)
 
         var tabs: [NavigationTabCoordinator<HomeTab>.Tab] = [
-            .init(coordinator: chatsSplitCoordinator, details: chatsTabDetails),
-            .init(coordinator: spacesSplitCoordinator, details: spacesTabDetails)
+            .init(coordinator: spacesSplitCoordinator, details: spacesTabDetails),
+            .init(coordinator: chatsSplitCoordinator, details: chatsTabDetails)
         ]
         if let searchTabNavigationStackCoordinator, let searchTabDetails {
             tabs.append(.init(coordinator: searchTabNavigationStackCoordinator, details: searchTabDetails))

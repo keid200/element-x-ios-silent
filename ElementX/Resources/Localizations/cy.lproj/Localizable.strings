@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Bydd angen i chi wirio'ch holl ddyfeisiau a chysylltiadau presennol eto";
 "screen_encryption_reset_footer" = "Ailosodwch eich hunaniaeth dim ond os nad oes gennych fynediad i ddyfais arall sydd wedi'i mewngofnodi a'ch bod wedi colli'ch allwedd adfer.";
 "screen_encryption_reset_title" = "Methu cadarnhau? Bydd angen i chi ailosod eich hunaniaeth.";
-"screen_home_tab_chats" = "Sgyrsiau";
-"screen_home_tab_spaces" = "Gofodau";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Methu cadarnhau?";
 "screen_identity_confirmation_create_new_recovery_key" = "Crëwch allwedd adfer newydd";
 "screen_identity_confirmation_subtitle" = "Dilyswch y ddyfais hon er mwyn gosod negeseuon diogel.";

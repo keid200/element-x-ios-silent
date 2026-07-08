@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Újból ellenőriznie kell az összes meglévő eszközét és csevegőpartnerét";
 "screen_encryption_reset_footer" = "Csak akkor állítsa alaphelyzetbe a személyazonosságát, ha nem fér hozzá más bejelentkezett eszközhöz, és elveszítette a helyreállítási kulcsát.";
 "screen_encryption_reset_title" = "Nem tudja megerősíteni? Alaphelyzetbe kell állítania a digitális személyazonosságát.";
-"screen_home_tab_chats" = "Összes csevegés";
-"screen_home_tab_spaces" = "Terek";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Nem tudja megerősíteni?";
 "screen_identity_confirmation_create_new_recovery_key" = "Új helyreállítási kulcs létrehozása";
 "screen_identity_confirmation_subtitle" = "Válassza ki az ellenőrzés módját a biztonságos üzenetküldés beállításához.";

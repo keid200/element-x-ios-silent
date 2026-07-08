@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "기존 장치와 연락처를 모두 다시 확인해야 합니다.";
 "screen_encryption_reset_footer" = "다른 인증된 기기를 사용할 수 없고 복구 키도 없는 경우에만 디지털 신원을 재설정하세요.";
 "screen_encryption_reset_title" = "확인할 수 없나요? 디지털 신원을 재설정해야 합니다.";
-"screen_home_tab_chats" = "채팅";
-"screen_home_tab_spaces" = "스페이스";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "확인할 수 없나요?";
 "screen_identity_confirmation_create_new_recovery_key" = "새로운 복구 키 만들기";
 "screen_identity_confirmation_subtitle" = "보안 메시징 설정을 위해 인증 방법을 선택해 주세요.";

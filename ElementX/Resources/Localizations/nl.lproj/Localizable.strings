@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Je moet al je bestaande apparaten en contacten opnieuw verifiëren";
 "screen_encryption_reset_footer" = "Stel je identiteit alleen opnieuw in als je geen toegang hebt tot een ander aangemeld apparaat en je je herstelsleutel kwijt bent.";
 "screen_encryption_reset_title" = "Kun je dit niet bevestigen? Je zult je identiteit opnieuw moeten instellen.";
-"screen_home_tab_chats" = "Chats";
-"screen_home_tab_spaces" = "Spaces";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Kan ik dit niet bevestigen?";
 "screen_identity_confirmation_create_new_recovery_key" = "Maak een nieuwe herstelsleutel";
 "screen_identity_confirmation_subtitle" = "Verifieer dit apparaat om beveiligde berichten in te stellen.";

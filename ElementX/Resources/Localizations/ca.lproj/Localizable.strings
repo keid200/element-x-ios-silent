@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Hauràs de tornar a verificar tots els teus dispositius i contactes existents.";
 "screen_encryption_reset_footer" = "Només restableix la teva identitat si no tens accés a cap altre dispositiu on tinguis la sessió iniciada i has perdut la clau de recuperació.";
 "screen_encryption_reset_title" = "Si no pots confirmar la teva identitat, hauràs de restablir-la.";
-"screen_home_tab_chats" = "Xats";
-"screen_home_tab_spaces" = "Spaces";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "No pots confirmar-la?";
 "screen_identity_confirmation_create_new_recovery_key" = "Crea nova clau de recuperació";
 "screen_identity_confirmation_subtitle" = "Verifica aquest dispositiu per configurar missatges segurs.";

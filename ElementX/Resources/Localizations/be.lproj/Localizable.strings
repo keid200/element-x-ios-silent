@@ -829,8 +829,8 @@
 "screen_encryption_reset_bullet_3" = "Вам трэба будзе зноў запэўніць ўсе вашы існуючыя прылады і кантакты";
 "screen_encryption_reset_footer" = "Працягвайце, толькі калі вы ўпэўненыя, што страцілі ўсе астатнія прылады і ключ аднаўлення.";
 "screen_encryption_reset_title" = "Скіньце ключы пацверджання, калі вы не можаце пацвердзіць яго іншым спосабам";
-"screen_home_tab_chats" = "Усе чаты";
-"screen_home_tab_spaces" = "Прасторы";
+"screen_home_tab_chats" = "Messages";
+"screen_home_tab_spaces" = "Circles";
 "screen_identity_confirmation_cannot_confirm" = "Не можаце пацвердзіць?";
 "screen_identity_confirmation_create_new_recovery_key" = "Стварыць новы ключ аднаўлення";
 "screen_identity_confirmation_subtitle" = "Пацвердзіце гэтую прыладу, каб наладзіць бяспечны абмен паведамленнямі.";
