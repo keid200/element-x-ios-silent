@@ -14,7 +14,7 @@ struct SpacesScreen: View {
     
     var body: some View {
         mainContent
-            .navigationTitle(L10n.screenSpaceListTitle)
+            .navigationTitle("Circles")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
             .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
@@ -37,11 +37,11 @@ struct SpacesScreen: View {
     
     private var emptyState: some View {
         FullscreenDialog(horizontalPadding: 24) {
-            TitleAndIcon(title: L10n.screenSpaceListEmptyStateTitle,
+            TitleAndIcon(title: "No circles yet",
                          icon: \.spaceSolid,
                          iconStyle: .defaultSolid)
         } bottomContent: {
-            Button(L10n.actionCreateSpace) {
+            Button("Create circle") {
                 context.send(viewAction: .createSpace)
             }
             .buttonStyle(.compound(.primary))
@@ -53,18 +53,18 @@ struct SpacesScreen: View {
             BigIcon(icon: \.spaceSolid)
             
             VStack(spacing: 8) {
-                Text(L10n.screenSpaceListTitle)
+                Text("Circles")
                     .font(.compound.headingLGBold)
                     .foregroundStyle(.compound.textPrimary)
                     .multilineTextAlignment(.center)
                 
-                Text(L10n.commonSpaces(context.viewState.topLevelSpaces.count))
+                Text("\(context.viewState.topLevelSpaces.count) circles")
                     .font(.compound.bodyLG)
                     .foregroundStyle(.compound.textSecondary)
                     .multilineTextAlignment(.center)
             }
             
-            Text(L10n.screenSpaceListDescription)
+            Text("Choose a circle to see its contacts.")
                 .font(.compound.bodyMD)
                 .foregroundStyle(.compound.textPrimary)
                 .multilineTextAlignment(.center)
@@ -121,7 +121,7 @@ struct SpacesScreen: View {
                 CompoundIcon(\.plus)
                     .accessibilityHidden(true)
             }
-            .accessibilityLabel(L10n.actionCreateSpace)
+            .accessibilityLabel("Create circle")
         }
     }
 }

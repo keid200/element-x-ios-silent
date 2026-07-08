@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Recupere sua identidade criptográfica e o histórico de mensagens com uma chave de recuperação caso você perda todos os dispositivos existentes.";
 "banner_set_up_recovery_submit" = "Receber chave de recuperação";
 "banner_set_up_recovery_title" = "Configure a recuperação para proteger sua conta";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "O Element Call não tem suporte a dispositivos de áudio Bluetooth nesta versão do Android. Por favor, selecione um dispositivo de áudio diferente.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "O Silent Call não tem suporte a dispositivos de áudio Bluetooth nesta versão do Android. Por favor, selecione um dispositivo de áudio diferente.";
 "common_about" = "Sobre";
 "common_acceptable_use_policy" = "Política de uso aceitável";
 "common_add_account" = "Adicionar uma conta";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Você está prestes a criar uma conta em %@";
 "screen_advanced_settings_developer_mode" = "Modo de desenvolvedor";
 "screen_advanced_settings_developer_mode_description" = "Ative para ter acesso a recursos e funcionalidades para desenvolvedores.";
-"screen_advanced_settings_element_call_base_url" = "URL base do Element Call personalizada";
-"screen_advanced_settings_element_call_base_url_description" = "Defina uma URL base personalizada para o Element Call.";
+"screen_advanced_settings_element_call_base_url" = "URL base do Silent Call personalizada";
+"screen_advanced_settings_element_call_base_url_description" = "Defina uma URL base personalizada para o Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "URL inválida, por favor verifique se o protocolo (http/https) está incluso e o endereço correto.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Ocultar avatares em solicitações de convite para salas";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Ocultar pré-visualizações de mídia na linha do tempo";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Use um provedor de conta diferente, como seu próprio servidor privado ou uma conta corporativa.";
 "screen_change_account_provider_title" = "Alterar provedor da conta";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "O app Element Pro é necessário no %1$@. Por favor, baixe-o da loja.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro necessário";
+"screen_change_server_error_element_pro_required_message" = "O app Silent é necessário no %1$@. Por favor, baixe-o da loja.";
+"screen_change_server_error_element_pro_required_title" = "Silent necessário";
 "screen_change_server_error_invalid_homeserver" = "Não conseguimos acessar esse servidor. Verifique se você digitou a URL do servidor corretamente. Se a URL estiver correta, entre em contato com o administrador do seu servidor-casa para obter mais ajuda.";
 "screen_change_server_error_invalid_well_known" = "O servidor não está disponível devido à um problema no arquivo .well-known:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "O provedor de conta selecionado não é compatível com a sliding sync. É necessária uma atualização do servidor para que você possa usar o %1$@.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Add media";
 "screen_migration_message" = "Este é um processo único, obrigado por esperar.";
 "screen_migration_title" = "Configurando sua conta.";
-"screen_missing_key_backup_open_element_classic" = "Open Element Classic";
-"screen_missing_key_backup_step_1" = "Open Element Classic on your device";
+"screen_missing_key_backup_open_element_classic" = "Open Silent";
+"screen_missing_key_backup_step_1" = "Open Silent on your device";
 "screen_missing_key_backup_step_2_ios" = "Go to User settings > Security";
 "screen_missing_key_backup_step_3_ios" = "Scroll down to Secure Backup and tap on Set up";
 "screen_missing_key_backup_step_4" = "Follow the instructions to enable your key storage";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Adicionar emoji";
 "screen_room_timeline_beginning_of_room" = "Este é o início de %1$@.";
 "screen_room_timeline_beginning_of_room_no_name" = "Este é o início desta conversa.";
-"screen_room_timeline_legacy_call" = "Chamada não suportada. Pergunte se o remetente pode usar o novo aplicativo Element X.";
+"screen_room_timeline_legacy_call" = "Chamada não suportada. Pergunte se o remetente pode usar o novo aplicativo Silent.";
 "screen_room_timeline_less_reactions" = "Mostrar menos";
 "screen_room_timeline_message_copied" = "Mensagem copiada";
 "screen_room_timeline_no_permission_to_post" = "Você não tem permissão para postar nesta sala";

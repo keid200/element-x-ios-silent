@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Dine chats sikkerhedskopieres automatisk med end-to-end-kryptering. For at kunne gendanne denne sikkerhedskopi og bevare din digitale identitet, hvis du mister adgang til alle dine enheder, får du brug for din gendannelsesnøgle.";
 "banner_set_up_recovery_submit" = "Hent gendannelsesnøgle";
 "banner_set_up_recovery_title" = "Sikkerhedskopier dine samtaler";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call understøtter desværre ikke brug af Bluetooth-lydenheder i denne Android-version. Vælg venligst en anden lydenhed.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call understøtter desværre ikke brug af Bluetooth-lydenheder i denne Android-version. Vælg venligst en anden lydenhed.";
 "common_about" = "Om";
 "common_acceptable_use_policy" = "Politik for acceptabel brug";
 "common_add_account" = "Tilføj en konto";
@@ -574,7 +574,7 @@
 "screen_advanced_settings_developer_mode" = "Udviklertilstand";
 "screen_advanced_settings_developer_mode_description" = "Aktivér for at få adgang til funktioner og funktionalitet for udviklere.";
 "screen_advanced_settings_element_call_base_url" = "Brugerdefineret URL til opkaldsbase for Element";
-"screen_advanced_settings_element_call_base_url_description" = "Angiv en brugerdefineret basis-URL til Element Call.";
+"screen_advanced_settings_element_call_base_url_description" = "Angiv en brugerdefineret basis-URL til Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "Ugyldig URL, sørg for at inkludere protokollen (http/https) og den korrekte adresse.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Skjul avatarer i anmodninger om invitation til rum";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Skjul forhåndsvisning af medier i tidslinjen";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Brug en anden kontoudbyder, f.eks. din egen private server eller en arbejdskonto.";
 "screen_change_account_provider_title" = "Skift kontoudbyder";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "Element Pro-appen er påkrævet på %1$@ Download den venligst fra din app store.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro kræves";
+"screen_change_server_error_element_pro_required_message" = "Silent-appen er påkrævet på %1$@ Download den venligst fra din app store.";
+"screen_change_server_error_element_pro_required_title" = "Silent kræves";
 "screen_change_server_error_invalid_homeserver" = "Vi kunne ikke nå denne hjemmeserver. Kontroller, at du har indtastet hjemmeserverens URL korrekt. Hvis URL-adressen er korrekt, skal du kontakte administratoren på din hjemmeserver for at få yderligere hjælp.";
 "screen_change_server_error_invalid_well_known" = "Serveren er ikke tilgængelig på grund af et problem i .well-known-filen: \n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Den valgte kontoudbyder understøtter ikke sliding sync. En opgradering af serveren er nødvendig for at bruge %1$@.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Add media";
 "screen_migration_message" = "Dette er en engangsproces, tak for din tålmodighed.";
 "screen_migration_title" = "Sætter din konto op.";
-"screen_missing_key_backup_open_element_classic" = "Åbn Element Classic";
-"screen_missing_key_backup_step_1" = "Åbn Element Classic på din enhed";
+"screen_missing_key_backup_open_element_classic" = "Åbn Silent";
+"screen_missing_key_backup_step_1" = "Åbn Silent på din enhed";
 "screen_missing_key_backup_step_2_ios" = "Gå til Brugerindstillinger > Sikkerhed";
 "screen_missing_key_backup_step_3_ios" = "Rul ned til Sikker backup, og tryk på Opsæt";
 "screen_missing_key_backup_step_4" = "Følg instruktionerne for at aktivere dit nøglelager";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Tilføj emoji";
 "screen_room_timeline_beginning_of_room" = "Dette er begyndelsen på %1$@.";
 "screen_room_timeline_beginning_of_room_no_name" = "Dette er begyndelsen på denne samtale.";
-"screen_room_timeline_legacy_call" = "Ikke-understøttet opkald. Spørg, om den, der ringer op, kan bruge den nye Element X-app.";
+"screen_room_timeline_legacy_call" = "Ikke-understøttet opkald. Spørg, om den, der ringer op, kan bruge den nye Silent-app.";
 "screen_room_timeline_less_reactions" = "Vis mindre";
 "screen_room_timeline_message_copied" = "Beskeden er kopieret";
 "screen_room_timeline_no_permission_to_post" = "Du har ikke tilladelse til at slå noget op i dette rum";

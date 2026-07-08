@@ -29,6 +29,7 @@ struct SpaceScreenViewState: BindableState {
     
     var paginationState: PaginationState = .idle
     var rooms: [SpaceServiceRoom]
+    var circleMembers: [RoomMemberDetails] = []
     var selectedSpaceRoomID: String?
     var joiningRoomIDs: Set<String> = []
     
@@ -71,6 +72,7 @@ struct SpaceScreenViewStateBindings {
 
 enum SpaceScreenViewAction {
     case spaceAction(SpaceRoomCell.Action)
+    case selectCircleMember(RoomMemberDetails)
     case leaveSpace
     case spaceSettings(roomProxy: JoinedRoomProxyProtocol)
     case displayMembers(roomProxy: JoinedRoomProxyProtocol)

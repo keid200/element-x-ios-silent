@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Keskustelusi varmuuskopioidaan automaattisesti päästä päähän -salauksella. Jotta voit palauttaa tämän varmuuskopion ja säilyttää digitaalisen identiteettisi, kun menetät pääsyn kaikkiin laitteisiisi, tarvitset palautusavaimesi.";
 "banner_set_up_recovery_submit" = "Hanki palautusavain";
 "banner_set_up_recovery_title" = "Varmuuskopioi keskustelusi";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call ei tue Bluetooth-äänilaitteiden käyttöä tässä Android-versiossa. Valitse toinen äänilaite.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call ei tue Bluetooth-äänilaitteiden käyttöä tässä Android-versiossa. Valitse toinen äänilaite.";
 "common_about" = "Tietoa";
 "common_acceptable_use_policy" = "Hyväksyttävän käytön käytäntö";
 "common_add_account" = "Lisää tili";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Olet luomassa tiliä %@-palvelimelle";
 "screen_advanced_settings_developer_mode" = "Kehittäjätila";
 "screen_advanced_settings_developer_mode_description" = "Ottamalla käyttöön pääset käsiksi kehittäjille tarkoitettuihin ominaisuuksiin.";
-"screen_advanced_settings_element_call_base_url" = "Mukautettu Element Call URL-osoite";
-"screen_advanced_settings_element_call_base_url_description" = "Aseta mukautettu URL-osoite Element Callille.";
+"screen_advanced_settings_element_call_base_url" = "Mukautettu Silent Call URL-osoite";
+"screen_advanced_settings_element_call_base_url_description" = "Aseta mukautettu URL-osoite Silent Callille.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "Virheellinen URL-osoite. Varmista, että sisällytät protokollan (http/https) ja oikean osoitteen.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Piilota huoneiden avatarit kutsuista";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Piilota median esikatselu aikajanalla";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Käytä toista palveluntarjoajaa, kuten omaa yksityistä palvelintasi tai työpaikkaasi.";
 "screen_change_account_provider_title" = "Vaihda palveluntarjoajaa";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "Element Pro -sovellus on pakollinen %1$@ -palvelimella. Lataa se sovelluskaupasta.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro vaaditaan";
+"screen_change_server_error_element_pro_required_message" = "Silent -sovellus on pakollinen %1$@ -palvelimella. Lataa se sovelluskaupasta.";
+"screen_change_server_error_element_pro_required_title" = "Silent vaaditaan";
 "screen_change_server_error_invalid_homeserver" = "Kotipalvelimeen ei saatu yhteyttä. Varmista, että olet syöttänyt osoitteen oikein. Jos osoite on oikein, ota yhteyttä palvelimesi ylläpitäjään.";
 "screen_change_server_error_invalid_well_known" = "Palvelin ei ole saatavilla .well-known tiedostossa olevan ongelman vuoksi:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Valitsemasi palveluntarjoaja ei tue sliding syncia. Palvelimen päivitys tarvitaan %1$@ -sovelluksen käyttämiseen.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Lisää mediaa";
 "screen_migration_message" = "Tämä on kertaluonteinen prosessi, kiitos odottamisesta.";
 "screen_migration_title" = "Tiliä määritetään.";
-"screen_missing_key_backup_open_element_classic" = "Avaa Element Classic";
-"screen_missing_key_backup_step_1" = "Avaa Element Classic laitteellasi";
+"screen_missing_key_backup_open_element_classic" = "Avaa Silent";
+"screen_missing_key_backup_step_1" = "Avaa Silent laitteellasi";
 "screen_missing_key_backup_step_2_ios" = "Mene kohtaan Käyttäjäasetukset > Tietoturva";
 "screen_missing_key_backup_step_3_ios" = "Vieritä alas kohtaan Suojattu varmuuskopiointi ja napauta Ota käyttöön";
 "screen_missing_key_backup_step_4" = "Noudata ohjeita";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Lisää reaktio";
 "screen_room_timeline_beginning_of_room" = "Tämä on huoneen %1$@ alku.";
 "screen_room_timeline_beginning_of_room_no_name" = "Tämä on tämän keskustelun alku.";
-"screen_room_timeline_legacy_call" = "Puhelu, jota ei tueta. Kysy, voiko soittaja käyttää uutta Element X -sovellusta.";
+"screen_room_timeline_legacy_call" = "Puhelu, jota ei tueta. Kysy, voiko soittaja käyttää uutta Silent -sovellusta.";
 "screen_room_timeline_less_reactions" = "Näytä vähemmän";
 "screen_room_timeline_message_copied" = "Viesti kopioitu";
 "screen_room_timeline_no_permission_to_post" = "Sinulla ei ole oikeutta kirjoittaa tässä huoneessa";

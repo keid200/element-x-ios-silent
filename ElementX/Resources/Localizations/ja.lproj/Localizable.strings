@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "あなたのチャットはエンドツーエンド暗号化を使用して自動的にバックアップされています。すべての端末を使用できない状況で、このバックアップからデジタルIDを復元するには、回復鍵が必要となります。";
 "banner_set_up_recovery_submit" = "回復鍵を作成";
 "banner_set_up_recovery_title" = "チャットをバックアップ";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element CallはこのAndroidバージョンにおいて、Bluetoothオーディオデバイスの使用をサポートしていません。別のオーディオデバイスを選択してください。";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent CallはこのAndroidバージョンにおいて、Bluetoothオーディオデバイスの使用をサポートしていません。別のオーディオデバイスを選択してください。";
 "common_about" = "アプリケーションについて";
 "common_acceptable_use_policy" = "利用規定";
 "common_add_account" = "アカウントを追加";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "%@ 上にアカウントを作成しようとしています";
 "screen_advanced_settings_developer_mode" = "開発者モード";
 "screen_advanced_settings_developer_mode_description" = "開発者向けの機能を表示します。";
-"screen_advanced_settings_element_call_base_url" = "任意の Element Call のベースURL";
-"screen_advanced_settings_element_call_base_url_description" = "任意の Element Call のベースURLを入力してください。";
+"screen_advanced_settings_element_call_base_url" = "任意の Silent Call のベースURL";
+"screen_advanced_settings_element_call_base_url_description" = "任意の Silent Call のベースURLを入力してください。";
 "screen_advanced_settings_element_call_base_url_validation_error" = "無効なURLです。プロトコル (http/https) が明記されていることと、アドレスが正しいことを確認してください。";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "ルームへの招待リクエストにアバターを表示しない";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "タイムラインにメディアのプレビューを表示しない";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "自身のサーバーや仕事用のアカウントにサインインするには、アカウント提供元を変更してください。";
 "screen_change_account_provider_title" = "アカウント提供元を変更";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "%1$@ では Element Pro を使用する必要があります。アプリストアよりダウンロードしてください。";
-"screen_change_server_error_element_pro_required_title" = "Element Pro が必要です";
+"screen_change_server_error_element_pro_required_message" = "%1$@ では Silent を使用する必要があります。アプリストアよりダウンロードしてください。";
+"screen_change_server_error_element_pro_required_title" = "Silent が必要です";
 "screen_change_server_error_invalid_homeserver" = "このホームサーバーに接続できませんでした。正しいURLを入力したことを確認し、問題が継続する場合は、ホームサーバーの管理者に問い合わせてください。";
 "screen_change_server_error_invalid_well_known" = ".well-knownファイルに問題があるためサーバーを使用できません: %1$@";
 "screen_change_server_error_no_sliding_sync_message" = "このアカウント提供元は、スライド同期に対応していません。%1$@ を使用するにはサーバーのアップグレードが必要です。";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "メディアを追加";
 "screen_migration_message" = "一度限りの工程です。お待ちください。";
 "screen_migration_title" = "アカウントを設定しています。";
-"screen_missing_key_backup_open_element_classic" = "Element Classic を開く";
-"screen_missing_key_backup_step_1" = "Element Classic をこの端末で開く";
+"screen_missing_key_backup_open_element_classic" = "Silent を開く";
+"screen_missing_key_backup_step_1" = "Silent をこの端末で開く";
 "screen_missing_key_backup_step_2_ios" = "「ユーザー設定 - セキュリティ」に移動します";
 "screen_missing_key_backup_step_3_ios" = "安全なバックアップの項目に移動して「設定する」を選択します";
 "screen_missing_key_backup_step_4" = "指示に従って、鍵の保管庫を有効化してください";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "リアクションを追加";
 "screen_room_timeline_beginning_of_room" = "%1$@ の始まりです。";
 "screen_room_timeline_beginning_of_room_no_name" = "ここが会話の開始点です。";
-"screen_room_timeline_legacy_call" = "非対応の着信です。新しい Element X を使用できないか確認してください。";
+"screen_room_timeline_legacy_call" = "非対応の着信です。新しい Silent を使用できないか確認してください。";
 "screen_room_timeline_less_reactions" = "一部を表示";
 "screen_room_timeline_message_copied" = "メッセージをコピーしました";
 "screen_room_timeline_no_permission_to_post" = "このルームに発言する権限がありません";

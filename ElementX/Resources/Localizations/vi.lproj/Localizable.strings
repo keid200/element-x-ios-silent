@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Các cuộc trò chuyện của bạn được tự động sao lưu bằng mã hóa đầu cuối. Để khôi phục bản sao lưu này và giữ lại danh tính kỹ thuật số của bạn khi bạn mất quyền truy cập vào tất cả các thiết bị, bạn sẽ cần khóa khôi phục.";
 "banner_set_up_recovery_submit" = "Lấy khóa khôi phục.";
 "banner_set_up_recovery_title" = "Sao lưu tin nhắn của bạn";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Ứng dụng Element Call không hỗ trợ sử dụng thiết bị âm thanh Bluetooth trên phiên bản Android này. Vui lòng chọn thiết bị âm thanh khác.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Ứng dụng Silent Call không hỗ trợ sử dụng thiết bị âm thanh Bluetooth trên phiên bản Android này. Vui lòng chọn thiết bị âm thanh khác.";
 "common_about" = "Giới thiệu";
 "common_acceptable_use_policy" = "Quy định sử dụng dịch vụ";
 "common_add_account" = "Thêm tài khoản";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Sử dụng nhà cung cấp tài khoản khác, ví dụ như máy chủ riêng của bạn hoặc tài khoản công việc.";
 "screen_change_account_provider_title" = "Thay đổi nhà cung cấp tài khoản";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "Ứng dụng Element Pro là bắt buộc trên %1$@. Vui lòng tải xuống từ cửa hàng.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro là bắt buộc";
+"screen_change_server_error_element_pro_required_message" = "Ứng dụng Silent là bắt buộc trên %1$@. Vui lòng tải xuống từ cửa hàng.";
+"screen_change_server_error_element_pro_required_title" = "Silent là bắt buộc";
 "screen_change_server_error_invalid_homeserver" = "Chúng tớ không thể kết nối với homeserver này. Vui lòng kiểm tra xem cậu đã nhập URL homeserver chính xác chưa. Nếu URL chính xác, hãy liên hệ với quản trị viên homeserver để được hỗ trợ thêm.";
 "screen_change_server_error_invalid_well_known" = "Máy chủ không khả dụng do sự cố trong tệp .well-known:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Nhà cung cấp tài khoản đã chọn không hỗ trợ đồng bộ sliding. Cần nâng cấp máy chủ để sử dụng %1$@ .";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Add media";
 "screen_migration_message" = "Quá trình này chỉ thực hiện một lần, cảm ơn bạn đã kiên nhẫn.";
 "screen_migration_title" = "Đang thiết lập tài khoản của bạn.";
-"screen_missing_key_backup_open_element_classic" = "Open Element Classic";
-"screen_missing_key_backup_step_1" = "Open Element Classic on your device";
+"screen_missing_key_backup_open_element_classic" = "Open Silent";
+"screen_missing_key_backup_step_1" = "Open Silent on your device";
 "screen_missing_key_backup_step_2_ios" = "Go to User settings > Security";
 "screen_missing_key_backup_step_3_ios" = "Scroll down to Secure Backup and tap on Set up";
 "screen_missing_key_backup_step_4" = "Follow the instructions to enable your key storage";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Thêm biểu cảm";
 "screen_room_timeline_beginning_of_room" = "Đây là sự kiện khởi đầu của phòng %1$@ .";
 "screen_room_timeline_beginning_of_room_no_name" = "Đây là khởi đầu của cuộc trò chuyện này.";
-"screen_room_timeline_legacy_call" = "Cuộc gọi không được hỗ trợ. Hãy hỏi xem người gọi có thể sử dụng ứng dụng Element X mới hay không.";
+"screen_room_timeline_legacy_call" = "Cuộc gọi không được hỗ trợ. Hãy hỏi xem người gọi có thể sử dụng ứng dụng Silent mới hay không.";
 "screen_room_timeline_less_reactions" = "Thu gọn";
 "screen_room_timeline_message_copied" = "Đã sao chép tin nhắn";
 "screen_room_timeline_no_permission_to_post" = "Bạn không có quyền gửi tin nhắn trong phòng này";

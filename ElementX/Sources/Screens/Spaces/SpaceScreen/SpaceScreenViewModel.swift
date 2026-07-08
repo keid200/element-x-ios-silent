@@ -17,12 +17,14 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
     private let clientProxy: ClientProxyProtocol
     private let mediaProvider: MediaProviderProtocol
     private let userIndicatorController: UserIndicatorControllerProtocol
-    
+    private var knownDirectRooms = [String: String]()
+    private var pendingDirectRoomUserIDs = Set<String>()
+
     private let actionsSubject: PassthroughSubject<SpaceScreenViewModelAction, Never> = .init()
     var actionsPublisher: AnyPublisher<SpaceScreenViewModelAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
-    
+
     init(spaceRoomListProxy: SpaceRoomListProxyProtocol,
          spaceServiceProxy: SpaceServiceProxyProtocol,
          selectedSpaceRoomPublisher: CurrentValuePublisher<String?, Never>,
@@ -33,29 +35,29 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
         clientProxy = userSession.clientProxy
         mediaProvider = userSession.mediaProvider
         self.userIndicatorController = userIndicatorController
-        
+
         super.init(initialViewState: SpaceScreenViewState(space: spaceRoomListProxy.spaceServiceRoomPublisher.value,
                                                           rooms: spaceRoomListProxy.spaceRoomsPublisher.value,
                                                           selectedSpaceRoomID: selectedSpaceRoomPublisher.value),
                    mediaProvider: userSession.mediaProvider)
-        
+
         spaceRoomListProxy.spaceServiceRoomPublisher
             .receive(on: DispatchQueue.main)
             .weakAssign(to: \.state.space, on: self)
             .store(in: &cancellables)
-        
+
         spaceRoomListProxy.spaceRoomsPublisher
             .receive(on: DispatchQueue.main)
             .weakAssign(to: \.state.rooms, on: self)
             .store(in: &cancellables)
-        
+
         // As the server is slow, we just let the screen automatically paginate everything in. We can
         // switch this to use the scroll position once Synapse receives some performance improvements.
         spaceRoomListProxy.paginationStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] paginationState in
                 guard let self else { return }
-                
+
                 switch paginationState {
                 case .idle(endReached: false):
                     state.paginationState = .idle
@@ -67,11 +69,11 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
                 }
             }
             .store(in: &cancellables)
-        
+
         selectedSpaceRoomPublisher
             .weakAssign(to: \.state.selectedSpaceRoomID, on: self)
             .store(in: &cancellables)
-        
+
         Task {
             if case let .joined(roomProxy) = await userSession.clientProxy.roomForIdentifier(spaceRoomListProxy.id) {
                 // Required to listen for membership updates in the members flow
@@ -80,7 +82,7 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
                 if case let .success(permalinkURL) = await roomProxy.matrixToPermalink() {
                     state.permalink = permalinkURL
                 }
-                
+
                 roomProxy.infoPublisher
                     .sink { [weak self] roomInfo in
                         guard let self else { return }
@@ -98,15 +100,28 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
                         state.canEditChildren = powerLevels.canOwnUser(sendStateEvent: .spaceChild)
                     }
                     .store(in: &cancellables)
+
+                roomProxy.membersPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] members in
+                        guard let self else { return }
+                        state.circleMembers = members
+                            .filter { $0.membership == .join && $0.userID != roomProxy.ownUserID && !$0.isServiceMember }
+                            .sorted()
+                            .map { RoomMemberDetails(withProxy: $0) }
+                    }
+                    .store(in: &cancellables)
+
+                await roomProxy.updateMembers()
             }
         }
     }
-    
+
     // MARK: - Public
-    
+
     override func process(viewAction: SpaceScreenViewAction) {
         MXLog.info("View model: received view action: \(viewAction)")
-        
+
         switch viewAction {
         case .spaceAction(.select(let spaceServiceRoom)) where state.editMode == .inactive:
             if spaceServiceRoom.isSpace {
@@ -129,6 +144,8 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
             }
         case .spaceAction(.join(let spaceServiceRoom)):
             Task { await join(spaceServiceRoom) }
+        case .selectCircleMember(let member):
+            Task { await openDirectChat(with: member) }
         case .leaveSpace:
             Task { await showLeaveSpaceConfirmation() }
         case .displayMembers(let roomProxy):
@@ -156,18 +173,18 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
             Task { await createChildRoom() }
         }
     }
-    
+
     func stop() {
         // If we pop this screen with running join operations, we don't want them to do anything.
         state.joiningRoomIDs.removeAll()
     }
-    
+
     func resetRoomList() {
         Task { await spaceRoomListProxy.resetAndWaitForFullReload(timeout: .seconds(10)) }
     }
-    
+
     // MARK: - Private
-    
+
     private func createChildRoom() async {
         switch await spaceServiceProxy.spaceForIdentifier(spaceID: spaceRoomListProxy.id) {
         case .success(.some(let space)):
@@ -177,19 +194,19 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
             userIndicatorController.submitIndicator(.init(title: L10n.errorUnknown))
         }
     }
-    
+
     private func join(_ spaceServiceRoom: SpaceServiceRoom) async {
         state.joiningRoomIDs.insert(spaceServiceRoom.id)
         defer { state.joiningRoomIDs.remove(spaceServiceRoom.id) }
-        
+
         guard case .success = await clientProxy.joinRoom(spaceServiceRoom.id, via: spaceServiceRoom.via) else {
             showFailureIndicator()
             return
         }
-        
+
         // We don't want to show the space room after joining it this way 🤷‍♂️
     }
-    
+
     private func selectSpace(_ spaceServiceRoom: SpaceServiceRoom) async {
         switch await spaceServiceProxy.spaceRoomList(spaceID: spaceServiceRoom.id) {
         case .success(let spaceRoomListProxy):
@@ -199,15 +216,48 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
             showFailureIndicator()
         }
     }
-    
+
+    private func openDirectChat(with member: RoomMemberDetails) async {
+        let userID = member.id
+        guard userID != clientProxy.userID else { return }
+
+        if let knownRoomID = knownDirectRooms[userID] {
+            actionsSubject.send(.selectRoom(roomID: knownRoomID))
+            return
+        }
+
+        if !pendingDirectRoomUserIDs.insert(userID).inserted {
+            return
+        }
+        defer { pendingDirectRoomUserIDs.remove(userID) }
+
+        switch clientProxy.directRoomForUserID(userID) {
+        case .success(.some(let roomID)):
+            knownDirectRooms[userID] = roomID
+            actionsSubject.send(.selectRoom(roomID: roomID))
+        case .success(.none):
+            switch await clientProxy.createDirectRoom(with: userID, expectedRoomName: member.name) {
+            case .success(let roomID):
+                knownDirectRooms[userID] = roomID
+                actionsSubject.send(.selectRoom(roomID: roomID))
+            case .failure(let error):
+                MXLog.error("Unable to create direct room for circle member: \(error)")
+                showFailureIndicator()
+            }
+        case .failure(let error):
+            MXLog.error("Unable to find direct room for circle member: \(error)")
+            showFailureIndicator()
+        }
+    }
+
     private func removeSelectedChildren() async {
         showRemovingIndicator()
         defer { hideRemovingIndicator() }
-        
+
         state.bindings.isPresentingRemoveChildrenConfirmation = false
-        
+
         MXLog.info("Removing \(state.editModeSelectedIDs.count) children from space \(spaceRoomListProxy.id)")
-        
+
         var removedIDs: [String] = [] // Using an intermediate array so the screen doesn't change until the operation finishes.
         for childID in state.editModeSelectedIDs {
             switch await spaceServiceProxy.removeChild(childID, from: spaceRoomListProxy.id) {
@@ -216,28 +266,28 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
             case .failure(let error):
                 MXLog.error("Failed removing room from space: \(error)")
                 showFailureIndicator()
-                
+
                 // Hide rooms that were successfully removed.
                 state.editModeSelectedIDs = state.editModeSelectedIDs.filter { !removedIDs.contains($0) }
                 state.editModeRemovedIDs.formUnion(removedIDs)
-                
+
                 return
             }
         }
-        
+
         MXLog.info("\(state.editModeSelectedIDs.count) children removed from space \(spaceRoomListProxy.id)")
-        
+
         await spaceRoomListProxy.resetAndWaitForFullReload(timeout: .seconds(10))
-        
+
         process(viewAction: .finishManagingChildren)
     }
-    
+
     private func showLeaveSpaceConfirmation() async {
         guard case let .success(leaveHandle) = await spaceServiceProxy.leaveSpace(spaceID: spaceRoomListProxy.id) else {
             showFailureIndicator()
             return
         }
-        
+
         let leaveSpaceViewModel = LeaveSpaceViewModel(spaceName: state.space.name,
                                                       canEditRolesAndPermissions: state.canEditRolesAndPermissions,
                                                       leaveHandle: leaveHandle,
@@ -266,31 +316,31 @@ class SpaceScreenViewModel: SpaceScreenViewModelType, SpaceScreenViewModelProtoc
             }
         }
         .store(in: &cancellables)
-        
+
         state.bindings.leaveSpaceViewModel = leaveSpaceViewModel
     }
-    
+
     // MARK: - Indicators
-    
+
     private static var removingIndicatorID: String {
         "\(Self.self)-Removing"
     }
-    
+
     private static var failureIndicatorID: String {
         "\(Self.self)-Failure"
     }
-    
+
     private func showRemovingIndicator() {
         userIndicatorController.submitIndicator(UserIndicator(id: Self.removingIndicatorID,
                                                               type: .modal(progress: .indeterminate, interactiveDismissDisabled: true, allowsInteraction: false),
                                                               title: L10n.commonRemoving,
                                                               persistent: true))
     }
-    
+
     private func hideRemovingIndicator() {
         userIndicatorController.retractIndicatorWithId(Self.removingIndicatorID)
     }
-    
+
     private func showFailureIndicator() {
         userIndicatorController.submitIndicator(UserIndicator(id: Self.failureIndicatorID,
                                                               type: .toast,

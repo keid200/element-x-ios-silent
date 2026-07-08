@@ -87,13 +87,13 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         chatsTabFlowCoordinator = ChatsTabFlowCoordinator(isNewLogin: isNewLogin,
                                                           navigationSplitCoordinator: chatsSplitCoordinator,
                                                           flowParameters: flowParameters)
-        chatsTabDetails = .init(tag: HomeTab.chats, title: L10n.screenHomeTabChats, icon: \.chat, selectedIcon: \.chatSolid)
+        chatsTabDetails = .init(tag: HomeTab.chats, title: "Messages", icon: \.chat, selectedIcon: \.chatSolid)
         chatsTabDetails.navigationSplitCoordinator = chatsSplitCoordinator
         
         let spacesSplitCoordinator = NavigationSplitCoordinator(placeholderCoordinator: PlaceholderScreenCoordinator(hideBrandChrome: flowParameters.appSettings.hideBrandChrome))
         spacesTabFlowCoordinator = SpacesTabFlowCoordinator(navigationSplitCoordinator: spacesSplitCoordinator,
                                                             flowParameters: flowParameters)
-        spacesTabDetails = .init(tag: HomeTab.spaces, title: L10n.screenHomeTabSpaces, icon: \.space, selectedIcon: \.spaceSolid)
+        spacesTabDetails = .init(tag: HomeTab.spaces, title: "Circles", icon: \.space, selectedIcon: \.spaceSolid)
         spacesTabDetails.navigationSplitCoordinator = spacesSplitCoordinator
         
         if flowParameters.appSettings.globalSearchEnabled, #available(iOS 26.0, *) {

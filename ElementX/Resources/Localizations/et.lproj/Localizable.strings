@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Sinu vestlused on automaatselt varundatud kasutades läbivat krüptimist. Kui peaksid kaotama ligipääsu kõikidele oma seadmetele, siis selle varukoopia taastamiseks ja oma digitaalse identiteedi säilitamiseks, on vaja taastevõtit.";
 "banner_set_up_recovery_submit" = "Seadista taastevõti";
 "banner_set_up_recovery_title" = "Varunda oma vestlused";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call ei võimalda selles Androidi versioonis Bluetoothi heliseadmete kasutamist. Palun vali mõni muu heliseade.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call ei võimalda selles Androidi versioonis Bluetoothi heliseadmete kasutamist. Palun vali mõni muu heliseade.";
 "common_about" = "Rakenduse teave";
 "common_acceptable_use_policy" = "Vastuvõetava kasutamise põhimõtted";
 "common_add_account" = "Lisa kasutajakonto";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Sa oled loomas kasutajakontot %@ teenuses";
 "screen_advanced_settings_developer_mode" = "Arendaja valikud";
 "screen_advanced_settings_developer_mode_description" = "Selle eelistuse sisselülitamisel lisanduvad rakendusse arendaja tööks vajalikud valikud.";
-"screen_advanced_settings_element_call_base_url" = "Element Calli kohandatud teenuseaadress";
-"screen_advanced_settings_element_call_base_url_description" = "Seadista kohandatud teenuseaadress Element Calli jaoks.";
+"screen_advanced_settings_element_call_base_url" = "Silent Calli kohandatud teenuseaadress";
+"screen_advanced_settings_element_call_base_url_description" = "Seadista kohandatud teenuseaadress Silent Calli jaoks.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "Vigane url. Palun vaata, et url algaks protokolliga (http/https) ning aadress ise oleks ka õige.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Peida jututubade kutsetest tunnuspildid";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Peida meedia eelvaated ajajoonel";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Kasuta erinevat teenusepakkujat, milleks võib olla ka sinu oma server või töökoha hallatav server.";
 "screen_change_account_provider_title" = "Muuda teenusepakkujat";
 "screen_change_server_error_element_pro_required_action_ios" = "Rakendustepood";
-"screen_change_server_error_element_pro_required_message" = "%1$@ koduserver eeldab Element Pro rakenduse kasutamist. Palun laadi ta alla rakendustepoest.";
-"screen_change_server_error_element_pro_required_title" = "Vajalik on Element Pro";
+"screen_change_server_error_element_pro_required_message" = "%1$@ koduserver eeldab Silent rakenduse kasutamist. Palun laadi ta alla rakendustepoest.";
+"screen_change_server_error_element_pro_required_title" = "Vajalik on Silent";
 "screen_change_server_error_invalid_homeserver" = "Me ei suutnud luuaühendust selle koduserveriga. Palun kontrolli, kas koduserveri aadress on õige. Kui aadress on õige, siis täiendavat teavet oskab sulle anda koduserveri haldaja.";
 "screen_change_server_error_invalid_well_known" = "Server pole saadaval vea tõttu well-known failis:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Valitud teenusepakkuja ei toeta „sliding sync“ režiimi. Rakenduse %1$@ kasutamiseks on vaja serverit uuendada.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Lisa meediumi";
 "screen_migration_message" = "Tänud, et ootad - seda toimingut on vaja teha vaid üks kord.";
 "screen_migration_title" = "Seadistame sinu kasutajakontot.";
-"screen_missing_key_backup_open_element_classic" = "Ava Element Classic";
-"screen_missing_key_backup_step_1" = "Ava Element Classic oma seadmes";
+"screen_missing_key_backup_open_element_classic" = "Ava Silent";
+"screen_missing_key_backup_step_1" = "Ava Silent oma seadmes";
 "screen_missing_key_backup_step_2_ios" = "Ava „Kasutaja seadistused“ → „Turvalisus“";
 "screen_missing_key_backup_step_3_ios" = "Keri valikuni „Turvaline varundus“ ja klõpsa „Seadista“";
 "screen_missing_key_backup_step_4" = "Võtmehoidla kasutuselevõtmiseks palun järgi juhendit";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Lisa emotikon";
 "screen_room_timeline_beginning_of_room" = "See on %1$@ jututoa algus.";
 "screen_room_timeline_beginning_of_room_no_name" = "See on antud vestluse algus.";
-"screen_room_timeline_legacy_call" = "Kõne pole nende rakenduste vahel toetatud. Palun küsi teiselt osapoolelt, kas ta oleks nõus kasutama Element X rakendust.";
+"screen_room_timeline_legacy_call" = "Kõne pole nende rakenduste vahel toetatud. Palun küsi teiselt osapoolelt, kas ta oleks nõus kasutama Silent rakendust.";
 "screen_room_timeline_less_reactions" = "Näita vähem";
 "screen_room_timeline_message_copied" = "Sõnum on kopeeritud";
 "screen_room_timeline_no_permission_to_post" = "Sul pole õigusi siia jututuppa kirjutada";

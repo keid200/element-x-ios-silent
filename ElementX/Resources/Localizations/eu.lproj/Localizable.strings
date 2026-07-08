@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Your chats are automatically backed up with end-to-end encryption. To restore this backup and retain your digital identity when you lose access to all your devices, you will need your recovery key.";
 "banner_set_up_recovery_submit" = "Konfiguratu berreskurapena";
 "banner_set_up_recovery_title" = "Back up your chats";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call does not support using Bluetooth audio devices in this Android version. Please select a different audio device.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call does not support using Bluetooth audio devices in this Android version. Please select a different audio device.";
 "common_about" = "Honi buruz";
 "common_acceptable_use_policy" = "Acceptable use policy";
 "common_add_account" = "Add an account";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "%@(e)n kontua sortzear zaude";
 "screen_advanced_settings_developer_mode" = "Garatzaile modua";
 "screen_advanced_settings_developer_mode_description" = "Gaitu garatzaileentzako ezaugarrietarako eta funtzionalitateetarako sarbidea izateko.";
-"screen_advanced_settings_element_call_base_url" = "Custom Element Call base URL";
-"screen_advanced_settings_element_call_base_url_description" = "Set a custom base URL for Element Call.";
+"screen_advanced_settings_element_call_base_url" = "Custom Silent Call base URL";
+"screen_advanced_settings_element_call_base_url_description" = "Set a custom base URL for Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "Invalid URL, please make sure you include the protocol (http/https) and the correct address.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Hide avatars in room invite requests";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Hide media previews in timeline";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Erabili beste kontu-hornitzaile bat, hala nola zure zerbitzari pribatua edo laneko kontu bat.";
 "screen_change_account_provider_title" = "Aldatu kontu-hornitzailea";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "The Element Pro app is required on %1$@. Please download it from the store.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro behar da";
+"screen_change_server_error_element_pro_required_message" = "The Silent app is required on %1$@. Please download it from the store.";
+"screen_change_server_error_element_pro_required_title" = "Silent behar da";
 "screen_change_server_error_invalid_homeserver" = "We couldn't reach this homeserver. Please check that you have entered the homeserver URL correctly. If the URL is correct, contact your homeserver administrator for further help.";
 "screen_change_server_error_invalid_well_known" = "Server isn't available due to an issue in the .well-known file:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Hautatutako kontu-hornitzailea ez da bateragarria Sliding Sync-ekin. Beharrezkoa da zerbitzaria bertsio-berritzea %1$@ erabiltzeko.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Add media";
 "screen_migration_message" = "Behin egin beharreko prozesua da; eskerrik asko itxaroteagatik.";
 "screen_migration_title" = "Zure kontua konfiguratzen.";
-"screen_missing_key_backup_open_element_classic" = "Open Element Classic";
-"screen_missing_key_backup_step_1" = "Open Element Classic on your device";
+"screen_missing_key_backup_open_element_classic" = "Open Silent";
+"screen_missing_key_backup_step_1" = "Open Silent on your device";
 "screen_missing_key_backup_step_2_ios" = "Go to User settings > Security";
 "screen_missing_key_backup_step_3_ios" = "Scroll down to Secure Backup and tap on Set up";
 "screen_missing_key_backup_step_4" = "Follow the instructions to enable your key storage";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Gehitu emojia";
 "screen_room_timeline_beginning_of_room" = "Hauxe da %1$@(r)en hasiera";
 "screen_room_timeline_beginning_of_room_no_name" = "Hau da elkarrizketaren hasiera.";
-"screen_room_timeline_legacy_call" = "Deia ez da bateragarria. Galdetu deika ari denari Element X aplikazio berria erabil dezakeen.";
+"screen_room_timeline_legacy_call" = "Deia ez da bateragarria. Galdetu deika ari denari Silent aplikazio berria erabil dezakeen.";
 "screen_room_timeline_less_reactions" = "Erakutsi gutxiago";
 "screen_room_timeline_message_copied" = "Mezua kopiatu da";
 "screen_room_timeline_no_permission_to_post" = "Ez duzu gela honetara mezuak bidaltzeko baimenik";

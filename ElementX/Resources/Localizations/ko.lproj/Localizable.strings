@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "대화 내용은 종단간 암호화 기술로 자동 백업됩니다. 모든 기기를 사용할 수 없는 상황에서 백업을 복구하고 디지털 신원을 유지하려면 복구 키가 반드시 필요합니다.";
 "banner_set_up_recovery_submit" = "복구 키 가져오기";
 "banner_set_up_recovery_title" = "대화 백업하기";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call은 이 Android 버전에서 Bluetooth 오디오 장치 사용을 지원하지 않습니다. 다른 오디오 장치를 선택하세요.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call은 이 Android 버전에서 Bluetooth 오디오 장치 사용을 지원하지 않습니다. 다른 오디오 장치를 선택하세요.";
 "common_about" = "정보";
 "common_acceptable_use_policy" = "이용 목적 제한 방침";
 "common_add_account" = "계정 추가";
@@ -574,7 +574,7 @@
 "screen_advanced_settings_developer_mode" = "개발자 모드";
 "screen_advanced_settings_developer_mode_description" = "개발자가 기능에 액세스할 수 있도록 합니다.";
 "screen_advanced_settings_element_call_base_url" = "사용자 정의 요소 호출 베이스 URL";
-"screen_advanced_settings_element_call_base_url_description" = "Element Call에 대한 사용자 지정 기본 URL을 설정하세요.";
+"screen_advanced_settings_element_call_base_url_description" = "Silent Call에 대한 사용자 지정 기본 URL을 설정하세요.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "URL이 잘못되었습니다. 프로토콜(http/https)과 올바른 주소를 포함했는지 확인하세요.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "방 초대 요청에서 아바타 숨기기";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "타임라인에서 미디어 미리 보기 숨기기";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "다른 계정 제공업체를 사용하세요. 예를 들어 자체 사설 서버나 업무용 계정 등을 사용할 수 있습니다.";
 "screen_change_account_provider_title" = "계정 제공자 변경";
 "screen_change_server_error_element_pro_required_action_ios" = "앱 스토어";
-"screen_change_server_error_element_pro_required_message" = "%1$@ 에는 Element Pro 앱이 필요합니다. 스토어에서 다운로드하시기 바랍니다.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro가 필요합니다";
+"screen_change_server_error_element_pro_required_message" = "%1$@ 에는 Silent 앱이 필요합니다. 스토어에서 다운로드하시기 바랍니다.";
+"screen_change_server_error_element_pro_required_title" = "Silent가 필요합니다";
 "screen_change_server_error_invalid_homeserver" = "이 홈 서버에 연결할 수 없습니다. 홈 서버 URL을 올바르게 입력했는지 확인하십시오. URL이 올바른 경우 홈 서버 관리자에게 추가 지원을 요청하십시오.";
 "screen_change_server_error_invalid_well_known" = "서버가 .well-known 파일의 문제로 인해 사용할 수 없습니다:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "선택한 계정 제공업체는 sliding sync를 지원하지 않습니다. %1$@를 사용하려면 서버를 업그레이드 해야 합니다.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "미디어 추가";
 "screen_migration_message" = "이 과정은 한 번만 진행됩니다, 기다려 주셔서 감사합니다.";
 "screen_migration_title" = "계정 설정하기";
-"screen_missing_key_backup_open_element_classic" = "Element Classic 열기";
-"screen_missing_key_backup_step_1" = "기기에서 Element Classic 앱을 열어 주세요";
+"screen_missing_key_backup_open_element_classic" = "Silent 열기";
+"screen_missing_key_backup_step_1" = "기기에서 Silent 앱을 열어 주세요";
 "screen_missing_key_backup_step_2_ios" = "사용자 설정 > 보안으로 이동하세요";
 "screen_missing_key_backup_step_3_ios" = "'보안 백업'이 나올 때까지 아래로 스크롤한 뒤 '설정'을 누르세요";
 "screen_missing_key_backup_step_4" = "안내에 따라 키 저장소를 활성화해 주세요";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "반응 추가";
 "screen_room_timeline_beginning_of_room" = "%1$@의 시작입니다.";
 "screen_room_timeline_beginning_of_room_no_name" = "대화의 시작입니다.";
-"screen_room_timeline_legacy_call" = "지원되지 않는 통화입니다. 발신자에게 새로운 Element X 앱을 사용할 수 있는지 문의하시기 바랍니다.";
+"screen_room_timeline_legacy_call" = "지원되지 않는 통화입니다. 발신자에게 새로운 Silent 앱을 사용할 수 있는지 문의하시기 바랍니다.";
 "screen_room_timeline_less_reactions" = "덜 보기";
 "screen_room_timeline_message_copied" = "메시지 복사됨";
 "screen_room_timeline_no_permission_to_post" = "이 방에 게시할 수 있는 권한이 없습니다.";

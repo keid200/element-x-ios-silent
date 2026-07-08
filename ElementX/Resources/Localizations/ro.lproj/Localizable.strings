@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Chaturile dumneavoastră sunt salvate automat cu criptare end-to-end. Pentru a restaura această copie de rezervă și a vă păstra identitatea digitală atunci când pierzdeți accesul la toate dispozitivele dumneavoastră, veți avea nevoie de cheia de recuperare.";
 "banner_set_up_recovery_submit" = "Obțineți cheia de recuperare";
 "banner_set_up_recovery_title" = "Faceți un backup al mesajelor";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call nu permite utilizarea dispozitivelor audio Bluetooth în această versiune Android. Vă rugăm să selectați un alt dispozitiv audio.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call nu permite utilizarea dispozitivelor audio Bluetooth în această versiune Android. Vă rugăm să selectați un alt dispozitiv audio.";
 "common_about" = "Despre";
 "common_acceptable_use_policy" = "Politică de utilizare rezonabilă";
 "common_add_account" = "Adăugare cont";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Sunteți pe cale să creați un cont pe %@";
 "screen_advanced_settings_developer_mode" = "Modul dezvoltator";
 "screen_advanced_settings_developer_mode_description" = "Activați pentru a avea acces la funcționalități pentru dezvoltatori.";
-"screen_advanced_settings_element_call_base_url" = "Adresa URL de bază Element Call";
-"screen_advanced_settings_element_call_base_url_description" = "Setați o adresă URL de bază personalizată pentru Element Call.";
+"screen_advanced_settings_element_call_base_url" = "Adresa URL de bază Silent Call";
+"screen_advanced_settings_element_call_base_url_description" = "Setați o adresă URL de bază personalizată pentru Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "URL invalid, vă rugăm să vă asigurați că includeți protocolul (http/https) și adresa corectă.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Ascundeți avatarele din invitațiile pentru camere";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Ascundeți previzualizările media în lista de mesaje";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Utilizați un alt furnizor de cont, cum ar fi propriul server privat sau un cont de serviciu.";
 "screen_change_account_provider_title" = "Schimbați furnizorul contului";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "Aplicația Element Pro este necesară pe %1$@. Descărcați-o din magazin.";
-"screen_change_server_error_element_pro_required_title" = "Este necesar Element Pro";
+"screen_change_server_error_element_pro_required_message" = "Aplicația Silent este necesară pe %1$@. Descărcați-o din magazin.";
+"screen_change_server_error_element_pro_required_title" = "Este necesar Silent";
 "screen_change_server_error_invalid_homeserver" = "Nu am putut accesa acest homeserver. Te rugăm să verifici că ai introdus corect adresa URL a homeserver-ului. Dacă adresa URL este corectă, contactează administratorul homeserver-ului pentru ajutor suplimentar.";
 "screen_change_server_error_invalid_well_known" = "Serverul nu este disponibil din cauza unei probleme în fișierul well-known:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Furnizorul de cont selectat nu acceptă Sliding sync. Pentru a utiliza funcția „ %1$@ ”, este necesară o actualizare a serverului.";
@@ -1018,7 +1018,7 @@
 "screen_migration_message" = "Acesta este un proces care se desfășoară o singură dată, vă mulțumim pentru așteptare.";
 "screen_migration_title" = "Contul dumneavoastră se configurează";
 "screen_missing_key_backup_open_element_classic" = "Deschideți Element Clasic";
-"screen_missing_key_backup_step_1" = "Deschideți Element Classic pe dispozitivul dumneavoastră";
+"screen_missing_key_backup_step_1" = "Deschideți Silent pe dispozitivul dumneavoastră";
 "screen_missing_key_backup_step_2_ios" = "Accesați Setări utilizator > Securitate";
 "screen_missing_key_backup_step_3_ios" = "Derulați în jos până la Backup securizat și atingeți Configurare";
 "screen_missing_key_backup_step_4" = "Urmați instrucțiunile pentru a activa stocarea cheilor";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Adăugați emoji";
 "screen_room_timeline_beginning_of_room" = "Acesta este începutul conversației %1$@.";
 "screen_room_timeline_beginning_of_room_no_name" = "Acesta este începutul acestei conversații.";
-"screen_room_timeline_legacy_call" = "Apel neacceptat. Întrebați apelantul dacă poate utiliza noua aplicație Element X.";
+"screen_room_timeline_legacy_call" = "Apel neacceptat. Întrebați apelantul dacă poate utiliza noua aplicație Silent.";
 "screen_room_timeline_less_reactions" = "Afișați mai puțin";
 "screen_room_timeline_message_copied" = "Mesaj copiat";
 "screen_room_timeline_no_permission_to_post" = "Nu aveți permisiunea de a posta în această cameră";

@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Irás criar uma conta em %@";
 "screen_advanced_settings_developer_mode" = "Modo de programador";
 "screen_advanced_settings_developer_mode_description" = "Permite o acesso a funcionalidades para programadores.";
-"screen_advanced_settings_element_call_base_url" = "URL base para Element Call personalizado";
-"screen_advanced_settings_element_call_base_url_description" = "Define um URL base para a Element Call.";
+"screen_advanced_settings_element_call_base_url" = "URL base para Silent Call personalizado";
+"screen_advanced_settings_element_call_base_url_description" = "Define um URL base para a Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "URL inválido, certifica-te de que incluis o protocolo (http/https) e o endereço correto.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Ocultar avatares nos pedidos de acesso a salas";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Ocultar pré-visualizações de multimédia na cronologia";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Utiliza um operador de conta diferente, como o teu próprio servidor privado ou uma conta de trabalho.";
 "screen_change_account_provider_title" = "Alterar operador de conta";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "%1$@ requer a Element Pro. Por favor, descarrega-a da app store.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro necessária";
+"screen_change_server_error_element_pro_required_message" = "%1$@ requer a Silent. Por favor, descarrega-a da app store.";
+"screen_change_server_error_element_pro_required_title" = "Silent necessária";
 "screen_change_server_error_invalid_homeserver" = "Não foi possível comunicar com este servidor. Por favor, verifica se introduziste o seu URL corretamente. Se sim, contacta o administrador para obteres mais ajuda.";
 "screen_change_server_error_invalid_well_known" = "O servidor não está disponível devido a um problema no ficheiro \".well-known\":\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "O operador de conta selecionado não suporta sincronização deslizante (sliding sync). É necessária uma atualização do servidor para poder usar a %1$@.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Add media";
 "screen_migration_message" = "Este processo só acontece uma única vez, obrigado por esperares.";
 "screen_migration_title" = "A configurar a tua conta…";
-"screen_missing_key_backup_open_element_classic" = "Open Element Classic";
-"screen_missing_key_backup_step_1" = "Open Element Classic on your device";
+"screen_missing_key_backup_open_element_classic" = "Open Silent";
+"screen_missing_key_backup_step_1" = "Open Silent on your device";
 "screen_missing_key_backup_step_2_ios" = "Go to User settings > Security";
 "screen_missing_key_backup_step_3_ios" = "Scroll down to Secure Backup and tap on Set up";
 "screen_missing_key_backup_step_4" = "Follow the instructions to enable your key storage";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Adicionar emoji";
 "screen_room_timeline_beginning_of_room" = "%1$@ começou aqui.";
 "screen_room_timeline_beginning_of_room_no_name" = "Esta conversa começou aqui.";
-"screen_room_timeline_legacy_call" = "Chamada não suportada. Pergunta se é possível utilizar a nova aplicação Element X.";
+"screen_room_timeline_legacy_call" = "Chamada não suportada. Pergunta se é possível utilizar a nova aplicação Silent.";
 "screen_room_timeline_less_reactions" = "Mostrar menos";
 "screen_room_timeline_message_copied" = "Mensagem copiada";
 "screen_room_timeline_no_permission_to_post" = "Não tens permissão para publicar nesta sala";

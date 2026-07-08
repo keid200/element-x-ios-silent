@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Ваші бесіди автоматично резервуються з використанням наскрізного шифрування. Щоб відновити цю резервну копію та зберегти свою цифрову ідентичність у разі втрати доступу до всіх своїх пристроїв, вам знадобиться ключ відновлення.";
 "banner_set_up_recovery_submit" = "Отримати ключ відновлення";
 "banner_set_up_recovery_title" = "Створити резервну копію своїх бесід";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call не підтримує використання аудіопристроїв Bluetooth у цій версії Android. Виберіть інший аудіопристрій.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call не підтримує використання аудіопристроїв Bluetooth у цій версії Android. Виберіть інший аудіопристрій.";
 "common_about" = "Відомості";
 "common_acceptable_use_policy" = "Політика прийнятного використання";
 "common_add_account" = "Додати обліковий запис";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Ви збираєтеся створити обліковий запис на %@";
 "screen_advanced_settings_developer_mode" = "Режим розробника";
 "screen_advanced_settings_developer_mode_description" = "Увімкніть доступ до функцій і можливостей для розробників.";
-"screen_advanced_settings_element_call_base_url" = "Користувацька URL-адреса Element Call";
-"screen_advanced_settings_element_call_base_url_description" = "Встановіть URL-адресу для Element Call.";
+"screen_advanced_settings_element_call_base_url" = "Користувацька URL-адреса Silent Call";
+"screen_advanced_settings_element_call_base_url_description" = "Встановіть URL-адресу для Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "Неправильна URL-адреса. Переконайтеся, що ви вказали протокол (http/https) та правильну адресу.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Сховати аватари у запитах на запрошення до кімнат";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Сховати попередній перегляд медіа у стрічці";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Використати іншого провайдера облікових записів, наприклад, власний приватний сервер або робочий обліковий запис.";
 "screen_change_account_provider_title" = "Змінити провайдера облікового запису";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "Необхідно встановити застосунок Element Pro на %1$@. Завантажте його з магазину.";
-"screen_change_server_error_element_pro_required_title" = "Потрібен Element Pro";
+"screen_change_server_error_element_pro_required_message" = "Необхідно встановити застосунок Silent на %1$@. Завантажте його з магазину.";
+"screen_change_server_error_element_pro_required_title" = "Потрібен Silent";
 "screen_change_server_error_invalid_homeserver" = "Не вдалося під'єднатися до цього домашнього сервера. Перевірте правильність введеної URL-адреси домашнього сервера. Якщо URL-адреса правильна, зверніться по додаткову допомогу до адміністратора домашнього сервера.";
 "screen_change_server_error_invalid_well_known" = "Сервер недоступний через помилку у файлі well-known:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Вибраний постачальник облікових записів не підтримує sliding sync. Щоб користуватися %1$@ необхідно оновити сервер.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Додати медіа";
 "screen_migration_message" = "Це одноразовий процес, дякую за очікування.";
 "screen_migration_title" = "Налаштування облікового запису.";
-"screen_missing_key_backup_open_element_classic" = "Відкрити Element Classic";
-"screen_missing_key_backup_step_1" = "Відкрийте Element Classic на своєму пристрої";
+"screen_missing_key_backup_open_element_classic" = "Відкрити Silent";
+"screen_missing_key_backup_step_1" = "Відкрийте Silent на своєму пристрої";
 "screen_missing_key_backup_step_2_ios" = "Перейдіть до «Налаштування користувача» > «Безпека»";
 "screen_missing_key_backup_step_3_ios" = "Прокрутіть вниз до розділу Безпечне резервне копіювання і натисніть Налаштувати.";
 "screen_missing_key_backup_step_4" = "Дотримуйтесь інструкцій, щоб увімкнути сховище ключів";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Додати смайлики";
 "screen_room_timeline_beginning_of_room" = "Це початок %1$@";
 "screen_room_timeline_beginning_of_room_no_name" = "Це початок цієї розмови.";
-"screen_room_timeline_legacy_call" = "Непідтримуваний виклик. Запитайте, чи може абонент використовувати новий застосунок Element X.";
+"screen_room_timeline_legacy_call" = "Непідтримуваний виклик. Запитайте, чи може абонент використовувати новий застосунок Silent.";
 "screen_room_timeline_less_reactions" = "Показувати менше";
 "screen_room_timeline_message_copied" = "Повідомлення скопійовано";
 "screen_room_timeline_no_permission_to_post" = "У вас немає дозволу на публікацію в цій кімнаті";

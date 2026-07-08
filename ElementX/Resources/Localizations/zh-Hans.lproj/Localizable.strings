@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "你的聊天已被端到端加密自动备份。如果你无法访问所有设备，则需要使用恢复密钥并保留数字身份。";
 "banner_set_up_recovery_submit" = "获取恢复密钥";
 "banner_set_up_recovery_title" = "备份聊天";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call 不支持在此 Android 版本中使用蓝牙音频设备。请选择其它音频设备。";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call 不支持在此 Android 版本中使用蓝牙音频设备。请选择其它音频设备。";
 "common_about" = "关于";
 "common_acceptable_use_policy" = "可接受的使用政策";
 "common_add_account" = "添加账户";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "你即将在 %@ 上创建账户";
 "screen_advanced_settings_developer_mode" = "开发者模式";
 "screen_advanced_settings_developer_mode_description" = "启用以访问适用于开发者的功能与特性。";
-"screen_advanced_settings_element_call_base_url" = "自定义 Element Call 基础 URL";
-"screen_advanced_settings_element_call_base_url_description" = "为 Element Call 设置基础 URL。";
+"screen_advanced_settings_element_call_base_url" = "自定义 Silent Call 基础 URL";
+"screen_advanced_settings_element_call_base_url_description" = "为 Silent Call 设置基础 URL。";
 "screen_advanced_settings_element_call_base_url_validation_error" = "URL 无效，请确保包含协议（http/https）和正确的地址。";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "在房间邀请请求中隐藏头像";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "在时间线上隐藏媒体预览";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "使用其它账户提供者，例如你自己的私有服务器或工作账户。";
 "screen_change_account_provider_title" = "更改账户提供者";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "%1$@ 要求 Element Pro。请从应用商店下载。";
-"screen_change_server_error_element_pro_required_title" = "需要 Element Pro";
+"screen_change_server_error_element_pro_required_message" = "%1$@ 要求 Silent。请从应用商店下载。";
+"screen_change_server_error_element_pro_required_title" = "需要 Silent";
 "screen_change_server_error_invalid_homeserver" = "我们无法访问此服务器。请检查输入的服务器 URL 是否正确。如果 URL 正确，请联系服务器管理员寻求进一步帮助。";
 "screen_change_server_error_invalid_well_known" = "由于 .well-known 文件存在问题，服务器不可用：\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "所选账户提供者不支持滑动同步。需要升级服务器才能使用 %1$@。";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "添加媒体";
 "screen_migration_message" = "此为一次性流程，感谢等待。";
 "screen_migration_title" = "设置账户。";
-"screen_missing_key_backup_open_element_classic" = "打开 Element Classic";
-"screen_missing_key_backup_step_1" = "在你的设备上打开 Element Classic";
+"screen_missing_key_backup_open_element_classic" = "打开 Silent";
+"screen_missing_key_backup_step_1" = "在你的设备上打开 Silent";
 "screen_missing_key_backup_step_2_ios" = "前往“用户设置” > “安全”";
 "screen_missing_key_backup_step_3_ios" = "向下滚动到“安全备份”并点击“设置”。";
 "screen_missing_key_backup_step_4" = "按指示启用密钥存储";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "添加反应";
 "screen_room_timeline_beginning_of_room" = "这是房间 %1$@ 的开头。";
 "screen_room_timeline_beginning_of_room_no_name" = "这是本对话的开始。";
-"screen_room_timeline_legacy_call" = "不受支持的通话。询问呼叫方是否可以使用新的 Element X app。";
+"screen_room_timeline_legacy_call" = "不受支持的通话。询问呼叫方是否可以使用新的 Silent app。";
 "screen_room_timeline_less_reactions" = "折叠";
 "screen_room_timeline_message_copied" = "消息已复制";
 "screen_room_timeline_no_permission_to_post" = "你无权在此房间发言";

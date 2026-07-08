@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "您的聊天會自動使用端到端加密備份。若您失去對您所有裝置的存取權，且要還原此備份並保留您的數位身份的話，您就會需要您的還原金鑰。";
 "banner_set_up_recovery_submit" = "取得還原金鑰";
 "banner_set_up_recovery_title" = "備份您的聊天";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call 不支援在此 Android 版本中使用藍牙音訊裝置。請選取其他音訊裝置。";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call 不支援在此 Android 版本中使用藍牙音訊裝置。請選取其他音訊裝置。";
 "common_about" = "關於";
 "common_acceptable_use_policy" = "可接受使用政策";
 "common_add_account" = "新增帳號";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "使用不同的帳戶提供者，例如您自己的伺服器或工作帳號。";
 "screen_change_account_provider_title" = "更改帳號提供者";
 "screen_change_server_error_element_pro_required_action_ios" = "應用程式商店";
-"screen_change_server_error_element_pro_required_message" = "%1$@ 需要 Element Pro 應用程式。請從商店下載。";
-"screen_change_server_error_element_pro_required_title" = "需要 Element Pro";
+"screen_change_server_error_element_pro_required_message" = "%1$@ 需要 Silent 應用程式。請從商店下載。";
+"screen_change_server_error_element_pro_required_title" = "需要 Silent";
 "screen_change_server_error_invalid_homeserver" = "我們無法連線至此家伺服器。請檢查您是否已正確輸入家伺服器 URL。若 URL 正確，請聯絡您家伺服器的管理員以取得進一步協助。";
 "screen_change_server_error_invalid_well_known" = "因為 well-known 檔案的問題，伺服器不可用：\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "選定的帳號提供者不支援 sliding sync。必須升級伺服器才能使用 %1$@。";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Add media";
 "screen_migration_message" = "這是一次性的程序，感謝您耐心等候。";
 "screen_migration_title" = "正在設定您的帳號。";
-"screen_missing_key_backup_open_element_classic" = "開啟 Element Classic";
-"screen_missing_key_backup_step_1" = "在您的裝置上開啟 Element Classic";
+"screen_missing_key_backup_open_element_classic" = "開啟 Silent";
+"screen_missing_key_backup_step_1" = "在您的裝置上開啟 Silent";
 "screen_missing_key_backup_step_2_ios" = "前往使用者設定→安全性";
 "screen_missing_key_backup_step_3_ios" = "往下捲動至「安全備份」，然後點選「設定」";
 "screen_missing_key_backup_step_4" = "按照說明啟用您的金鑰儲存空間";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "新增表情符號";
 "screen_room_timeline_beginning_of_room" = "這是 %1$@ 的開頭。";
 "screen_room_timeline_beginning_of_room_no_name" = "這是此對話的開頭。";
-"screen_room_timeline_legacy_call" = "不支援的通話。詢問通話者是否可以使用新的 Element X 應用程式。";
+"screen_room_timeline_legacy_call" = "不支援的通話。詢問通話者是否可以使用新的 Silent 應用程式。";
 "screen_room_timeline_less_reactions" = "較少";
 "screen_room_timeline_message_copied" = "訊息已複製";
 "screen_room_timeline_no_permission_to_post" = "您沒有權限在此聊天室傳送訊息";

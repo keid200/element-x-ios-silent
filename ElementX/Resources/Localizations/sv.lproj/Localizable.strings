@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Skapa en ny återställningsnyckel som kan användas för att återställa din krypterade meddelandehistorik om du förlorar åtkomst till dina enheter.";
 "banner_set_up_recovery_submit" = "Ställ in återställning";
 "banner_set_up_recovery_title" = "Ställ in återställning";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call stöder inte användning av Bluetooth-ljudenheter i den här Android-versionen. Välj en annan ljudenhet.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call stöder inte användning av Bluetooth-ljudenheter i den här Android-versionen. Välj en annan ljudenhet.";
 "common_about" = "Om";
 "common_acceptable_use_policy" = "Policy för godtagbar användning";
 "common_add_account" = "Lägg till ett konto";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Du är på väg att skapa ett konto på %@";
 "screen_advanced_settings_developer_mode" = "Utvecklarläge";
 "screen_advanced_settings_developer_mode_description" = "Aktivera för att ha tillgång till funktionalitet för utvecklare.";
-"screen_advanced_settings_element_call_base_url" = "Anpassad bas-URL för Element Call";
-"screen_advanced_settings_element_call_base_url_description" = "Ange en anpassad bas-URL för Element Call.";
+"screen_advanced_settings_element_call_base_url" = "Anpassad bas-URL för Silent Call";
+"screen_advanced_settings_element_call_base_url_description" = "Ange en anpassad bas-URL för Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "Ogiltig URL, se till att du inkluderar protokollet (http/https) och rätt adress.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Dölj avatarer i förfrågningar om rumsinbjudningar";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Dölj förhandsgranskningar av media i tidslinjen";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Använd en annan kontoleverantör, till exempel din egen privata server eller ett jobbkonto.";
 "screen_change_account_provider_title" = "Byt kontoleverantör";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "Element Pro-appen krävs på %1$@. Ladda ner den från butiken.";
-"screen_change_server_error_element_pro_required_title" = "Element Pro krävs";
+"screen_change_server_error_element_pro_required_message" = "Silent-appen krävs på %1$@. Ladda ner den från butiken.";
+"screen_change_server_error_element_pro_required_title" = "Silent krävs";
 "screen_change_server_error_invalid_homeserver" = "Vi kunde inte nå den här hemservern. Kontrollera att du har angett hemserverns URL korrekt. Om URL:en är korrekt kontaktar du administratören för hemservern för ytterligare hjälp.";
 "screen_change_server_error_invalid_well_known" = "Sliding Sync är inte tillgängligt på grund av ett problem i .well-known-filen:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Den valda kontoleverantören stöder inte sliding sync. En uppgradering till servern behövs för att använda %1$@.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Add media";
 "screen_migration_message" = "Detta är en engångsprocess, tack för att du väntar.";
 "screen_migration_title" = "Konfigurerar ditt konto";
-"screen_missing_key_backup_open_element_classic" = "Open Element Classic";
-"screen_missing_key_backup_step_1" = "Open Element Classic on your device";
+"screen_missing_key_backup_open_element_classic" = "Open Silent";
+"screen_missing_key_backup_step_1" = "Open Silent on your device";
 "screen_missing_key_backup_step_2_ios" = "Go to User settings > Security";
 "screen_missing_key_backup_step_3_ios" = "Scroll down to Secure Backup and tap on Set up";
 "screen_missing_key_backup_step_4" = "Follow the instructions to enable your key storage";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Lägg till emoji";
 "screen_room_timeline_beginning_of_room" = "Det här är början på %1$@.";
 "screen_room_timeline_beginning_of_room_no_name" = "Detta är början på det här samtalet.";
-"screen_room_timeline_legacy_call" = "Samtalet stöds inte. Fråga om den som ringer kan använda den nya Element X-appen.";
+"screen_room_timeline_legacy_call" = "Samtalet stöds inte. Fråga om den som ringer kan använda den nya Silent-appen.";
 "screen_room_timeline_less_reactions" = "Visa mindre";
 "screen_room_timeline_message_copied" = "Meddelande kopierat";
 "screen_room_timeline_no_permission_to_post" = "Du är inte behörig att göra inlägg i det här rummet";

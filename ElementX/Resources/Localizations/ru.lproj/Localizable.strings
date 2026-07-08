@@ -206,7 +206,7 @@
 "banner_set_up_recovery_content" = "Ваши чаты автоматически резервируются с использованием сквозного шифрования. Для восстановления этой резервной копии и сохранения вашей цифровой личности в случае потери доступа ко всем вашим устройствам вам потребуется ключ восстановления.";
 "banner_set_up_recovery_submit" = "Получить ключ восстановления";
 "banner_set_up_recovery_title" = "Сделайте резервную копию своих чатов.";
-"call_invalid_audio_device_bluetooth_devices_disabled" = "Element Call не поддерживает использование устройств Bluetooth в данной версии Android. Пожалуйста, выберите другое устройство.";
+"call_invalid_audio_device_bluetooth_devices_disabled" = "Silent Call не поддерживает использование устройств Bluetooth в данной версии Android. Пожалуйста, выберите другое устройство.";
 "common_about" = "О приложении";
 "common_acceptable_use_policy" = "Политика допустимого использования";
 "common_add_account" = "Добавить аккаунт";
@@ -573,8 +573,8 @@
 "screen_account_provider_signup_title" = "Вы собираетесь создать аккаунт на %@";
 "screen_advanced_settings_developer_mode" = "Режим разработчика";
 "screen_advanced_settings_developer_mode_description" = "Предоставьте разработчикам доступ к функциям и функциональным возможностям.";
-"screen_advanced_settings_element_call_base_url" = "URL сервера Element Call";
-"screen_advanced_settings_element_call_base_url_description" = "Укажите собственный сервер Element Call.";
+"screen_advanced_settings_element_call_base_url" = "URL сервера Silent Call";
+"screen_advanced_settings_element_call_base_url_description" = "Укажите собственный сервер Silent Call.";
 "screen_advanced_settings_element_call_base_url_validation_error" = "Адрес указан неверно, удостоверьтесь, что вы указали протокол (http/https) и правильный адрес.";
 "screen_advanced_settings_hide_invite_avatars_toggle_title" = "Скрывать аватары в приглашениях";
 "screen_advanced_settings_hide_timeline_media_toggle_title" = "Скрывать предпросмотр медиа в истории сообщений";
@@ -693,8 +693,8 @@
 "screen_change_account_provider_subtitle" = "Используйте другой сервер, например, собственный частный сервер или рабочую учетную запись.";
 "screen_change_account_provider_title" = "Сменить сервер";
 "screen_change_server_error_element_pro_required_action_ios" = "App Store";
-"screen_change_server_error_element_pro_required_message" = "Требуется приложение Element Pro для %1$@. Пожалуйста, загрузите его из магазина.";
-"screen_change_server_error_element_pro_required_title" = "Требуется Element Pro";
+"screen_change_server_error_element_pro_required_message" = "Требуется приложение Silent для %1$@. Пожалуйста, загрузите его из магазина.";
+"screen_change_server_error_element_pro_required_title" = "Требуется Silent";
 "screen_change_server_error_invalid_homeserver" = "Нам не удалось связаться с этим сервером. Убедитесь, что вы правильно указали адрес сервера. Если адрес указан правильно, обратитесь к администратору сервера за дополнительной помощью.";
 "screen_change_server_error_invalid_well_known" = "Сервер недоступен из-за проблемы в файле .well-known:\n%1$@";
 "screen_change_server_error_no_sliding_sync_message" = "Выбранный сервер не поддерживает Sliding sync. Для использования %1$@ необходимо обновление сервера.";
@@ -1017,8 +1017,8 @@
 "screen_media_upload_preview_title" = "Добавить медиа";
 "screen_migration_message" = "Это единоразовая процедура, спасибо, что подождали.";
 "screen_migration_title" = "Настройка Вашего аккаунта.";
-"screen_missing_key_backup_open_element_classic" = "Открыть Element Classic";
-"screen_missing_key_backup_step_1" = "Откройте Element Classic на своем устройстве.";
+"screen_missing_key_backup_open_element_classic" = "Открыть Silent";
+"screen_missing_key_backup_step_1" = "Откройте Silent на своем устройстве.";
 "screen_missing_key_backup_step_2_ios" = "Перейдите в Настройки пользователя > Безопасность";
 "screen_missing_key_backup_step_3_ios" = "Прокрутите вниз до раздела Резервное копирование и нажмите Настроить";
 "screen_missing_key_backup_step_4" = "Следуйте инструкциям, чтобы активировать хранилище ключей";
@@ -1372,7 +1372,7 @@
 "screen_room_timeline_add_reaction" = "Добавить реакцию";
 "screen_room_timeline_beginning_of_room" = "Это начало %1$@.";
 "screen_room_timeline_beginning_of_room_no_name" = "Это начало беседы.";
-"screen_room_timeline_legacy_call" = "Звонок не поддерживается. Собеседник должен использовать новое приложение Element X.";
+"screen_room_timeline_legacy_call" = "Звонок не поддерживается. Собеседник должен использовать новое приложение Silent.";
 "screen_room_timeline_less_reactions" = "Показать меньше";
 "screen_room_timeline_message_copied" = "Сообщение скопировано";
 "screen_room_timeline_no_permission_to_post" = "Вы не можете писать сообщения в этой комнате";

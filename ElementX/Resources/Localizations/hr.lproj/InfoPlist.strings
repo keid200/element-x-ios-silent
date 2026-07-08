@@ -1,6 +1,6 @@
-"NSCameraUsageDescription" = "Element X treba pristup kameri kako biste mogli fotografirati i snimati videozapise te ih slati kao poruke.";
+"NSCameraUsageDescription" = "Silent treba pristup kameri kako biste mogli fotografirati i snimati videozapise te ih slati kao poruke.";
 "NSFaceIDUsageDescription" = "Face ID se koristi za zaštitu pristupa vašem računu.";
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "Za dijeljenje vaše lokacije uživo, Element X treba pristup lokaciji kada je aplikacija u pozadini.";
-"NSLocationWhenInUseUsageDescription" = "Omogućite pristup lokaciji kako bi Element X mogao dijeliti vašu lokaciju.";
-"NSMicrophoneUsageDescription" = "Element X treba pristup mikrofonu kako biste mogli snimati i slati poruke sa zvukom.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Za dijeljenje vaše lokacije uživo, Silent treba pristup lokaciji kada je aplikacija u pozadini.";
+"NSLocationWhenInUseUsageDescription" = "Omogućite pristup lokaciji kako bi Silent mogao dijeliti vašu lokaciju.";
+"NSMicrophoneUsageDescription" = "Silent treba pristup mikrofonu kako biste mogli snimati i slati poruke sa zvukom.";
 "NSPhotoLibraryUsageDescription" = "To vam omogućuje spremanje slika i videozapisa u fotogaleriju.";
