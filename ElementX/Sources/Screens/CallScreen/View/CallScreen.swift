@@ -551,12 +551,15 @@ private struct CallView: UIViewRepresentable {
             }
 
             [data-testid="incall_leave"] {
-              background: #ec1238 !important;
-              box-shadow: none !important;
+              background: rgba(30, 30, 30, 0.24) !important;
+              box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.26) !important;
             }
 
-            [data-testid="incall_leave"] svg {
-              color: #fff !important;
+            [data-testid="incall_leave"] svg,
+            [data-testid="incall_leave"] svg * {
+              color: #ff2f4f !important;
+              fill: #ff2f4f !important;
+              stroke: #ff2f4f !important;
             }
 
             @media (max-width: 360px) {
