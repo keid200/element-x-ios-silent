@@ -49,6 +49,15 @@ public class CompoundColors {
     init() {
         let tokens = CompoundColorTokens()
         self.tokens = tokens
+        decorativeColors = [
+            .init(background: tokens.bgDecorative1, text: tokens.textDecorative1),
+            .init(background: tokens.bgDecorative2, text: tokens.textDecorative2),
+            .init(background: tokens.bgDecorative3, text: tokens.textDecorative3),
+            .init(background: tokens.bgDecorative4, text: tokens.textDecorative4),
+            .init(background: tokens.bgDecorative5, text: tokens.textDecorative5),
+            .init(background: tokens.bgDecorative6, text: tokens.textDecorative6)
+        ]
+
         let silentBrandBlue = Color(red: 0.082, green: 0.333, blue: 0.878)
         let silentBrandBluePressed = Color(red: 0.051, green: 0.247, blue: 0.706)
         let silentBrandBlueSoft = Color(red: 0.91, green: 0.95, blue: 1.0)
@@ -65,15 +74,6 @@ public class CompoundColors {
         overrides[\.gradientActionStop2] = silentBrandBlue
         overrides[\.gradientActionStop3] = silentBrandBluePressed
         overrides[\.gradientActionStop4] = silentBrandBluePressed
-
-        decorativeColors = [
-            .init(background: tokens.bgDecorative1, text: tokens.textDecorative1),
-            .init(background: tokens.bgDecorative2, text: tokens.textDecorative2),
-            .init(background: tokens.bgDecorative3, text: tokens.textDecorative3),
-            .init(background: tokens.bgDecorative4, text: tokens.textDecorative4),
-            .init(background: tokens.bgDecorative5, text: tokens.textDecorative5),
-            .init(background: tokens.bgDecorative6, text: tokens.textDecorative6)
-        ]
     }
 
     // MARK: - Decorative Colors
