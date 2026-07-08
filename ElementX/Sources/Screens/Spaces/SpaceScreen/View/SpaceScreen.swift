@@ -94,7 +94,7 @@ struct SpaceScreen: View {
 
     var circleEmptyState: some View {
         VStack(spacing: 12) {
-            CompoundIcon(\.userProfile, size: .large, relativeTo: .compound.headingMD)
+            CompoundIcon(\.userProfile, size: .custom(32), relativeTo: .compound.headingMD)
                 .foregroundStyle(.compound.iconAccentPrimary)
 
             Text("No contacts found")
