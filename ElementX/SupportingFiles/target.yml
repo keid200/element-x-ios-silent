@@ -96,7 +96,7 @@ targets:
           location
         ]
         BGTaskSchedulerPermittedIdentifiers: [
-          io.element.elementx.background.refresh
+          com.cybershield.silent.background.refresh
         ]
         UTExportedTypeDeclarations:
         - UTTypeConformsTo: [public.text]
@@ -114,23 +114,17 @@ targets:
       properties:
         aps-environment: development
         com.apple.developer.associated-domains:
-        - applinks:element.io
-        - applinks:app.element.io
-        - applinks:staging.element.io
-        - applinks:develop.element.io
-        - applinks:mobile.element.io
+        - applinks:cybershieldits.com
+        - webcredentials:cybershieldits.com
         - applinks:matrix.to
         # - applinks:localhost?mode=developer # developer mode only works with https (but self-signed is fine).
-        - webcredentials:*.element.io
         com.apple.developer.usernotifications.communication: true
         com.apple.security.app-sandbox: true
         com.apple.security.application-groups:
         - $(APP_GROUP_IDENTIFIER)
-        - $(CLASSIC_APP_GROUP_IDENTIFIER)
         com.apple.security.network.client: true
         keychain-access-groups:
         - $(KEYCHAIN_ACCESS_GROUP_IDENTIFIER)
-        - $(CLASSIC_APP_KEYCHAIN_ACCESS_GROUP_IDENTIFIER)
 
     settings:
       base:
@@ -149,6 +143,14 @@ targets:
         SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
         OTHER_SWIFT_FLAGS:
         - "-DIS_MAIN_APP"
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+          CODE_SIGN_IDENTITY: Apple Development
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: Silent AppStore
 
     preBuildScripts:
     - name: 🛠 SwiftGen

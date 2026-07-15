@@ -14,6 +14,11 @@ import SwiftUI
 
 typealias RoomScreenViewModelType = StateStoreViewModel<RoomScreenViewState, RoomScreenViewAction>
 
+enum ScreenshotNotificationConstants {
+    nonisolated static let noticeBody = "Screenshot taken"
+    nonisolated static let duplicateCooldown: TimeInterval = 2
+}
+
 class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol {
     private let clientProxy: ClientProxyProtocol
     private let roomProxy: JoinedRoomProxyProtocol
@@ -26,6 +31,10 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
     
     private var identityPinningViolations = [String: RoomMemberProxyProtocol]()
     private var identityVerificationViolations = [String: RoomMemberProxyProtocol]()
+    private var presenceTask: Task<Void, Never>?
+    private let presenceRefreshInterval: Duration = .seconds(60)
+    private var screenshotNotificationTask: Task<Void, Never>?
+    private var lastScreenshotNotificationDate: Date?
     
     private let actionsSubject: PassthroughSubject<RoomScreenViewModelAction, Never> = .init()
     var actions: AnyPublisher<RoomScreenViewModelAction, Never> {
@@ -127,6 +136,8 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
         // When navigating away from the room, we need to mark the room as fully read.
         // This does not affect the read receipts only the notification count.
         Task { await roomProxy.markAsRead(receiptType: .fullyRead) }
+        presenceTask?.cancel()
+        screenshotNotificationTask?.cancel()
         // Work around QLPreviewController dismissal issues, see the InteractiveQuickLookModifier.
         state.bindings.mediaPreviewViewModel = nil
     }
@@ -178,7 +189,20 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
         roomProxy.infoPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] roomInfo in
-                self?.updateRoomInfo(roomInfo)
+                guard let self else { return }
+                updateRoomInfo(roomInfo)
+                updatePresence()
+            }
+            .store(in: &cancellables)
+        
+        roomProxy.membersPublisher
+            .map { [weak self] members in
+                self?.dmRecipientUserID(members: members)
+            }
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updatePresence()
             }
             .store(in: &cancellables)
         
@@ -232,6 +256,14 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
             .sink { [weak self] _ in
                 self?.roomProxy.timeline.retryDecryption(sessionIDs: nil)
+                self?.updatePresence()
+            }
+            .store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.handleScreenshotTaken()
             }
             .store(in: &cancellables)
     }
@@ -285,6 +317,84 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
         }
         
         state.dmRecipientVerificationState = userIdentity.verificationState
+    }
+    
+    private func updatePresence() {
+        presenceTask?.cancel()
+        
+        guard state.isDM, let userID = dmRecipientUserID(members: roomProxy.membersPublisher.value) else {
+            state.roomSubtitle = nil
+            return
+        }
+        
+        presenceTask = Task { [weak self] in
+            guard let self else { return }
+            
+            while !Task.isCancelled {
+                await refreshPresence(for: userID)
+                
+                do {
+                    try await Task.sleep(for: presenceRefreshInterval)
+                } catch {
+                    return
+                }
+            }
+        }
+    }
+    
+    private func refreshPresence(for userID: String) async {
+        let result = await clientProxy.presence(for: userID)
+        guard !Task.isCancelled else { return }
+        
+        await MainActor.run {
+            guard self.state.isDM,
+                  self.dmRecipientUserID(members: self.roomProxy.membersPublisher.value) == userID else {
+                return
+            }
+            
+            switch result {
+            case .success(let presence):
+                self.state.roomSubtitle = presence.roomHeaderSubtitle
+            case .failure:
+                self.state.roomSubtitle = nil
+            }
+        }
+    }
+    
+    private func handleScreenshotTaken() {
+        guard state.isDM else { return }
+        
+        let now = Date()
+        if let lastScreenshotNotificationDate,
+           now.timeIntervalSince(lastScreenshotNotificationDate) < ScreenshotNotificationConstants.duplicateCooldown {
+            return
+        }
+        lastScreenshotNotificationDate = now
+        
+        screenshotNotificationTask = Task { [weak self] in
+            await self?.sendScreenshotNotification()
+        }
+    }
+    
+    private func sendScreenshotNotification() async {
+        do {
+            let noticeContent = NoticeMessageContent(body: ScreenshotNotificationConstants.noticeBody, formatted: nil)
+            let messageContent = try messageEventContentNew(msgtype: .notice(content: noticeContent))
+            let result = await roomProxy.timeline.sendMessageEventContent(messageContent)
+            
+            guard case .failure(let error) = result else { return }
+            MXLog.error("Failed sending screenshot notification with error: \(error)")
+        } catch {
+            MXLog.error("Failed building screenshot notification with error: \(error)")
+        }
+    }
+    
+    private func dmRecipientUserID(members: [RoomMemberProxyProtocol]) -> String? {
+        guard roomProxy.infoPublisher.value.isDM else {
+            return nil
+        }
+        
+        return members.first { $0.userID != roomProxy.ownUserID }?.userID
     }
     
     private func resolveIdentityPinningViolation(_ userID: String) async {

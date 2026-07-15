@@ -55,14 +55,17 @@ struct HomeScreen: View {
         ToolbarItem(placement: .navigationBarLeading) {
             settingsButton
                 .buttonStyle(.borderless)
+                .frame(width: 44, height: 44)
         }
 
         ToolbarItem(placement: .primaryAction) {
             if #available(iOS 26, *) {
                 newRoomButton
+                    .frame(width: 44, height: 44)
             } else {
                 newRoomButton
                     .buttonStyle(.compound(.super, size: .toolbarIcon))
+                    .frame(width: 44, height: 44)
             }
         }
 
@@ -72,16 +75,28 @@ struct HomeScreen: View {
         Button {
             context.send(viewAction: .showSettings)
         } label: {
-            LoadableAvatarImage(url: context.viewState.userProfile.avatarURL,
-                                name: context.viewState.userProfile.displayName,
-                                contentID: context.viewState.userProfile.id,
-                                avatarSize: .user(on: .chats),
-                                mediaProvider: context.mediaProvider)
-                .accessibilityIdentifier(A11yIdentifiers.homeScreen.userAvatar)
-                .clipShape(.circle)
-                .overlayBadge(10, isBadged: context.viewState.requiresExtraAccountSetup)
-                .compositingGroup()
+            ZStack(alignment: .bottomTrailing) {
+                LoadableAvatarImage(url: context.viewState.userProfile.avatarURL,
+                                    name: context.viewState.userProfile.displayName,
+                                    contentID: context.viewState.userProfile.id,
+                                    avatarSize: .user(on: .chats),
+                                    mediaProvider: context.mediaProvider)
+                    .accessibilityIdentifier(A11yIdentifiers.homeScreen.userAvatar)
+                    .clipShape(.circle)
+                
+                Circle()
+                    .fill(.green)
+                    .frame(width: 10, height: 10)
+                    .overlay {
+                        Circle()
+                            .stroke(Color.white, lineWidth: 2)
+                    }
+                    .accessibilityHidden(true)
+            }
+            .frame(width: 36, height: 36)
+            .overlayBadge(10, isBadged: context.viewState.requiresExtraAccountSetup)
         }
+        .frame(width: 44, height: 44)
         .accessibilityLabel(L10n.commonSettings)
     }
 
@@ -94,6 +109,7 @@ struct HomeScreen: View {
             } label: {
                 CompoundIcon(\.plus)
             }
+            .frame(width: 44, height: 44)
             .accessibilityLabel(L10n.actionStartChat)
             .accessibilityIdentifier(A11yIdentifiers.homeScreen.startChat)
         default:

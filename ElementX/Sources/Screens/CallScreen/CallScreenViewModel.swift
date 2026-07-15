@@ -30,6 +30,10 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     @CancellableTask
     private var timeoutTask: Task<Void, Never>?
     
+    private var audioRouteTasks = [Task<Void, Never>]()
+    
+    private var prefersEarpieceAudioRoute = true
+    
     /// Designated initialiser
     /// - Parameters:
     ///   - elementCallService: service responsible for setting up CallKit
@@ -101,7 +105,10 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         NotificationCenter.default
             .publisher(for: AVAudioSession.routeChangeNotification)
             .sink { [weak self] _ in
-                Task { await self?.updateOutputsListOnWeb() }
+                guard let self else { return }
+                logCurrentAudioRoute(context: "route changed")
+                enforcePreferredAudioRoute(after: .milliseconds(250))
+                Task { await self.updateOutputsListOnWeb() }
             }
             .store(in: &cancellables)
         
@@ -122,6 +129,7 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         case .endCall:
             actionsSubject.send(.dismiss)
         case .mediaCapturePermissionGranted:
+            enforcePreferredAudioRoute(after: .milliseconds(250))
             Task { await updateOutputsListOnWeb() }
         case .outputDeviceSelected(deviceID: let deviceID):
             handleOutputDeviceSelected(deviceID: deviceID)
@@ -135,7 +143,10 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
             await hangup()
         }
         
+        audioRouteTasks.forEach { $0.cancel() }
+        audioRouteTasks.removeAll()
         elementCallService.tearDownCallSession()
+        resetCallAudioRoute()
         UIDevice.current.isProximityMonitoringEnabled = false
     }
     
@@ -193,8 +204,15 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
                 return
             }
             
+            prefersEarpieceAudioRoute = true
+            setCallAudioRoute(toEarpiece: true, reason: "call start default")
+            UIDevice.current.isProximityMonitoringEnabled = true
+            
             await elementCallService.setupCallSession(roomID: configuration.roomProxy.id,
                                                       roomDisplayName: configuration.roomProxy.infoPublisher.value.displayName ?? configuration.roomProxy.id)
+            enforcePreferredAudioRoute(after: .milliseconds(100))
+            enforcePreferredAudioRoute(after: .milliseconds(500))
+            enforcePreferredAudioRoute(after: .seconds(2))
         }
         
         timeoutTask = Task { [weak self] in
@@ -213,9 +231,60 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     private static let earpieceID = "earpiece-id"
     
     private func handleOutputDeviceSelected(deviceID: String) {
-        let isEarpiece = deviceID == Self.earpieceID
-        MXLog.info("Is earpiece: \(isEarpiece)")
+        let isEarpiece = deviceID == Self.earpieceID || deviceID.localizedCaseInsensitiveContains("earpiece")
+        MXLog.info("Selected call output device: \(deviceID). Is earpiece: \(isEarpiece)")
+        prefersEarpieceAudioRoute = isEarpiece
+        setCallAudioRoute(toEarpiece: isEarpiece, reason: "user selected \(deviceID)")
+        enforcePreferredAudioRoute(after: .milliseconds(250))
+        enforcePreferredAudioRoute(after: .seconds(1))
         UIDevice.current.isProximityMonitoringEnabled = isEarpiece
+    }
+    
+    private func setCallAudioRoute(toEarpiece: Bool, reason: String) {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetoothHFP])
+            try audioSession.setActive(true)
+            try audioSession.overrideOutputAudioPort(toEarpiece ? .none : .speaker)
+            logCurrentAudioRoute(context: "\(toEarpiece ? "forced earpiece" : "forced speaker") - \(reason)")
+        } catch {
+            MXLog.error("Failed changing call audio route to \(toEarpiece ? "earpiece" : "speaker"): \(error)")
+        }
+    }
+    
+    private func enforcePreferredAudioRoute(after delay: Duration) {
+        audioRouteTasks.append(Task { [weak self] in
+            try? await Task.sleep(for: delay)
+            guard !Task.isCancelled, let self else { return }
+            guard isCurrentAudioRouteSpeaker != !prefersEarpieceAudioRoute else {
+                logCurrentAudioRoute(context: "route already matches preference")
+                return
+            }
+            setCallAudioRoute(toEarpiece: prefersEarpieceAudioRoute, reason: "route enforcement")
+        })
+    }
+    
+    private var isCurrentAudioRouteSpeaker: Bool {
+        AVAudioSession.sharedInstance().currentRoute.outputs.contains { output in
+            output.portType == .builtInSpeaker
+        }
+    }
+    
+    private func resetCallAudioRoute() {
+        do {
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+            logCurrentAudioRoute(context: "reset")
+        } catch {
+            MXLog.error("Failed resetting call audio route: \(error)")
+        }
+    }
+    
+    private func logCurrentAudioRoute(context: String) {
+        let audioSession = AVAudioSession.sharedInstance()
+        let outputs = audioSession.currentRoute.outputs
+            .map { "\($0.portName) (\($0.portType.rawValue), \($0.uid))" }
+            .joined(separator: ", ")
+        MXLog.info("Call audio route \(context): \(outputs)")
     }
     
     private func handleBackwardsNavigation() async {
@@ -288,7 +357,7 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         
         let deviceList = if currentOutput.portType == .builtInSpeaker {
             // This allows the webview to display the earpiece option
-            "{id: '\(currentOutput.uid)', name: '\(currentOutput.portName)', forEarpiece: true, isSpeaker: true}"
+            "{id: '\(Self.earpieceID)', name: 'iPhone', forEarpiece: true, isSpeaker: false}"
         } else {
             // Doesn't matter because the switch is handled through the OS
             "{id: 'dummy', name: 'dummy'}"

@@ -805,6 +805,47 @@ class ClientProxy: ClientProxyProtocol {
         }
     }
     
+    func presence(for userID: String) async -> Result<UserPresence, ClientProxyError> {
+        struct PresenceResponse: Decodable {
+            let presence: UserPresence.State
+            let lastActiveAgo: UInt64?
+            let currentlyActive: Bool?
+            
+            enum CodingKeys: String, CodingKey {
+                case presence
+                case lastActiveAgo = "last_active_ago"
+                case currentlyActive = "currently_active"
+            }
+        }
+        
+        do {
+            let session = try client.session()
+            let encodedUserID = userID.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? userID
+            let url = URL(string: "\(session.homeserverUrl)/_matrix/client/v3/presence/\(encodedUserID)/status")
+            guard let url else {
+                return .failure(.invalidResponse)
+            }
+            
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(session.accessToken)", forHTTPHeaderField: "Authorization")
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  200..<300 ~= httpResponse.statusCode else {
+                MXLog.error("Failed retrieving presence for userID: \(userID), response: \(response)")
+                return .failure(.invalidResponse)
+            }
+            
+            let decodedResponse = try JSONDecoder().decode(PresenceResponse.self, from: data)
+            return .success(UserPresence(state: decodedResponse.presence,
+                                         lastActiveAgo: decodedResponse.lastActiveAgo,
+                                         currentlyActive: decodedResponse.currentlyActive))
+        } catch {
+            MXLog.error("Failed retrieving presence for userID: \(userID) with error: \(error)")
+            return .failure(.sdkError(error))
+        }
+    }
+    
     func roomDirectorySearchProxy() -> RoomDirectorySearchProxyProtocol {
         RoomDirectorySearchProxy(roomDirectorySearch: client.roomDirectorySearch())
     }

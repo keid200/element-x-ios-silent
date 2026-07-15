@@ -41,6 +41,7 @@ enum RoomScreenViewAction {
 
 struct RoomScreenViewState: BindableState {
     var roomTitle = ""
+    var roomSubtitle: String?
     var roomAvatar: RoomAvatar
     var dmRecipientVerificationState: UserIdentityVerificationState?
     

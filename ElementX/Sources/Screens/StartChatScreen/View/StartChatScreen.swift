@@ -52,19 +52,7 @@ struct StartChatScreen: View {
     private var mainContent: some View {
         createRoomSection
         roomDirectorySearch
-        inviteFriendsSection
-        joinRoomByAddressSection
         usersSection
-    }
-    
-    private var joinRoomByAddressSection: some View {
-        Section {
-            ListRow(label: .default(title: L10n.screenStartChatJoinRoomByAddressAction,
-                                    icon: \.room),
-                    kind: .button {
-                        context.isJoinRoomByAddressSheetPresented = true
-                    })
-        }
     }
     
     private var roomDirectorySearch: some View {
@@ -93,18 +81,6 @@ struct StartChatScreen: View {
                                     icon: \.plus),
                     kind: .navigationLink { context.send(viewAction: .createRoom) })
                 .accessibilityIdentifier(A11yIdentifiers.startChatScreen.createRoom)
-        }
-    }
-    
-    private var inviteFriendsSection: some View {
-        Section {
-            ListRow(kind: .custom {
-                MatrixUserShareLink(userID: context.viewState.userID) {
-                    ListRowLabel.default(title: L10n.actionInvitePeopleToApp(InfoPlistReader.main.bundleDisplayName),
-                                         icon: \.shareIos)
-                }
-            })
-            .accessibilityIdentifier(A11yIdentifiers.startChatScreen.inviteFriends)
         }
     }
     

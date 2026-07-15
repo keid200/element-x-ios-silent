@@ -100,6 +100,38 @@ struct LiveLocationOwnInfoUpdate: Equatable {
     let isLive: Bool
 }
 
+struct UserPresence: Equatable {
+    enum State: String, Decodable {
+        case online
+        case offline
+        case unavailable
+    }
+    
+    let state: State
+    let lastActiveAgo: UInt64?
+    let currentlyActive: Bool?
+    
+    var roomHeaderSubtitle: String? {
+        if currentlyActive == true || state == .online {
+            return "Online"
+        }
+        
+        if let lastActiveAgo {
+            let lastSeenDate = Date(timeIntervalSinceNow: -Double(lastActiveAgo) / 1000)
+            return "Last seen \(lastSeenDate.formatted(.relative(presentation: .named)))"
+        }
+        
+        switch state {
+        case .online:
+            return "Online"
+        case .unavailable:
+            return "Away"
+        case .offline:
+            return "Offline"
+        }
+    }
+}
+
 // sourcery: AutoMockable
 protocol ClientProxyProtocol: AnyObject {
     var actionsPublisher: AnyPublisher<ClientProxyAction, Never> { get }
@@ -233,6 +265,8 @@ protocol ClientProxyProtocol: AnyObject {
     func searchUsers(searchTerm: String, limit: UInt) async -> Result<SearchUsersResults, ClientProxyError>
     
     func profile(for userID: String) async -> Result<UserProfile, ClientProxyError>
+    
+    func presence(for userID: String) async -> Result<UserPresence, ClientProxyError>
     
     func roomDirectorySearchProxy() -> RoomDirectorySearchProxyProtocol
     

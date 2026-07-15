@@ -18,6 +18,7 @@ struct RoomCallControlsToolbar: ToolbarContent {
                 JoinCallButton(isVoiceCall: viewState.activeRoomCallIntent == .audio) {
                     onCallTap(viewState.activeRoomCallIntent == .audio)
                 }
+                .frame(width: 44, height: 44)
                 .accessibilityIdentifier(A11yIdentifiers.roomScreen.joinCall)
                 .disabled(!viewState.canJoinCall)
             }
@@ -44,6 +45,7 @@ struct RoomCallControlsToolbar: ToolbarContent {
                                 CompoundIcon(\.voiceCallSolid)
                                 CompoundIcon(\.chevronDown, size: .xSmall, relativeTo: .compound.bodyLG)
                             }
+                            .frame(width: 44, height: 44)
                         }
                         .accessibilityLabel(L10n.a11yStartCall)
                         .disabled(!viewState.canJoinCall)
@@ -53,6 +55,7 @@ struct RoomCallControlsToolbar: ToolbarContent {
                         Button { onCallTap(false) } label: {
                             CompoundIcon(\.videoCallSolid)
                         }
+                        .frame(width: 44, height: 44)
                         .accessibilityLabel(L10n.a11yStartVideoCall)
                         .accessibilityIdentifier(A11yIdentifiers.roomScreen.startVideoCall)
                         .disabled(!viewState.canJoinCall)
@@ -62,6 +65,7 @@ struct RoomCallControlsToolbar: ToolbarContent {
                         Button { onCallTap(true) } label: {
                             CompoundIcon(\.voiceCallSolid)
                         }
+                        .frame(width: 44, height: 44)
                         .accessibilityLabel(L10n.a11yStartVoiceCall)
                         .accessibilityIdentifier(A11yIdentifiers.roomScreen.startVoiceCall)
                         .disabled(!viewState.canJoinCall)
@@ -72,6 +76,7 @@ struct RoomCallControlsToolbar: ToolbarContent {
                     Button { onCallTap(false) } label: {
                         CompoundIcon(\.videoCallSolid)
                     }
+                    .frame(width: 44, height: 44)
                     .accessibilityLabel(L10n.a11yStartVideoCall)
                     .disabled(!viewState.canJoinCall)
                 }

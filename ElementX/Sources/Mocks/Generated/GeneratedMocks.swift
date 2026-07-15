@@ -3522,6 +3522,48 @@ nonisolated class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
             return profileForReturnValue
         }
     }
+    //MARK: - presence
+
+    private let presenceForCallsCountLock = NSLock()
+    private nonisolated(unsafe) var presenceForUnderlyingCallsCount = 0
+    var presenceForCallsCount: Int {
+        get { presenceForCallsCountLock.withLock { presenceForUnderlyingCallsCount } }
+        set { presenceForCallsCountLock.withLock { presenceForUnderlyingCallsCount = newValue } }
+    }
+    var presenceForCalled: Bool {
+        return presenceForCallsCount > 0
+    }
+    private let presenceForReceivedUserIDLock = NSLock()
+    private nonisolated(unsafe) var presenceForUnderlyingReceivedUserID: String?
+    var presenceForReceivedUserID: String? {
+        get { presenceForReceivedUserIDLock.withLock { presenceForUnderlyingReceivedUserID } }
+        set { presenceForReceivedUserIDLock.withLock { presenceForUnderlyingReceivedUserID = newValue } }
+    }
+    private let presenceForReceivedInvocationsLock = NSLock()
+    private nonisolated(unsafe) var presenceForUnderlyingReceivedInvocations: [String] = []
+    var presenceForReceivedInvocations: [String] {
+        get { presenceForReceivedInvocationsLock.withLock { presenceForUnderlyingReceivedInvocations } }
+        set { presenceForReceivedInvocationsLock.withLock { presenceForUnderlyingReceivedInvocations = newValue } }
+    }
+
+    private let presenceForReturnValueLock = NSLock()
+    private nonisolated(unsafe) var presenceForUnderlyingReturnValue: Result<UserPresence, ClientProxyError>!
+    var presenceForReturnValue: Result<UserPresence, ClientProxyError>! {
+        get { presenceForReturnValueLock.withLock { presenceForUnderlyingReturnValue } }
+        set { presenceForReturnValueLock.withLock { presenceForUnderlyingReturnValue = newValue } }
+    }
+    nonisolated(unsafe) var presenceForClosure: ((String) async -> Result<UserPresence, ClientProxyError>)?
+
+    @concurrent func presence(for userID: String) async -> Result<UserPresence, ClientProxyError> {
+        presenceForCallsCountLock.withLock { presenceForUnderlyingCallsCount += 1 }
+        presenceForReceivedUserID = userID
+        presenceForReceivedInvocationsLock.withLock { presenceForUnderlyingReceivedInvocations.append(userID) }
+        if let presenceForClosure = presenceForClosure {
+            return await presenceForClosure(userID)
+        } else {
+            return presenceForReturnValue
+        }
+    }
     //MARK: - roomDirectorySearchProxy
 
     private let roomDirectorySearchProxyCallsCountLock = NSLock()

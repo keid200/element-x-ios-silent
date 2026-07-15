@@ -92,6 +92,7 @@ extension ClientProxyMock {
         isAliasAvailableReturnValue = .success(true)
         searchUsersSearchTermLimitReturnValue = .success(.init(results: [], limited: false))
         profileForReturnValue = .success(.init(userID: "@a:b.com", displayName: "Some user"))
+        presenceForReturnValue = .success(.init(state: .online, lastActiveAgo: nil, currentlyActive: true))
         ignoreUserReturnValue = .success(())
         unignoreUserReturnValue = .success(())
         

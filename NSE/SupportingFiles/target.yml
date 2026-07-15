@@ -61,7 +61,6 @@ targets:
     entitlements:
       path: NSE.entitlements
       properties:
-        com.apple.developer.usernotifications.filtering: true
         com.apple.security.application-groups:
         - $(APP_GROUP_IDENTIFIER)
         keychain-access-groups:
@@ -80,6 +79,14 @@ targets:
         SWIFT_APPROACHABLE_CONCURRENCY: YES
         OTHER_SWIFT_FLAGS:
         - "-DIS_NSE"
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+          CODE_SIGN_IDENTITY: Apple Development
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: Silent AppStore-NSE
 
     sources:
     - path: ../Sources

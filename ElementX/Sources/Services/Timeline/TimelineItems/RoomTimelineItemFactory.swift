@@ -169,6 +169,9 @@ nonisolated struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
         case .file(let fileMessageContent):
             return buildFileTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, fileMessageContent, isOutgoing)
         case .notice(content: let noticeMessageContent):
+            if isOutgoing, noticeMessageContent.body == ScreenshotNotificationConstants.noticeBody {
+                return nil
+            }
             return buildNoticeTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, noticeMessageContent, isOutgoing)
         case .emote(content: let emoteMessageContent):
             return buildEmoteTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, emoteMessageContent, isOutgoing)
