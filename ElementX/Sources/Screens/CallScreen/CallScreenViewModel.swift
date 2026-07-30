@@ -33,6 +33,8 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     private var audioRouteTasks = [Task<Void, Never>]()
     
     private var prefersEarpieceAudioRoute = true
+
+    private var isManagingCallAudioSession = false
     
     /// Designated initialiser
     /// - Parameters:
@@ -105,10 +107,27 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         NotificationCenter.default
             .publisher(for: AVAudioSession.routeChangeNotification)
             .sink { [weak self] _ in
-                guard let self else { return }
+                guard let self, isManagingCallAudioSession else { return }
                 logCurrentAudioRoute(context: "route changed")
-                enforcePreferredAudioRoute(after: .milliseconds(250))
-                Task { await self.updateOutputsListOnWeb() }
+                enforcePreferredAudioRoute(after: .milliseconds(350), updateWebOutputs: true)
+            }
+            .store(in: &cancellables)
+
+        NotificationCenter.default
+            .publisher(for: AVAudioSession.interruptionNotification,
+                       object: AVAudioSession.sharedInstance())
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] notification in
+                self?.handleAudioSessionInterruption(notification)
+            }
+            .store(in: &cancellables)
+
+        NotificationCenter.default
+            .publisher(for: UIApplication.didBecomeActiveNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self, isManagingCallAudioSession else { return }
+                restoreCallAudioSession(after: .milliseconds(250), updateWebOutputs: true)
             }
             .store(in: &cancellables)
         
@@ -129,8 +148,9 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         case .endCall:
             actionsSubject.send(.dismiss)
         case .mediaCapturePermissionGranted:
-            enforcePreferredAudioRoute(after: .milliseconds(250))
-            Task { await updateOutputsListOnWeb() }
+            guard isManagingCallAudioSession else { return }
+            prepareCallAudioSession(reason: "media capture permission granted")
+            enforcePreferredAudioRoute(after: .milliseconds(350), updateWebOutputs: true)
         case .outputDeviceSelected(deviceID: let deviceID):
             handleOutputDeviceSelected(deviceID: deviceID)
         case .widgetAction(let message):
@@ -139,6 +159,8 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     }
     
     func stop() {
+        isManagingCallAudioSession = false
+
         Task {
             await hangup()
         }
@@ -205,14 +227,14 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
             }
             
             prefersEarpieceAudioRoute = true
-            setCallAudioRoute(toEarpiece: true, reason: "call start default")
+            isManagingCallAudioSession = true
             UIDevice.current.isProximityMonitoringEnabled = true
+            prepareCallAudioSession(reason: "call start")
             
             await elementCallService.setupCallSession(roomID: configuration.roomProxy.id,
                                                       roomDisplayName: configuration.roomProxy.infoPublisher.value.displayName ?? configuration.roomProxy.id)
-            enforcePreferredAudioRoute(after: .milliseconds(100))
             enforcePreferredAudioRoute(after: .milliseconds(500))
-            enforcePreferredAudioRoute(after: .seconds(2))
+            enforcePreferredAudioRoute(after: .seconds(1))
         }
         
         timeoutTask = Task { [weak self] in
@@ -229,8 +251,14 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     
     /// This should always match the web app value
     private static let earpieceID = "earpiece-id"
+    private static let placeholderOutputID = "dummy"
     
     private func handleOutputDeviceSelected(deviceID: String) {
+        guard deviceID != Self.placeholderOutputID else {
+            MXLog.info("Ignoring placeholder call output device selection")
+            return
+        }
+
         let isEarpiece = deviceID == Self.earpieceID || deviceID.localizedCaseInsensitiveContains("earpiece")
         MXLog.info("Selected call output device: \(deviceID). Is earpiece: \(isEarpiece)")
         prefersEarpieceAudioRoute = isEarpiece
@@ -239,28 +267,94 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         enforcePreferredAudioRoute(after: .seconds(1))
         UIDevice.current.isProximityMonitoringEnabled = isEarpiece
     }
+
+    private func prepareCallAudioSession(activate: Bool = false, reason: String) {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            // Keep the session non-mixable so ringtones and notification sounds don't play
+            // over an active Silent call. WebKit normally activates the session after media
+            // permission is granted; native code only reactivates it after an interruption.
+            try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetoothHFP])
+            try audioSession.setPrefersNoInterruptionsFromSystemAlerts(true)
+            if activate {
+                try audioSession.setActive(true)
+            }
+            MXLog.info("Prepared call audio session - \(reason)")
+        } catch {
+            MXLog.error("Failed preparing call audio session - \(reason): \(error)")
+        }
+    }
     
     private func setCallAudioRoute(toEarpiece: Bool, reason: String) {
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetoothHFP])
-            try audioSession.setActive(true)
             try audioSession.overrideOutputAudioPort(toEarpiece ? .none : .speaker)
-            logCurrentAudioRoute(context: "\(toEarpiece ? "forced earpiece" : "forced speaker") - \(reason)")
+            logCurrentAudioRoute(context: "\(toEarpiece ? "receiver route" : "speaker route") - \(reason)")
         } catch {
             MXLog.error("Failed changing call audio route to \(toEarpiece ? "earpiece" : "speaker"): \(error)")
         }
     }
     
-    private func enforcePreferredAudioRoute(after delay: Duration) {
+    private func enforcePreferredAudioRoute(after delay: Duration, updateWebOutputs: Bool = false) {
         audioRouteTasks.append(Task { [weak self] in
             try? await Task.sleep(for: delay)
             guard !Task.isCancelled, let self else { return }
-            guard isCurrentAudioRouteSpeaker != !prefersEarpieceAudioRoute else {
+            if isCurrentAudioRouteSpeaker == !prefersEarpieceAudioRoute {
                 logCurrentAudioRoute(context: "route already matches preference")
+            } else {
+                setCallAudioRoute(toEarpiece: prefersEarpieceAudioRoute, reason: "route enforcement")
+            }
+
+            if updateWebOutputs {
+                await updateOutputsListOnWeb()
+            }
+        })
+    }
+
+    private func handleAudioSessionInterruption(_ notification: Notification) {
+        guard isManagingCallAudioSession else { return }
+
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            MXLog.warning("Received call audio interruption without a valid interruption type")
+            return
+        }
+
+        switch type {
+        case .began:
+            let reasonValue = userInfo[AVAudioSessionInterruptionReasonKey] as? UInt
+            let reason = reasonValue.flatMap { AVAudioSession.InterruptionReason(rawValue: $0) }
+            MXLog.info("Call audio session interruption began. Reason: \(String(describing: reason))")
+        case .ended:
+            let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
+            let shouldResume = AVAudioSession.InterruptionOptions(rawValue: optionsValue).contains(.shouldResume)
+            MXLog.info("Call audio session interruption ended. Should resume: \(shouldResume)")
+
+            guard shouldResume else {
+                MXLog.warning("Call audio session interruption ended without permission to resume")
                 return
             }
-            setCallAudioRoute(toEarpiece: prefersEarpieceAudioRoute, reason: "route enforcement")
+
+            restoreCallAudioSession(after: .milliseconds(100))
+            restoreCallAudioSession(after: .milliseconds(600), updateWebOutputs: true)
+            restoreCallAudioSession(after: .seconds(2))
+        @unknown default:
+            MXLog.warning("Received an unknown call audio interruption type")
+        }
+    }
+
+    private func restoreCallAudioSession(after delay: Duration, updateWebOutputs: Bool = false) {
+        audioRouteTasks.append(Task { [weak self] in
+            try? await Task.sleep(for: delay)
+            guard !Task.isCancelled, let self, isManagingCallAudioSession else { return }
+
+            prepareCallAudioSession(activate: true, reason: "interruption recovery")
+            setCallAudioRoute(toEarpiece: prefersEarpieceAudioRoute, reason: "interruption recovery")
+
+            if updateWebOutputs {
+                await updateOutputsListOnWeb()
+            }
         })
     }
     
@@ -271,11 +365,18 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     }
     
     private func resetCallAudioRoute() {
+        let audioSession = AVAudioSession.sharedInstance()
         do {
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+            try audioSession.setPrefersNoInterruptionsFromSystemAlerts(false)
+        } catch {
+            MXLog.error("Failed resetting system alert interruption preference: \(error)")
+        }
+
+        do {
+            try audioSession.overrideOutputAudioPort(.none)
             logCurrentAudioRoute(context: "reset")
         } catch {
-            MXLog.error("Failed resetting call audio route: \(error)")
+            MXLog.error("Failed resetting call output route: \(error)")
         }
     }
     
@@ -357,13 +458,18 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         
         let deviceList = if currentOutput.portType == .builtInSpeaker {
             // This allows the webview to display the earpiece option
-            "{id: '\(Self.earpieceID)', name: 'iPhone', forEarpiece: true, isSpeaker: false}"
+            "{id: '\(currentOutput.uid)', name: '\(currentOutput.portName)', forEarpiece: true, isSpeaker: true}"
         } else {
             // Doesn't matter because the switch is handled through the OS
             "{id: 'dummy', name: 'dummy'}"
         }
         
-        let javaScript = "window.controls.setAvailableOutputDevices([\(deviceList)])"
+        let selectEarpiece = if currentOutput.portType == .builtInSpeaker, prefersEarpieceAudioRoute {
+            "window.controls.setOutputDevice('\(Self.earpieceID)');"
+        } else {
+            ""
+        }
+        let javaScript = "\(selectEarpiece)window.controls.setAvailableOutputDevices([\(deviceList)])"
         do {
             let result = try await state.bindings.javaScriptEvaluator?(javaScript)
             MXLog.debug("Evaluated  with result: \(String(describing: result))")
