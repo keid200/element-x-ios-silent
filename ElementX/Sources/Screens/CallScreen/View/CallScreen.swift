@@ -195,6 +195,8 @@ private struct CallView: UIViewRepresentable {
             case .onOutputDeviceSelect:
                 guard let deviceID = message.body as? String else { return }
                 viewModelContext?.send(viewAction: .outputDeviceSelected(deviceID: deviceID))
+            case .onAudioPlaybackStarted:
+                viewModelContext?.send(viewAction: .audioPlaybackStarted)
             case .onBackButtonPressed:
                 viewModelContext?.send(viewAction: .navigateBack)
             case .onPipMediaOrientationUpdate:

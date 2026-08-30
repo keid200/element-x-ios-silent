@@ -33,8 +33,13 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     private var audioRouteTasks = [Task<Void, Never>]()
     
     private var prefersEarpieceAudioRoute = true
+    private var isMicrophoneEnabled = true
 
     private var isManagingCallAudioSession = false
+
+    private let systemCallObserver = SystemCallObserver()
+    private var hasActiveSystemCall = false
+    private var callAudioWasInterrupted = false
     
     /// Designated initialiser
     /// - Parameters:
@@ -57,6 +62,10 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         widgetDriver = configuration.roomProxy.elementCallWidgetDriver(deviceID: deviceID)
         
         super.init(initialViewState: CallScreenViewState(script: CallScreenJavaScriptMessageName.allCasesInjectionScript))
+
+        systemCallObserver.start { [weak self] hasActiveCall in
+            self?.handleSystemCallStateChanged(hasActiveCall: hasActiveCall)
+        }
         
         elementCallService.actions
             .receive(on: DispatchQueue.main)
@@ -99,6 +108,7 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
                 case .callEnded:
                     actionsSubject.send(.dismiss)
                 case .mediaStateChanged(let audioEnabled, _):
+                    isMicrophoneEnabled = audioEnabled
                     elementCallService.setAudioEnabled(audioEnabled, roomID: configuration.callRoomID)
                 }
             }
@@ -127,7 +137,18 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self, isManagingCallAudioSession else { return }
-                restoreCallAudioSession(after: .milliseconds(250), updateWebOutputs: true)
+                guard !hasActiveSystemCall else {
+                    MXLog.info("Silent became active while another system call is ongoing; deferring audio recovery")
+                    return
+                }
+                if callAudioWasInterrupted {
+                    callAudioWasInterrupted = false
+                    scheduleCallAudioRecovery(reason: "application became active after interruption")
+                } else {
+                    restoreCallAudioSession(after: .milliseconds(250),
+                                            updateWebOutputs: true,
+                                            reason: "application became active")
+                }
             }
             .store(in: &cancellables)
         
@@ -151,6 +172,11 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
             guard isManagingCallAudioSession else { return }
             prepareCallAudioSession(reason: "media capture permission granted")
             enforcePreferredAudioRoute(after: .milliseconds(350), updateWebOutputs: true)
+        case .audioPlaybackStarted:
+            guard isManagingCallAudioSession else { return }
+            applySystemAlertInterruptionPreference(after: .zero, reason: "WebRTC playback started")
+            applySystemAlertInterruptionPreference(after: .milliseconds(300), reason: "WebRTC playback settled")
+            applySystemAlertInterruptionPreference(after: .seconds(1), reason: "WebRTC playback active")
         case .outputDeviceSelected(deviceID: let deviceID):
             handleOutputDeviceSelected(deviceID: deviceID)
         case .widgetAction(let message):
@@ -160,6 +186,7 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     
     func stop() {
         isManagingCallAudioSession = false
+        systemCallObserver.stop()
 
         Task {
             await hangup()
@@ -271,20 +298,47 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     private func prepareCallAudioSession(activate: Bool = false, reason: String) {
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            // Keep the session non-mixable so ringtones and notification sounds don't play
-            // over an active Silent call. WebKit normally activates the session after media
-            // permission is granted; native code only reactivates it after an interruption.
             try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetoothHFP])
-            try audioSession.setPrefersNoInterruptionsFromSystemAlerts(true)
-            if activate {
-                try audioSession.setActive(true)
-            }
-            MXLog.info("Prepared call audio session - \(reason)")
         } catch {
-            MXLog.error("Failed preparing call audio session - \(reason): \(error)")
+            MXLog.error("Failed configuring call audio session - \(reason): \(error)")
+        }
+
+        setSystemAlertInterruptionPreference(true, reason: reason)
+
+        if activate {
+            do {
+                try audioSession.setActive(true)
+            } catch {
+                MXLog.error("Failed activating call audio session - \(reason): \(error)")
+            }
+        }
+
+        MXLog.info("Prepared call audio session - \(reason)")
+    }
+
+    private func applySystemAlertInterruptionPreference(after delay: Duration, reason: String) {
+        audioRouteTasks.append(Task { [weak self] in
+            try? await Task.sleep(for: delay)
+            guard !Task.isCancelled, let self, isManagingCallAudioSession else { return }
+            setSystemAlertInterruptionPreference(true, reason: reason)
+        })
+    }
+
+    private func setSystemAlertInterruptionPreference(_ enabled: Bool, reason: String) {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setPrefersNoInterruptionsFromSystemAlerts(enabled)
+            let resolvedValue = audioSession.prefersNoInterruptionsFromSystemAlerts
+            if resolvedValue == enabled {
+                MXLog.info("System alert interruption preference is \(enabled ? "enabled" : "disabled") - \(reason)")
+            } else {
+                MXLog.warning("System alert interruption preference was not applied - \(reason)")
+            }
+        } catch {
+            MXLog.error("Failed setting system alert interruption preference - \(reason): \(error)")
         }
     }
-    
+
     private func setCallAudioRoute(toEarpiece: Bool, reason: String) {
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -323,6 +377,7 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
 
         switch type {
         case .began:
+            callAudioWasInterrupted = true
             let reasonValue = userInfo[AVAudioSessionInterruptionReasonKey] as? UInt
             let reason = reasonValue.flatMap { AVAudioSession.InterruptionReason(rawValue: $0) }
             MXLog.info("Call audio session interruption began. Reason: \(String(describing: reason))")
@@ -331,31 +386,119 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
             let shouldResume = AVAudioSession.InterruptionOptions(rawValue: optionsValue).contains(.shouldResume)
             MXLog.info("Call audio session interruption ended. Should resume: \(shouldResume)")
 
-            guard shouldResume else {
-                MXLog.warning("Call audio session interruption ended without permission to resume")
+            guard !hasActiveSystemCall, !systemCallObserver.hasActiveCall else {
+                MXLog.info("Another system call is still active; deferring Silent audio recovery")
                 return
             }
 
-            restoreCallAudioSession(after: .milliseconds(100))
-            restoreCallAudioSession(after: .milliseconds(600), updateWebOutputs: true)
-            restoreCallAudioSession(after: .seconds(2))
+            if !shouldResume {
+                // `shouldResume` is only a hint. This is an ongoing communication session that
+                // doesn't require a new user action, so it is appropriate to resume once the
+                // competing system call has ended.
+                MXLog.info("Resuming the ongoing Silent call despite a missing shouldResume hint")
+            }
+
+            guard callAudioWasInterrupted else {
+                MXLog.info("Silent audio recovery was already scheduled by the system call observer")
+                return
+            }
+
+            callAudioWasInterrupted = false
+            scheduleCallAudioRecovery(reason: "audio interruption ended")
         @unknown default:
             MXLog.warning("Received an unknown call audio interruption type")
         }
     }
 
-    private func restoreCallAudioSession(after delay: Duration, updateWebOutputs: Bool = false) {
+    private func handleSystemCallStateChanged(hasActiveCall: Bool) {
+        guard hasActiveCall != hasActiveSystemCall else { return }
+
+        hasActiveSystemCall = hasActiveCall
+        if hasActiveCall {
+            callAudioWasInterrupted = true
+            MXLog.info("A competing system or CallKit call became active; preserving the Silent call until it ends")
+            return
+        }
+
+        MXLog.info("The competing system or CallKit call ended")
+        guard isManagingCallAudioSession, callAudioWasInterrupted else { return }
+
+        callAudioWasInterrupted = false
+        scheduleCallAudioRecovery(reason: "competing system call ended")
+    }
+
+    private func scheduleCallAudioRecovery(reason: String) {
+        restoreCallAudioSession(after: .milliseconds(100), reason: reason)
+        restoreCallAudioSession(after: .milliseconds(600),
+                                updateWebOutputs: true,
+                                recoverWebMedia: true,
+                                reason: reason)
+        restoreCallAudioSession(after: .seconds(2),
+                                updateWebOutputs: true,
+                                recoverWebMedia: true,
+                                reason: reason)
+    }
+
+    private func restoreCallAudioSession(after delay: Duration,
+                                         updateWebOutputs: Bool = false,
+                                         recoverWebMedia: Bool = false,
+                                         reason: String) {
         audioRouteTasks.append(Task { [weak self] in
             try? await Task.sleep(for: delay)
             guard !Task.isCancelled, let self, isManagingCallAudioSession else { return }
+            guard !hasActiveSystemCall, !systemCallObserver.hasActiveCall else {
+                MXLog.info("Skipping Silent audio recovery while another system call remains active")
+                return
+            }
 
-            prepareCallAudioSession(activate: true, reason: "interruption recovery")
-            setCallAudioRoute(toEarpiece: prefersEarpieceAudioRoute, reason: "interruption recovery")
+            prepareCallAudioSession(activate: true, reason: reason)
+            setCallAudioRoute(toEarpiece: prefersEarpieceAudioRoute, reason: reason)
 
             if updateWebOutputs {
                 await updateOutputsListOnWeb()
             }
+
+            if recoverWebMedia {
+                await recoverElementCallMedia(reason: reason)
+            }
         })
+    }
+
+    /// Element Call's WebRTC media runs in WebKit's process, which owns a separate audio
+    /// session. Reactivating the app's AVAudioSession alone can therefore leave the remote
+    /// audio and microphone suspended after another CallKit app releases the device.
+    private func recoverElementCallMedia(reason: String) async {
+        let resumeOutputScript = """
+        (() => {
+            document.querySelectorAll('audio, video').forEach(element => {
+                const playResult = element.play();
+                if (playResult && playResult.catch) {
+                    playResult.catch(error => console.warn('Failed resuming media element', error));
+                }
+            });
+
+            return true;
+        })()
+        """
+
+        do {
+            _ = try await state.bindings.javaScriptEvaluator?(resumeOutputScript)
+        } catch {
+            MXLog.error("Failed resuming Element Call output - \(reason): \(error)")
+        }
+
+        guard isMicrophoneEnabled else {
+            MXLog.info("Element Call microphone was muted before interruption; preserving mute state")
+            return
+        }
+
+        // Re-toggling the existing WebRTC microphone track makes WebKit reacquire capture after
+        // a competing VoIP app has released its higher-priority audio session.
+        await setAudioEnabled(false)
+        try? await Task.sleep(for: .milliseconds(100))
+        guard isManagingCallAudioSession, !hasActiveSystemCall, !systemCallObserver.hasActiveCall else { return }
+        await setAudioEnabled(true)
+        MXLog.info("Recovered Element Call WebKit media - \(reason)")
     }
     
     private var isCurrentAudioRouteSpeaker: Bool {
@@ -366,11 +509,7 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
     
     private func resetCallAudioRoute() {
         let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setPrefersNoInterruptionsFromSystemAlerts(false)
-        } catch {
-            MXLog.error("Failed resetting system alert interruption preference: \(error)")
-        }
+        setSystemAlertInterruptionPreference(false, reason: "call ended")
 
         do {
             try audioSession.overrideOutputAudioPort(.none)
@@ -476,5 +615,29 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         } catch {
             MXLog.error("Received javascript evaluation error: \(error)")
         }
+    }
+}
+
+private final class SystemCallObserver: NSObject, CXCallObserverDelegate {
+    private let observer = CXCallObserver()
+    private var stateChanged: ((Bool) -> Void)?
+
+    var hasActiveCall: Bool {
+        observer.calls.contains { !$0.hasEnded }
+    }
+
+    func start(stateChanged: @escaping (Bool) -> Void) {
+        self.stateChanged = stateChanged
+        observer.setDelegate(self, queue: .main)
+        stateChanged(hasActiveCall)
+    }
+
+    func stop() {
+        observer.setDelegate(nil, queue: nil)
+        stateChanged = nil
+    }
+
+    func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
+        stateChanged?(callObserver.calls.contains { !$0.hasEnded })
     }
 }

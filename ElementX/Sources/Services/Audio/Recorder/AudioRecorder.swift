@@ -122,6 +122,9 @@ nonisolated class AudioRecorder: AudioRecorderProtocol, @unchecked Sendable {
     
     private func releaseAudioSession() {
         MXLog.info("releasing audio session")
+        // setupAudioSession enables this for voice-message recording. Restore the system default
+        // before releasing the shared session so the setting can't leak into a later call.
+        try? audioSession.setAllowHapticsAndSystemSoundsDuringRecording(false)
         try? audioSession.setActive(false, options: .notifyOthersOnDeactivation)
         removeObservers()
     }

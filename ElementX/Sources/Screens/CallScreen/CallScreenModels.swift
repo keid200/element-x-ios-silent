@@ -37,6 +37,7 @@ enum CallScreenViewAction {
     case pictureInPictureWillStop
     case endCall
     case mediaCapturePermissionGranted
+    case audioPlaybackStarted
     case outputDeviceSelected(deviceID: String)
     case widgetAction(message: String)
 }
@@ -55,6 +56,8 @@ enum CallScreenJavaScriptMessageName: String, CaseIterable {
     case showNativeOutputDevicePicker
     /// Used to determine if the webview has selected the earpiece or not.
     case onOutputDeviceSelect
+    /// Used to configure the native audio session after WebKit starts call playback.
+    case onAudioPlaybackStarted
     /// Used to handle the webview back button
     case onBackButtonPressed
     /// Used to handle PiP orientation changes
@@ -91,6 +94,12 @@ enum CallScreenJavaScriptMessageName: String, CaseIterable {
             """
             window.controls.\(rawValue) = (id) => {
                 window.webkit.messageHandlers.\(rawValue).postMessage(id);
+            };
+            """
+        case .onAudioPlaybackStarted:
+            """
+            window.controls.\(rawValue) = () => {
+                window.webkit.messageHandlers.\(rawValue).postMessage("");
             };
             """
         case .onBackButtonPressed:
