@@ -21,6 +21,16 @@ struct SpacesScreenViewState: BindableState {
     var topLevelSpaces: [SpaceServiceRoom]
     var selectedSpaceID: String?
     var circleMembers: [RoomMemberDetails]? = nil
+    var bindings = SpacesScreenViewStateBindings()
+
+    var visibleCircleMembers: [RoomMemberDetails]? {
+        let searchQuery = bindings.searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        return circleMembers?.filter { $0.matches(searchQuery: searchQuery) }
+    }
+}
+
+struct SpacesScreenViewStateBindings {
+    var searchQuery = ""
 }
 
 enum SpacesScreenViewAction {

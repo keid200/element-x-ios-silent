@@ -80,4 +80,23 @@ final class SpacesScreenViewModelTests {
             Issue.record("The action should select the space.")
         }
     }
+
+    @Test
+    func circleMemberSearchMatchesNameAndUserID() {
+        var state = SpacesScreenViewState(userProfile: .mockAlice,
+                                          topLevelSpaces: [],
+                                          circleMembers: [
+                                              RoomMemberDetails(withProxy: RoomMemberProxyMock.mockAlice),
+                                              RoomMemberDetails(withProxy: RoomMemberProxyMock.mockBob)
+                                          ])
+
+        state.bindings.searchQuery = "alice"
+        #expect(state.visibleCircleMembers?.map(\.id) == [RoomMemberProxyMock.mockAlice.userID])
+
+        state.bindings.searchQuery = "bob:"
+        #expect(state.visibleCircleMembers?.map(\.id) == [RoomMemberProxyMock.mockBob.userID])
+
+        state.bindings.searchQuery = "   "
+        #expect(state.visibleCircleMembers?.count == 2)
+    }
 }

@@ -91,6 +91,7 @@ class SpacesScreenViewModel: SpacesScreenViewModelType, SpacesScreenViewModelPro
             fatalError("There shouldn't be any unjoined spaces in the joined spaces list.")
         case .selectCircle(let spaceServiceRoom):
             state.selectedSpaceID = spaceServiceRoom.id
+            state.bindings.searchQuery = ""
             Task { await loadMembers(for: spaceServiceRoom.id) }
         case .selectCircleMember(let member):
             Task { await openDirectChat(with: member) }

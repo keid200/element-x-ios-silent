@@ -176,10 +176,12 @@ struct SpacesScreen: View {
             HStack(spacing: 8) {
                 CompoundIcon(\.search, size: .small, relativeTo: .compound.bodyMD)
                     .foregroundStyle(.compound.iconSecondary)
-                Text("Search contacts...")
+                TextField("Search contacts...", text: $context.searchQuery)
                     .font(.compound.bodyMD)
-                    .foregroundStyle(.compound.textSecondary)
-                Spacer()
+                    .foregroundStyle(.compound.textPrimary)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .submitLabel(.search)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 11)
@@ -200,9 +202,9 @@ struct SpacesScreen: View {
 
     @ViewBuilder
     private var contacts: some View {
-        if let circleMembers = context.viewState.circleMembers {
+        if let circleMembers = context.viewState.visibleCircleMembers {
             if circleMembers.isEmpty {
-                circleMessage("No contacts found")
+                circleMessage(context.searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "No contacts found" : "No matching contacts")
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(circleMembers.enumerated()), id: \.element.id) { index, member in
