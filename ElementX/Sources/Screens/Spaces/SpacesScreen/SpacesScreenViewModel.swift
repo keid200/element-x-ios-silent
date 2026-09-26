@@ -14,7 +14,6 @@ typealias SpacesScreenViewModelType = StateStoreViewModelV2<SpacesScreenViewStat
 class SpacesScreenViewModel: SpacesScreenViewModelType, SpacesScreenViewModelProtocol {
     private let clientProxy: ClientProxyProtocol
     private let spaceServiceProxy: SpaceServiceProxyProtocol
-    private let appSettings: AppSettings
     private let userIndicatorController: UserIndicatorControllerProtocol
     private var circleMemberCancellables = Set<AnyCancellable>()
     private var knownDirectRooms = [String: String]()
@@ -27,11 +26,9 @@ class SpacesScreenViewModel: SpacesScreenViewModelType, SpacesScreenViewModelPro
 
     init(userSession: UserSessionProtocol,
          selectedSpacePublisher: CurrentValuePublisher<String?, Never>,
-         appSettings: AppSettings,
          userIndicatorController: UserIndicatorControllerProtocol) {
         clientProxy = userSession.clientProxy
         spaceServiceProxy = userSession.clientProxy.spaceService
-        self.appSettings = appSettings
         self.userIndicatorController = userIndicatorController
 
         super.init(initialViewState: SpacesScreenViewState(userProfile: userSession.clientProxy.userProfilePublisher.value,

@@ -65,7 +65,7 @@ nonisolated enum TimelineItemSendFailure: Hashable {
     }
     
     case verifiedUser(VerifiedUser)
-    case unknown
+    case unknown(reason: String?)
 }
 
 /// A light wrapper around event timeline items returned from Rust.
@@ -95,8 +95,10 @@ final nonisolated class EventTimelineItemProxy: Sendable {
                 return .sendingFailed(.verifiedUser(.changedIdentity(users: users)))
             case .insecureDevices(let userDeviceMap):
                 return .sendingFailed(.verifiedUser(.hasUnsignedDevice(devices: userDeviceMap)))
+            case .genericApiError(let message):
+                return .sendingFailed(.unknown(reason: message))
             default:
-                return .sendingFailed(.unknown)
+                return .sendingFailed(.unknown(reason: nil))
             }
         case .notSentYet:
             return .sending
@@ -155,6 +157,10 @@ final nonisolated class EventTimelineItemProxy: Sendable {
     
     var readReceipts: [String: Receipt] {
         item.readReceipts
+    }
+    
+    var reactions: [Reaction] {
+        item.reactions
     }
 }
 
@@ -236,8 +242,11 @@ nonisolated struct SendHandleProxy: Hashable {
 nonisolated struct VideoInfoProxy: Hashable {
     let source: MediaSourceProxy
     private(set) var duration: TimeInterval
+    // periphery:ignore - used via the synthesized Hashable conformance
     private(set) var size: CGSize?
+    // periphery:ignore - used via the synthesized Hashable conformance
     private(set) var aspectRatio: CGFloat?
+    // periphery:ignore - used via the synthesized Hashable conformance
     private(set) var mimeType: String?
     private(set) var fileSize: UInt?
     
@@ -275,12 +284,22 @@ nonisolated struct VideoInfoProxy: Hashable {
                      mimeType: nil,
                      fileSize: 45_167_000)
     }
+    
+    static func mockVideo(duration: TimeInterval) -> VideoInfoProxy {
+        .init(source: mockVideo.source,
+              duration: duration,
+              size: .init(width: 1920, height: 1080),
+              aspectRatio: 1.78,
+              mimeType: nil,
+              fileSize: 45_167_000)
+    }
 }
 
 nonisolated struct ImageInfoProxy: Hashable {
     let source: MediaSourceProxy
     private(set) var size: CGSize?
     private(set) var aspectRatio: CGFloat?
+    // periphery:ignore - used via the synthesized Hashable conformance
     private(set) var mimeType: String?
     private(set) var fileSize: UInt?
     

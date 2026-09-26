@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import MapLibre
 import MatrixRustSDK
 
 nonisolated enum Target: String {
@@ -62,24 +61,6 @@ nonisolated enum Target: String {
         enableSentryLogging(enabled: false)
         
         MXLog.configure(currentTarget: rawValue)
-        
-        MLNLoggingConfiguration.shared.loggingLevel = .debug
-        MLNLoggingConfiguration.shared.handler = { loggingLevel, _, _, message in
-            switch loggingLevel {
-            case .error:
-                MXLog.error(message)
-            case .warning:
-                MXLog.warning(message)
-            case .info:
-                MXLog.info(message)
-            case .debug:
-                MXLog.debug(message)
-            case .verbose:
-                MXLog.verbose(message)
-            default:
-                break
-            }
-        }
         
         let hookCancellable = rageshakeURL.publisher
             .sink { _ in

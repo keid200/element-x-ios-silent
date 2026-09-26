@@ -67,6 +67,8 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
             self?.handleSystemCallStateChanged(hasActiveCall: hasActiveCall)
         }
         
+        state.swiftUICallViewCoordinator = .init(viewModelContext: context)
+        
         elementCallService.actions
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -194,7 +196,7 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
         
         audioRouteTasks.forEach { $0.cancel() }
         audioRouteTasks.removeAll()
-        elementCallService.tearDownCallSession()
+        elementCallService.tearDownCallSession(roomID: configuration.callRoomID)
         resetCallAudioRoute()
         UIDevice.current.isProximityMonitoringEnabled = false
     }
@@ -259,7 +261,8 @@ class CallScreenViewModel: CallScreenViewModelType, CallScreenViewModelProtocol 
             prepareCallAudioSession(reason: "call start")
             
             await elementCallService.setupCallSession(roomID: configuration.roomProxy.id,
-                                                      roomDisplayName: configuration.roomProxy.infoPublisher.value.displayName ?? configuration.roomProxy.id)
+                                                      roomDisplayName: configuration.roomProxy.infoPublisher.value.displayNameOrID,
+                                                      isVideo: !configuration.voiceOnly)
             enforcePreferredAudioRoute(after: .milliseconds(500))
             enforcePreferredAudioRoute(after: .seconds(1))
         }

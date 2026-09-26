@@ -13,6 +13,7 @@ import SwiftUI
 
 struct HomeScreen: View {
     private let silentBrandBlue = Color(red: 0.082, green: 0.333, blue: 0.878)
+    @Environment(\.isInSidebar) private var isInSidebar
     @ObservedObject var context: HomeScreenViewModel.Context
 
     @State private var scrollViewAdapter = ScrollViewAdapter()
@@ -29,13 +30,16 @@ struct HomeScreen: View {
                    actions: leaveRoomAlertActions,
                    message: leaveRoomAlertMessage)
             .navigationTitle(title)
+            .navigationBarTitleDisplayMode(Compound.supportsGlass ? .inline : .automatic)
             .toolbar { toolbar }
+            .toolbarRole(Compound.supportsGlass ? .editor : .automatic)
             .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
             .toolbarBackground(silentBrandBlue, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .tint(.white)
             .track(screen: .Home)
+            .toolbarBloom(hasSearchBar: context.viewState.isRoomListSearchEnabled)
             .sentryTrace("\(Self.self)")
             .sheet(item: $context.spaceFiltersViewModel) { vm in
                 ChatsSpaceFiltersScreen(context: vm.context)
@@ -52,11 +56,22 @@ struct HomeScreen: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            settingsButton
-                .buttonStyle(.borderless)
-                .frame(width: 44, height: 44)
+        ToolbarItem(placement: Compound.supportsGlass ? .title : .navigationBarLeading) {
+            HStack(spacing: isInSidebar ? 8 : 12) {
+                // The settings button is inside the title on iOS 26 to workaround a
+                // weird liquid glass transition when pushing/popping a room.
+                settingsButton
+                    .buttonStyle(.borderless)
+                
+                if #available(iOS 26, *) {
+                    Text(title)
+                        .font(isInSidebar ? .compound.bodyLGSemibold : .compound.headingLGBold)
+                        .foregroundStyle(.compound.textPrimary)
+                        .minimumScaleFactor(isInSidebar ? 1 : 0.6) // Allow scaling down to bodyLG if needed.
+                }
+            }
         }
+        .backportSharedBackgroundVisibility(.hidden)
 
         ToolbarItem(placement: .primaryAction) {
             if #available(iOS 26, *) {
@@ -76,13 +91,8 @@ struct HomeScreen: View {
             context.send(viewAction: .showSettings)
         } label: {
             ZStack(alignment: .bottomTrailing) {
-                LoadableAvatarImage(url: context.viewState.userProfile.avatarURL,
-                                    name: context.viewState.userProfile.displayName,
-                                    contentID: context.viewState.userProfile.id,
-                                    avatarSize: .user(on: .chats),
-                                    mediaProvider: context.mediaProvider)
-                    .accessibilityIdentifier(A11yIdentifiers.homeScreen.userAvatar)
-                    .clipShape(.circle)
+                AvatarSettingsButtonLabel(userProfile: context.viewState.userProfile,
+                                          mediaProvider: context.mediaProvider)
                 
                 Circle()
                     .fill(.green)
@@ -93,11 +103,9 @@ struct HomeScreen: View {
                     }
                     .accessibilityHidden(true)
             }
-            .frame(width: 36, height: 36)
-            .overlayBadge(10, isBadged: context.viewState.requiresExtraAccountSetup)
         }
-        .frame(width: 44, height: 44)
         .accessibilityLabel(L10n.commonSettings)
+        .accessibilityIdentifier(A11yIdentifiers.homeScreen.userAvatar)
     }
 
     @ViewBuilder
@@ -186,7 +194,7 @@ struct HomeScreen_Previews: PreviewProvider, TestablePreview {
         ElementNavigationStack {
             HomeScreen(context: loadingViewModel.context)
         }
-        .snapshotPreferences(expect: loadedViewModel.context.$viewState.map { state in
+        .snapshotPreferences(expect: loadingViewModel.context.$viewState.map { state in
             state.roomListMode == .skeletons
         })
         .previewDisplayName("Loading")
@@ -229,6 +237,7 @@ struct HomeScreen_Previews: PreviewProvider, TestablePreview {
                                    selectedRoomPublisher: CurrentValueSubject<String?, Never>(nil).asCurrentValuePublisher(),
                                    appSettings: .volatile(),
                                    analyticsService: AnalyticsServiceMock(.init()),
+                                   bugReportService: BugReportServiceMock(.init()),
                                    notificationManager: NotificationManagerMock(),
                                    userIndicatorController: UserIndicatorControllerMock())
     }

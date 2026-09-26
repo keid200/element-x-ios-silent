@@ -21,13 +21,6 @@ nonisolated struct RoomSummary {
             default: false
             }
         }
-        
-        var isKnock: Bool {
-            switch self {
-            case .knock: true
-            default: false
-            }
-        }
     }
     
     enum LastMessageState { case sending, failed }
@@ -190,5 +183,10 @@ nonisolated extension RoomSummary {
         } else {
             return .room(id: id, name: name, avatarURL: avatarURL)
         }
+    }
+    
+    var statusEmoji: Character? {
+        guard case let .heroes(heroes) = avatar else { return nil }
+        return heroes.first?.status.displayed?.emoji
     }
 }

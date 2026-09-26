@@ -22,8 +22,6 @@ final class SpacesScreenViewModelTests {
     }
     
     init() {
-        let appSettings = AppSettings.volatile()
-        
         let clientProxy = ClientProxyMock(.init())
         let userSession = UserSessionMock(.init(clientProxy: clientProxy))
         
@@ -42,7 +40,6 @@ final class SpacesScreenViewModelTests {
         
         viewModel = SpacesScreenViewModel(userSession: userSession,
                                           selectedSpacePublisher: .init(nil),
-                                          appSettings: appSettings,
                                           userIndicatorController: UserIndicatorControllerMock())
     }
     

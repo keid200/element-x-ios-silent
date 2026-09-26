@@ -17,6 +17,7 @@ enum TimelineReplyViewPlacement {
 struct TimelineReplyView: View {
     @Environment(\.timelineContext) private var timelineContext
     
+    // periphery:ignore - might be useful to have
     let placement: TimelineReplyViewPlacement
     let timelineItemReplyDetails: TimelineItemReplyDetails?
     var maxWidth: CGFloat?
@@ -24,6 +25,7 @@ struct TimelineReplyView: View {
     var body: some View {
         ContentScanningView(contentScannerService: timelineContext?.contentScannerService,
                             mediaSource: scannedMediaSource,
+                            thumbnailSource: scannedThumbnailSource,
                             containerShowsFailure: false) {
             content
                 .roundedContainer(padding: 4,
@@ -58,6 +60,24 @@ struct TimelineReplyView: View {
         case .image(let content): return content.imageInfo.source
         case .video(let content): return content.videoInfo.source
         case .voice(let content): return content.source
+        // Only the first item is scanned as it's the only one the reply previews.
+        case .gallery(let content): return content.items.first?.mediaSource
+        default: return nil
+        }
+    }
+    
+    /// The thumbnail source validated alongside ``scannedMediaSource`` when the replied to message has one.
+    private var scannedThumbnailSource: MediaSourceProxy? {
+        guard case .loaded(_, _, let eventContent) = timelineItemReplyDetails,
+              case .message(let message) = eventContent else {
+            return nil
+        }
+        
+        switch message {
+        case .file(let content): return content.thumbnailSource
+        case .image(let content): return content.thumbnailInfo?.source
+        case .video(let content): return content.thumbnailInfo?.source
+        case .gallery(let content): return content.items.first?.thumbnailSource
         default: return nil
         }
     }
@@ -112,6 +132,8 @@ struct TimelineReplyView: View {
                                   plainBody: L10n.commonSharedLocation,
                                   formattedBody: nil,
                                   icon: .init(kind: .icon(\.locationPin)))
+                    case .gallery(let content):
+                        GalleryReplyView(sender: sender, content: content)
                     }
                 case .poll(let question):
                     ReplyView(sender: sender,
@@ -132,6 +154,47 @@ struct TimelineReplyView: View {
             default:
                 LoadingReplyView()
             }
+        }
+    }
+    
+    /// A gallery previews its first attachment as though it had been sent on its own, counting its
+    /// media when they're all images/videos and its attachments otherwise.
+    private struct GalleryReplyView: View {
+        let sender: TimelineItemSender
+        let content: GalleryRoomTimelineItemContent
+        
+        private var caption: String? {
+            content.caption?.isBlank == false ? content.caption : nil
+        }
+        
+        private var isMediaGallery: Bool {
+            content.items.allSatisfy { $0.isImage || $0.isVideo }
+        }
+        
+        private var placeholder: String {
+            if isMediaGallery {
+                L10n.commonGalleryReplyMediaItems(content.items.count)
+            } else {
+                L10n.commonGalleryReplyAttachments(content.items.count)
+            }
+        }
+        
+        private var icon: ReplyView.Icon? {
+            guard let item = content.items.first else { return nil }
+            
+            return switch item {
+            case .image(_, let itemContent): .init(kind: .mediaSource(itemContent.thumbnailInfo?.source ?? itemContent.imageInfo.source))
+            case .video(_, let itemContent): itemContent.thumbnailInfo.map { .init(kind: .mediaSource($0.source)) }
+            case .audio: .init(kind: .icon(\.audio))
+            case .file, .other: .init(kind: .icon(\.attachment))
+            }
+        }
+        
+        var body: some View {
+            ReplyView(sender: sender,
+                      plainBody: caption ?? placeholder,
+                      formattedBody: caption == nil ? nil : content.formattedCaption,
+                      icon: icon)
         }
     }
     
@@ -203,11 +266,11 @@ struct TimelineReplyView: View {
                         CompoundIcon(\.image)
                             .padding(4.0)
                     }
-                    .aspectRatio(contentMode: .fill)
+                    .scaledToFill()
                 case .iconAsset(let asset):
                     Image(asset: asset)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
                         .padding(8.0)
                 case .icon(let keyPath):
                     CompoundIcon(keyPath, size: .medium, relativeTo: .body)
@@ -378,6 +441,22 @@ struct TimelineReplyView_Previews: PreviewProvider, TestablePreview {
                               timelineItemReplyDetails: .loaded(sender: .init(id: "", displayName: "Bob"),
                                                                 eventID: "123",
                                                                 eventContent: .message(.notice(.init(body: "", formattedBody: attributedStringWithEventOnRoomAliasMention))))),
+            TimelineReplyView(placement: .timeline,
+                              timelineItemReplyDetails: .loaded(sender: .init(id: "", displayName: "Alice"),
+                                                                eventID: "123",
+                                                                eventContent: .message(.gallery(.init(body: "Gallery",
+                                                                                                      items: [.mockImage(index: 0),
+                                                                                                              .mockVideo(index: 1)]))))),
+            
+            TimelineReplyView(placement: .timeline,
+                              timelineItemReplyDetails: .loaded(sender: .init(id: "", displayName: "Alice"),
+                                                                eventID: "123",
+                                                                eventContent: .message(.gallery(.init(body: "Gallery",
+                                                                                                      caption: "A trip to remember 🌅",
+                                                                                                      items: [.mockImage(index: 0),
+                                                                                                              .mockVideo(index: 1),
+                                                                                                              .mockImage(index: 2)]))))),
+            
             TimelineReplyView(placement: .timeline,
                               timelineItemReplyDetails: .loaded(sender: .init(id: "", displayName: "Bob"),
                                                                 eventID: "123",

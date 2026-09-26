@@ -171,6 +171,7 @@ struct RoomMembersListScreen_Previews: PreviewProvider, TestablePreview {
     static let adminViewModel = makeViewModel(isAdmin: true, initialMode: .members)
     static let bannedViewModel = makeViewModel(isAdmin: true, initialMode: .banned)
     static let emptyBannedViewModel = makeViewModel(withBanned: false, isAdmin: false, initialMode: .members)
+    static let activeRoomCallViewModel = makeViewModel(hasActiveRoomCall: true, isAdmin: true)
     
     static var previews: some View {
         ElementNavigationStack {
@@ -206,6 +207,14 @@ struct RoomMembersListScreen_Previews: PreviewProvider, TestablePreview {
         .previewDisplayName("Admin: Banned")
         
         ElementNavigationStack {
+            RoomMembersListScreen(context: activeRoomCallViewModel.context)
+        }
+        .snapshotPreferences(expect: activeRoomCallViewModel.context.$viewState.map { state in
+            state.canBanUsers == true
+        })
+        .previewDisplayName("Active Room Call")
+        
+        ElementNavigationStack {
             RoomMembersListScreen(context: emptyBannedViewModel.context)
                 .onAppear { emptyBannedViewModel.context.searchQuery = "Dan" }
         }
@@ -215,9 +224,9 @@ struct RoomMembersListScreen_Previews: PreviewProvider, TestablePreview {
     
     static func makeViewModel(withInvites: Bool = false,
                               withBanned: Bool = true,
+                              hasActiveRoomCall: Bool = false,
                               isAdmin: Bool = false,
-                              initialMode: RoomMembersListScreenMode = .members,
-                              searchQuery: String = "") -> RoomMembersListScreenViewModel {
+                              initialMode: RoomMembersListScreenMode = .members) -> RoomMembersListScreenViewModel {
         let mockAdmin = RoomMemberProxyMock.mockAdmin
         
         let ownUserID = isAdmin ? mockAdmin.userID : RoomMemberProxyMock.mockMe.userID
@@ -240,6 +249,12 @@ struct RoomMembersListScreen_Previews: PreviewProvider, TestablePreview {
             members.append(.mockInvited)
         }
         
+        let activeRoomCallParticipants: [String] = if hasActiveRoomCall {
+            [RoomMemberProxyMock.mockAlice.userID, RoomMemberProxyMock.mockOwner.userID, mockAdmin.userID]
+        } else {
+            []
+        }
+        
         let clientProxyMock = ClientProxyMock(.init())
         clientProxyMock.userIdentityForFallBackToServerClosure = { userID, _ in
             let identity = switch userID {
@@ -257,6 +272,7 @@ struct RoomMembersListScreen_Previews: PreviewProvider, TestablePreview {
         return RoomMembersListScreenViewModel(initialMode: initialMode,
                                               userSession: UserSessionMock(.init(clientProxy: clientProxyMock)),
                                               roomProxy: JoinedRoomProxyMock(.init(name: "Some room",
+                                                                                   activeRoomCallParticipants: activeRoomCallParticipants,
                                                                                    members: members,
                                                                                    ownUserID: ownUserID,
                                                                                    powerLevelsConfiguration: .init(canUserInvite: false))),

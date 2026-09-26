@@ -202,20 +202,18 @@ final class HomeScreenViewModelTests {
         #expect(context.viewState.securityBannerMode == .none)
         
         // When the recovery state comes through as disabled.
-        var deferred = deferFulfillment(context.$viewState) { $0.requiresExtraAccountSetup == true }
+        var deferred = deferFulfillment(context.$viewState) { $0.securityBannerMode == .show(.setUpRecovery) }
         securityStateStateSubject.send(.init(verificationState: .verified, recoveryState: .disabled))
-        try await deferred.fulfill()
         
         // Then the banner should be shown to set up recovery.
-        #expect(context.viewState.securityBannerMode == .show(.setUpRecovery))
-        
-        // When the recovery is enabled.
-        deferred = deferFulfillment(context.$viewState) { $0.requiresExtraAccountSetup == false }
-        securityStateStateSubject.send(.init(verificationState: .verified, recoveryState: .enabled))
         try await deferred.fulfill()
         
+        // When the recovery is enabled.
+        deferred = deferFulfillment(context.$viewState) { $0.securityBannerMode == .none }
+        securityStateStateSubject.send(.init(verificationState: .verified, recoveryState: .enabled))
+        
         // Then the banner should no longer be shown.
-        #expect(context.viewState.securityBannerMode == .none)
+        try await deferred.fulfill()
     }
     
     @Test
@@ -248,20 +246,18 @@ final class HomeScreenViewModelTests {
         #expect(context.viewState.securityBannerMode == .none)
         
         // When the recovery state comes through as incomplete.
-        var deferred = deferFulfillment(context.$viewState) { $0.requiresExtraAccountSetup == true }
+        var deferred = deferFulfillment(context.$viewState) { $0.securityBannerMode == .show(.recoveryOutOfSync) }
         securityStateStateSubject.send(.init(verificationState: .verified, recoveryState: .incomplete))
-        try await deferred.fulfill()
         
         // Then the banner should be shown for out of sync recovery.
-        #expect(context.viewState.securityBannerMode == .show(.recoveryOutOfSync))
-        
-        // When the recovery is enabled.
-        deferred = deferFulfillment(context.$viewState) { $0.requiresExtraAccountSetup == false }
-        securityStateStateSubject.send(.init(verificationState: .verified, recoveryState: .enabled))
         try await deferred.fulfill()
         
+        // When the recovery is enabled.
+        deferred = deferFulfillment(context.$viewState) { $0.securityBannerMode == .none }
+        securityStateStateSubject.send(.init(verificationState: .verified, recoveryState: .enabled))
+        
         // Then the banner should no longer be shown.
-        #expect(context.viewState.securityBannerMode == .none)
+        try await deferred.fulfill()
     }
     
     @Test
@@ -388,7 +384,60 @@ final class HomeScreenViewModelTests {
     
     enum InviteType { case rooms, spaces }
     
-    private func setupViewModel(securityStatePublisher: CurrentValuePublisher<SessionSecurityState, Never>? = nil, invites: InviteType? = nil) {
+    @Test
+    func roomListModeIsSetSynchronouslyOnAWarmLaunch() {
+        setupViewModel()
+        
+        // No awaiting, the mode must not need the subscription's async delivery.
+        #expect(context.viewState.roomListMode == .rooms)
+    }
+    
+    @Test
+    func roomListModeWaitsForTheRoomsToPublish() async throws {
+        let (roomListSubject, stateSubject) = setupViewModelWithManualProvider()
+        
+        #expect(context.viewState.roomListMode == .skeletons)
+        
+        // The provider reports loaded before the first summaries have been published.
+        let failure = deferFailure(context.$viewState, timeout: .seconds(1)) { $0.roomListMode != .skeletons }
+        stateSubject.send(.loaded(totalNumberOfRooms: 8))
+        try await failure.fulfill()
+        
+        let deferred = deferFulfillment(context.$viewState) { $0.roomListMode == .rooms }
+        roomListSubject.send(.mockRooms)
+        try await deferred.fulfill()
+    }
+    
+    @Test
+    func roomListModeDoesntReturnToSkeletonsWhenTheRoomsAreFilteredOut() async throws {
+        let (roomListSubject, stateSubject) = setupViewModelWithManualProvider()
+        
+        stateSubject.send(.loaded(totalNumberOfRooms: 8))
+        let deferred = deferFulfillment(context.$viewState) { $0.roomListMode == .rooms }
+        roomListSubject.send(.mockRooms)
+        try await deferred.fulfill()
+        
+        // A filter or a search without matches empties the list, the mode must not regress.
+        let failure = deferFailure(context.$viewState, timeout: .seconds(1)) { $0.roomListMode != .rooms }
+        roomListSubject.send([])
+        stateSubject.send(.loaded(totalNumberOfRooms: 9))
+        try await failure.fulfill()
+    }
+    
+    private func setupViewModelWithManualProvider() -> (CurrentValueSubject<[RoomSummary], Never>, CurrentValueSubject<RoomSummaryProviderState, Never>) {
+        let roomListSubject = CurrentValueSubject<[RoomSummary], Never>([])
+        let stateSubject = CurrentValueSubject<RoomSummaryProviderState, Never>(.notLoaded)
+        
+        let provider = RoomSummaryProviderMock()
+        provider.roomListPublisher = roomListSubject.asCurrentValuePublisher()
+        provider.statePublisher = stateSubject.asCurrentValuePublisher()
+        
+        setupViewModel(roomSummaryProvider: provider)
+        
+        return (roomListSubject, stateSubject)
+    }
+    
+    private func setupViewModel(securityStatePublisher: CurrentValuePublisher<SessionSecurityState, Never>? = nil, invites: InviteType? = nil, roomSummaryProvider: RoomSummaryProviderMock? = nil) {
         cancellables.removeAll()
         
         var rooms: [RoomSummary] = .mockRooms
@@ -402,10 +451,10 @@ final class HomeScreenViewModelTests {
             break
         }
         
-        roomSummaryProvider = RoomSummaryProviderMock(.init(state: .loaded(rooms)))
+        self.roomSummaryProvider = roomSummaryProvider ?? RoomSummaryProviderMock(.init(state: .loaded(rooms)))
         
         clientProxy = ClientProxyMock(.init(userID: "@mock:client.com",
-                                            roomSummaryProvider: roomSummaryProvider))
+                                            roomSummaryProvider: self.roomSummaryProvider))
         
         clientProxy.joinRoomViaReturnValue = .success(())
         clientProxy.joinRoomAliasReturnValue = .success(())
@@ -436,6 +485,7 @@ final class HomeScreenViewModelTests {
                                         selectedRoomPublisher: CurrentValueSubject<String?, Never>(nil).asCurrentValuePublisher(),
                                         appSettings: appSettings,
                                         analyticsService: AnalyticsServiceMock(.init()),
+                                        bugReportService: BugReportServiceMock(.init()),
                                         notificationManager: notificationManager,
                                         userIndicatorController: UserIndicatorControllerMock())
     }

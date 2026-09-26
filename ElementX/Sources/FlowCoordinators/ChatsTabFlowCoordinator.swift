@@ -31,12 +31,10 @@ class ChatsTabFlowCoordinator: FlowCoordinatorProtocol {
     
     private let stateMachine: ChatsTabFlowCoordinatorStateMachine
     
-    // periphery:ignore - retaining purpose
     private var roomFlowCoordinator: RoomFlowCoordinator?
     // periphery:ignore - retaining purpose
     private var spaceFlowCoordinator: SpaceFlowCoordinator?
     
-    // periphery:ignore - retaining purpose
     private var bugReportFlowCoordinator: BugReportFlowCoordinator?
     // periphery:ignore - retaining purpose
     private var encryptionResetFlowCoordinator: EncryptionResetFlowCoordinator?
@@ -54,8 +52,7 @@ class ChatsTabFlowCoordinator: FlowCoordinatorProtocol {
         actionsSubject.eraseToAnyPublisher()
     }
     
-    init(isNewLogin: Bool,
-         navigationSplitCoordinator: NavigationSplitCoordinator,
+    init(navigationSplitCoordinator: NavigationSplitCoordinator,
          flowParameters: CommonFlowParameters) {
         stateMachine = flowParameters.stateMachineFactory.makeChatsTabFlowStateMachine()
         self.navigationSplitCoordinator = navigationSplitCoordinator
@@ -344,6 +341,7 @@ class ChatsTabFlowCoordinator: FlowCoordinatorProtocol {
                     Task {
                         let roomSummaries = self.userSession.clientProxy.staticRoomSummaryProvider.roomListPublisher.value
                         await self.flowParameters.notificationManager.removeDeliveredNotificationsForFullyReadRooms(roomSummaries)
+                        await self.flowParameters.notificationManager.updateAppBadgeCount()
                     }
                 default:
                     break
@@ -753,9 +751,9 @@ class ChatsTabFlowCoordinator: FlowCoordinatorProtocol {
         let parameters = UserProfileScreenCoordinatorParameters(userID: userID,
                                                                 isPresentedModally: true,
                                                                 userSession: userSession,
-                                                                userIndicatorController: flowParameters.userIndicatorController,
+                                                                appHooks: flowParameters.appHooks,
                                                                 analytics: flowParameters.analytics,
-                                                                appSettings: flowParameters.appSettings)
+                                                                userIndicatorController: flowParameters.userIndicatorController)
         let coordinator = UserProfileScreenCoordinator(parameters: parameters)
         coordinator.actionsPublisher.sink { [weak self] action in
             guard let self else { return }

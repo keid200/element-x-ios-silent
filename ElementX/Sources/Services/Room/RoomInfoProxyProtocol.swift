@@ -27,8 +27,10 @@ nonisolated protocol BaseRoomInfoProxyProtocol: Sendable {
 // sourcery: AutoMockable
 nonisolated protocol RoomInfoProxyProtocol: BaseRoomInfoProxyProtocol {
     var id: String { get }
+    // periphery:ignore - might be useful to have
     var creators: [String] { get }
     var displayName: String? { get }
+    // periphery:ignore - might be useful to have
     var rawName: String? { get }
     var topic: String? { get }
     /// The room's avatar URL. Use this for editing and favour ``avatar`` for display.
@@ -43,20 +45,29 @@ nonisolated protocol RoomInfoProxyProtocol: BaseRoomInfoProxyProtocol {
     var canonicalAlias: String? { get }
     var alternativeAliases: [String] { get }
     var membership: Membership { get }
+    // periphery:ignore - might be useful to have
     var inviter: RoomMemberProxyProtocol? { get }
     
     var activeMembersCount: Int { get }
+    // periphery:ignore - might be useful to have
     var invitedMembersCount: Int { get }
     var joinedMembersCount: Int { get }
+    // periphery:ignore - might be useful to have
     var highlightCount: Int { get }
+    // periphery:ignore - might be useful to have
     var notificationCount: Int { get }
+    // periphery:ignore - might be useful to have
     var cachedUserDefinedNotificationMode: RoomNotificationMode? { get }
     var hasRoomCall: Bool { get }
     var activeRoomCallIntent: CallIntent? { get }
     var activeRoomCallParticipants: [String] { get }
+    // periphery:ignore - might be useful to have
     var isMarkedUnread: Bool { get }
+    // periphery:ignore - might be useful to have
     var unreadMessagesCount: UInt { get }
+    // periphery:ignore - might be useful to have
     var unreadNotificationsCount: UInt { get }
+    // periphery:ignore - might be useful to have
     var unreadMentionsCount: UInt { get }
     var fullyReadEventID: String? { get }
     var pinnedEventIDs: Set<String> { get }
@@ -83,6 +94,11 @@ extension BaseRoomInfoProxyProtocol {
         
         return .room(id: id, name: displayName, avatarURL: avatarURL)
     }
+    
+    var statusEmoji: Character? {
+        guard case let .heroes(heroes) = avatar else { return nil }
+        return heroes.first?.status.displayed?.emoji
+    }
 }
 
 extension RoomInfoProxyProtocol {
@@ -105,6 +121,11 @@ extension RoomInfoProxyProtocol {
     /// Checks if the other person left the room in a direct chat
     var isUserAloneInDirectRoom: Bool {
         isDirect && activeMembersCount == 1
+    }
+    
+    /// The room's name, falling back to its identifier when it doesn't have one.
+    var displayNameOrID: String {
+        displayName ?? id
     }
     
     /// Find the first alias that matches the given homeserver

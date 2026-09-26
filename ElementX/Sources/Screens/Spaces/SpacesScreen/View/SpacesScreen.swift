@@ -24,6 +24,7 @@ struct SpacesScreen: View {
             .navigationTitle("Circles")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
+            .toolbarRole(Compound.supportsGlass ? .editor : .automatic)
             .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
             .toolbarBackground(silentBrandBlue, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
@@ -274,29 +275,30 @@ struct SpacesScreen: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
+        // Use the title placement on iOS 26 to match the chats tab and fix a weird animation.
+        ToolbarItem(placement: Compound.supportsGlass ? .title : .navigationBarLeading) {
             Button {
                 context.send(viewAction: .showSettings)
             } label: {
-                LoadableAvatarImage(url: context.viewState.userProfile.avatarURL,
-                                    name: context.viewState.userProfile.displayName,
-                                    contentID: context.viewState.userProfile.id,
-                                    avatarSize: .user(on: .spaces),
-                                    mediaProvider: context.mediaProvider)
-                    .accessibilityIdentifier(A11yIdentifiers.homeScreen.userAvatar)
-                    .compositingGroup()
+                AvatarSettingsButtonLabel(userProfile: context.viewState.userProfile,
+                                          mediaProvider: context.mediaProvider)
             }
             .buttonStyle(.borderless)
             .accessibilityLabel(L10n.commonSettings)
-        }
-
-        ToolbarItem(placement: .principal) {
-            // Hides the navigationTitle (which is set for the navigation stack label).
-            Text("").accessibilityHidden(true)
+            .accessibilityIdentifier(A11yIdentifiers.homeScreen.userAvatar)
         }
         .backportSharedBackgroundVisibility(.hidden)
 
-        ToolbarItem(placement: .navigationBarTrailing) {
+        // No need to hide the title on iOS 26, as we use the .title placement for the settings
+        // button to workaround a weird liquid glass transition.
+        if #unavailable(iOS 26) {
+            ToolbarItem(placement: .principal) {
+                // Hides the navigationTitle (which is set for the navigation stack label).
+                Text("").accessibilityHidden(true)
+            }
+        }
+
+        ToolbarItem(placement: .primaryAction) {
             Button {
                 context.send(viewAction: .createSpace)
             } label: {
@@ -326,14 +328,11 @@ struct SpacesScreen_Previews: PreviewProvider, TestablePreview {
     }
 
     static func makeViewModel(isEmpty: Bool = false) -> SpacesScreenViewModel {
-        let appSettings = AppSettings.volatile()
-
         let clientProxy = ClientProxyMock(.init())
         clientProxy.spaceService = SpaceServiceProxyMock(.init(topLevelSpaces: isEmpty ? [] : .mockJoinedSpaces))
 
         return SpacesScreenViewModel(userSession: UserSessionMock(.init(clientProxy: clientProxy)),
                                      selectedSpacePublisher: .init(nil),
-                                     appSettings: appSettings,
                                      userIndicatorController: UserIndicatorControllerMock())
     }
 }

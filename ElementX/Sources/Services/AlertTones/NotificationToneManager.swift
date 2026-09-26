@@ -23,8 +23,6 @@ nonisolated struct NotificationToneManager: NotificationToneManagerProtocol {
         /// The source file could not be accessed due to sandbox restrictions.
         case couldNotAccessSandboxedResource
         
-        /// `AVAudioConverter` could not be initialised for the given format pair.
-        case converterSetupFailed
         /// A tone with the same filename already exists in the library.
         case fileAlreadyExists
         /// An `AVAudioPCMBuffer` could not be allocated.
@@ -265,15 +263,7 @@ nonisolated struct NotificationToneManager: NotificationToneManagerProtocol {
                             filename: "sound_01.caf")
     ].sorted()
     
-    private static let systemLocation = {
-        let systemRoot: URL
-        if let simulatorRoot = ProcessInfo.processInfo.environment["SIMULATOR_ROOT"] {
-            systemRoot = URL(filePath: simulatorRoot)
-        } else {
-            systemRoot = URL(filePath: "/")
-        }
-        return systemRoot.appending(components: "System", "Library", "Audio", "UISounds", directoryHint: .isDirectory)
-    }()
+    private static let systemLocation = URL.systemSoundsDirectory
     
     private static let bundledLocation: URL = {
         guard let url = Bundle.app.resourceURL else {

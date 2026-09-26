@@ -41,6 +41,7 @@ targets:
       base:
         PRODUCT_NAME: PreviewTests
         PRODUCT_BUNDLE_IDENTIFIER: ${BASE_BUNDLE_IDENTIFIER}.preview.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME)"
         # Requires iOS 26 as the generated tests reference previews gated to the Observations-based observe(_:).
         IPHONEOS_DEPLOYMENT_TARGET: '26.0'
         SWIFT_VERSION: 6.2

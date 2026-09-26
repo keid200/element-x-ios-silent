@@ -6,21 +6,20 @@
 // Please see LICENSE files in the repository root for full details.
 //
 
-import Foundation
+import Compound
 import SwiftUI
 
 struct ReadMarkerRoomTimelineView: View {
-    let timelineItem: ReadMarkerRoomTimelineItem
-    
     var body: some View {
         VStack(alignment: .trailing, spacing: 2) {
             Text(L10n.screenRoomTimelineReadMarkerTitle)
                 .textCase(.uppercase)
                 .font(.compound.bodyXSSemibold)
-                .foregroundColor(.compound.textSecondary)
+                .foregroundColor(.compound.textActionAccent)
+            
             Rectangle()
                 .frame(height: 0.5)
-                .foregroundColor(.compound.borderInteractivePrimary)
+                .foregroundColor(.compound.borderAccentPrimary)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
@@ -29,8 +28,6 @@ struct ReadMarkerRoomTimelineView: View {
 
 struct ReadMarkerRoomTimelineView_Previews: PreviewProvider, TestablePreview {
     static let viewModel = TimelineViewModel.mock
-    
-    static let item = ReadMarkerRoomTimelineItem(id: .randomVirtual)
     
     static var previews: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -43,7 +40,7 @@ struct ReadMarkerRoomTimelineView_Previews: PreviewProvider, TestablePreview {
                                                                     sender: .init(id: "1", displayName: "Bob"),
                                                                     content: .init(body: "This is another message"))), groupStyle: .single))
             
-            ReadMarkerRoomTimelineView(timelineItem: item)
+            ReadMarkerRoomTimelineView()
             
             RoomTimelineItemView(viewState: .init(type: .separator(.init(id: .virtual(uniqueID: .init("Separator")), timestamp: .mock)), groupStyle: .single))
             RoomTimelineItemView(viewState: .init(type: .text(.init(id: .randomEvent,

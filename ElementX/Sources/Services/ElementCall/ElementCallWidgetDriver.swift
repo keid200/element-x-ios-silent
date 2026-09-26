@@ -36,6 +36,7 @@ struct ElementCallWidgetMessage: Codable {
     let action: Action
     var data: Data = .init()
     
+    // periphery:ignore - part of the encoded payload
     let widgetId: String
     var requestId = "widgetapi-\(UUID())"
     
@@ -102,7 +103,7 @@ final class ElementCallWidgetDriver: WidgetCapabilitiesProvider, ElementCallWidg
         }
         
         let languageTag = "\(Locale.current.language.languageCode ?? "en")-\(Locale.current.language.region ?? "US")"
-        let theme = colorScheme == .light ? "light" : "dark"
+        let theme = "dark"
         
         let urlString: String
         do {
@@ -166,7 +167,7 @@ final class ElementCallWidgetDriver: WidgetCapabilitiesProvider, ElementCallWidg
             return .failure(.driverNotSetup)
         }
         
-        let result = await widgetDriver.handle.send(msg: message)
+        let result = widgetDriver.handle.send(msg: message)
         MXLog.debug("Sent message: \(message) with result: \(result)")
         
         handleMessageIfNeeded(message)

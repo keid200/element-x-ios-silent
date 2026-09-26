@@ -1,6 +1,6 @@
 "NSCameraUsageDescription" = "სურათის ან ვიდეოს გადასაღებად და შემდგომ გასაგზავნად Silent კამერასთან წვდომა სჭირდება.";
 "NSFaceIDUsageDescription" = "Face ID გამოიყენება თქვენს აპლიკაციასთან წვდომისათვის.";
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "To share your live location, Silent needs location access when the app is in the background.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "To share your location live in chats, location access is needed when the app is in the background.";
 "NSLocationWhenInUseUsageDescription" = "მიანიჭეთ Silent-ს წვდომა ადგილმდებარეობასთან მისი გასაზიარებლად";
 "NSMicrophoneUsageDescription" = "ხმოვანი შეტყობინების გასაგზავნად Silent-ს თქვენს მიკროფონთან წვდომა სჭირდება.";
 "NSPhotoLibraryUsageDescription" = "ეს გაძლევთ საშუალებას, შეინახოთ სურათები და ვიდეოები თქვენს ფოტო ბიბლიოთეკაში.";

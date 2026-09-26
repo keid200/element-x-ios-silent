@@ -7,6 +7,7 @@
 //
 
 import Combine
+import MatrixRustSDK
 import SwiftUI
 
 typealias LoginScreenViewModelType = StateStoreViewModelV2<LoginScreenViewState, LoginScreenViewAction>
@@ -15,7 +16,6 @@ class LoginScreenViewModel: LoginScreenViewModelType, LoginScreenViewModelProtoc
     private let authenticationService: AuthenticationServiceProtocol
     private let userIndicatorController: UserIndicatorControllerProtocol
     private let appSettings: AppSettings
-    private let analytics: AnalyticsServiceProtocol
     
     private var actionsSubject: PassthroughSubject<LoginScreenViewModelAction, Never> = .init()
     var actions: AnyPublisher<LoginScreenViewModelAction, Never> {
@@ -25,12 +25,10 @@ class LoginScreenViewModel: LoginScreenViewModelType, LoginScreenViewModelProtoc
     init(authenticationService: AuthenticationServiceProtocol,
          loginHint: String?,
          userIndicatorController: UserIndicatorControllerProtocol,
-         appSettings: AppSettings,
-         analytics: AnalyticsServiceProtocol) {
+         appSettings: AppSettings) {
         self.authenticationService = authenticationService
         self.userIndicatorController = userIndicatorController
         self.appSettings = appSettings
-        self.analytics = analytics
         
         let username = switch loginHint {
         case .some(let hint) where hint.hasPrefix("mxid:"): String(hint.dropFirst(5)) // MSC4198
@@ -69,9 +67,7 @@ class LoginScreenViewModel: LoginScreenViewModelType, LoginScreenViewModelProtoc
     private func parseUsername() {
         let username = state.bindings.username
         
-        guard MatrixEntityRegex.isMatrixUserIdentifier(username) else { return }
-        
-        let homeserverDomain = String(username.split(separator: ":")[1])
+        guard let homeserverDomain = try? serverNameFromUserId(userId: username) else { return }
         
         startLoading(isInteractionBlocking: false)
         

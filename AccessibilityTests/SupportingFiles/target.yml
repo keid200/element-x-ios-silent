@@ -36,6 +36,7 @@ targets:
       base:
         PRODUCT_NAME: AccessibilityTests
         PRODUCT_BUNDLE_IDENTIFIER: ${BASE_BUNDLE_IDENTIFIER}.accessibility.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME)"
         SWIFT_VERSION: 6.2
         SWIFT_APPROACHABLE_CONCURRENCY: YES
       configs:
@@ -54,4 +55,3 @@ targets:
     - path: ../../ElementX/Sources/Other/MatrixEntityRegex.swift
     - path: ../../ElementX/Sources/Other/Pills/PillUtilities.swift
     - path: ../../ElementX/Sources/Other/Extensions/NSRegularExpresion.swift
-

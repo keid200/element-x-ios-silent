@@ -32,8 +32,7 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
         self.userIndicatorController = userIndicatorController
         self.appSettings = appSettings
         
-        super.init(initialViewState: SecurityAndPrivacyScreenViewState(serverName: clientProxy.userIDServerName ?? "",
-                                                                       accessType: roomProxy.infoPublisher.value.joinRule.toSecurityAndPrivacyRoomAccessType,
+        super.init(initialViewState: SecurityAndPrivacyScreenViewState(accessType: roomProxy.infoPublisher.value.joinRule.toSecurityAndPrivacyRoomAccessType,
                                                                        isEncryptionEnabled: roomProxy.infoPublisher.value.isEncrypted,
                                                                        historyVisibility: roomProxy.infoPublisher.value.historyVisibility.toSecurityAndPrivacyHistoryVisibility,
                                                                        isSpace: roomProxy.infoPublisher.value.isSpace,
@@ -161,7 +160,7 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
         state.canEditAddress = powerLevels.canOwnUser(sendStateEvent: .roomCanonicalAlias)
         state.canEditJoinRule = powerLevels.canOwnUser(sendStateEvent: .roomJoinRules)
         state.canEditHistoryVisibility = powerLevels.canOwnUser(sendStateEvent: .roomHistoryVisibility)
-        state.canEnableEncryption = powerLevels.canOwnUser(sendStateEvent: .roomEncryption)
+        state.canEnableEncryption = powerLevels.canOwnUser(sendStateEvent: .roomEncryption) && !appSettings.forceDisableE2EE.publisher.value
     }
     
     private func setupRoomDirectoryVisibility() {

@@ -9,6 +9,7 @@
 import AVKit
 import Combine
 import Compound
+import ElementCall
 import SwiftState
 import SwiftUI
 
@@ -26,6 +27,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     private let navigationTabCoordinator: NavigationTabCoordinator<HomeTab>
     private let appLockService: AppLockServiceProtocol
     private let flowParameters: CommonFlowParameters
+    // periphery:ignore - retaining purpose
+    private let presenceService: PresenceService
 
     private var userSession: UserSessionProtocol {
         flowParameters.userSession
@@ -79,13 +82,14 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         self.navigationRootCoordinator = navigationRootCoordinator
         self.appLockService = appLockService
         self.flowParameters = flowParameters
+        presenceService = PresenceService(clientProxy: flowParameters.userSession.clientProxy,
+                                          appSettings: flowParameters.appSettings)
 
         navigationTabCoordinator = NavigationTabCoordinator()
         navigationRootCoordinator.setRootCoordinator(navigationTabCoordinator)
 
         let chatsSplitCoordinator = NavigationSplitCoordinator(placeholderCoordinator: PlaceholderScreenCoordinator(hideBrandChrome: flowParameters.appSettings.hideBrandChrome))
-        chatsTabFlowCoordinator = ChatsTabFlowCoordinator(isNewLogin: isNewLogin,
-                                                          navigationSplitCoordinator: chatsSplitCoordinator,
+        chatsTabFlowCoordinator = ChatsTabFlowCoordinator(navigationSplitCoordinator: chatsSplitCoordinator,
                                                           flowParameters: flowParameters)
         chatsTabDetails = .init(tag: HomeTab.chats, title: "Messages", icon: \.chat, selectedIcon: \.chatSolid)
         chatsTabDetails.navigationSplitCoordinator = chatsSplitCoordinator
@@ -210,7 +214,6 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             fatalError("Unexpected transition: \(context)")
         }
     }
-
     // swiftlint:disable:next function_body_length
     private func setupObservers() {
         chatsTabFlowCoordinator.actionsPublisher
@@ -301,18 +304,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                 }
             }
             .store(in: &cancellables)
-
-        flowParameters.elementCallService.actions
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
-                switch action {
-                case .endCall:
-                    self?.dismissCallScreenIfNeeded()
-                default:
-                    break
-                }
-            }
-            .store(in: &cancellables)
+        setupCallObservers()
 
         searchScreenCoordinator?.actionsPublisher
             .sink { [weak self] action in
@@ -325,6 +317,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                         handleAppRoute(.room(roomID: roomID, via: []), animated: true)
                     }
                 case .cancel:
+                    // The search screen is also dismissed when leaving the tab, ignore it in that case.
+                    guard navigationTabCoordinator.selectedTab == .search else { return }
                     // Return to the tab the user came from, but never back into search.
                     navigationTabCoordinator.selectedTab = navigationTabCoordinator.previousTab == .search ? .chats : navigationTabCoordinator.previousTab ?? .chats
                 }
@@ -442,6 +436,10 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
 
     private func presentCallScreen(roomID: String, isVoiceCall: Bool) async {
         guard case let .joined(roomProxy) = await userSession.clientProxy.roomForIdentifier(roomID) else {
+            // An answered call is left up for the native stack, so it has to be ended here rather
+            // than leaving the system with a call this room can no longer serve.
+            MXLog.error("Cannot present the call screen, \(roomID) isn't a joined room")
+            flowParameters.elementCallService.tearDownCallSession(roomID: roomID)
             return
         }
 
@@ -461,6 +459,12 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
 
     private var callScreenPictureInPictureController: AVPictureInPictureController?
     private func presentCallScreen(configuration: ElementCallConfiguration) {
+        // The service runs native calls and drives their screen through its own actions.
+        if flowParameters.elementCallService.handleNativeCallRequest(roomProxy: configuration.roomProxy,
+                                                                     isVoiceCall: configuration.voiceOnly) {
+            return
+        }
+        
         guard flowParameters.ongoingCallRoomIDPublisher.value != configuration.callRoomID else {
             MXLog.info("Returning to existing call.")
             callScreenPictureInPictureController?.stopPictureInPicture()
@@ -498,6 +502,11 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     }
 
     private func hideCallScreenOverlay() {
+        if navigationTabCoordinator.overlayCoordinator is NativeCallScreenCoordinator {
+            flowParameters.elementCallService.minimizeNativeCall()
+            return
+        }
+        
         guard let callScreenPictureInPictureController else {
             MXLog.warning("Picture in picture isn't available, dismissing the call screen.")
             dismissCallScreenIfNeeded()
@@ -508,9 +517,66 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         callScreenPictureInPictureController.startPictureInPicture()
         navigationTabCoordinator.setOverlayPresentationMode(.minimized)
     }
+    // MARK: - Native calls
+    
+    private func setupCallObservers() {
+        flowParameters.elementCallService.actions
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] action in
+                guard let self else { return }
+                switch action {
+                case .endCall:
+                    // A native call comes down on `.nativeCall(.dismiss)` instead, once it has
+                    // actually left the room.
+                    if navigationTabCoordinator.overlayCoordinator is CallScreenCoordinator {
+                        dismissCallScreenIfNeeded()
+                    }
+                case .nativeCall(let presentation):
+                    handleNativeCall(presentation)
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func handleNativeCall(_ presentation: NativeCallPresentation) {
+        switch presentation {
+        case .present:
+            presentNativeCallScreen()
+        case .restore:
+            restoreNativeCallScreen()
+        case .minimize:
+            navigationTabCoordinator.setOverlayPresentationMode(.minimized)
+        case .dismiss:
+            dismissCallScreenIfNeeded()
+        }
+    }
+    
+    private func presentNativeCallScreen() {
+        guard let controller = flowParameters.elementCallService.nativeCallController else {
+            MXLog.error("Cannot present a native call without a call stack")
+            return
+        }
+        
+        guard !(navigationTabCoordinator.overlayCoordinator is NativeCallScreenCoordinator) else {
+            restoreNativeCallScreen()
+            return
+        }
+        
+        let coordinator = NativeCallScreenCoordinator(parameters: .init(controller: controller))
+        navigationTabCoordinator.setOverlayCoordinator(coordinator, animated: true)
+        flowParameters.analytics.track(screen: .RoomCall)
+    }
+    
+    private func restoreNativeCallScreen() {
+        flowParameters.elementCallService.restoreNativeCall()
+        navigationTabCoordinator.setOverlayPresentationMode(.fullScreen)
+    }
 
     private func dismissCallScreenIfNeeded() {
-        guard navigationTabCoordinator.overlayCoordinator is CallScreenCoordinator else {
+        guard navigationTabCoordinator.overlayCoordinator is CallScreenCoordinator
+            || navigationTabCoordinator.overlayCoordinator is NativeCallScreenCoordinator else {
             return
         }
 

@@ -412,7 +412,6 @@ struct LoadableImage_Previews: PreviewProvider, TestablePreview {
             mediaProvider.imageFromSourceSizeClosure = { _, _ in nil }
             mediaProvider.loadFileFromSourceFilenameClosure = { _, _ in .failure(.failedRetrievingFile) }
             mediaProvider.loadImageDataFromSourceClosure = { _ in .failure(.failedRetrievingImage) }
-            mediaProvider.loadImageFromSourceSizeClosure = { _, _ in .failure(.failedRetrievingImage) }
             mediaProvider.loadThumbnailForSourceSourceSizeClosure = { _, _ in .failure(.failedRetrievingThumbnail) }
             mediaProvider.loadImageRetryingOnReconnectionSizeClosure = { _, _ in
                 Task { throw MediaProviderError.failedRetrievingImage }
@@ -424,7 +423,7 @@ struct LoadableImage_Previews: PreviewProvider, TestablePreview {
 
 private extension View {
     func layout(title: String, hideTimelineMedia: Bool = false) -> some View {
-        aspectRatio(contentMode: .fit)
+        scaledToFit()
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .overlay(alignment: .bottom) {
                 Text(title)

@@ -90,11 +90,9 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
     private var pinnedEventsTimelineFlowCoordinator: PinnedEventsTimelineFlowCoordinator?
     // periphery:ignore - used to avoid deallocation
     private var mediaEventsTimelineFlowCoordinator: MediaEventsTimelineFlowCoordinator?
-    // periphery:ignore - used to avoid deallocation
     private var childRoomFlowCoordinator: RoomFlowCoordinator?
     // periphery:ignore - retaining purpose
     private var spaceFlowCoordinator: SpaceFlowCoordinator?
-    // periphery:ignore - retaining purpose
     private var membersFlowCoordinator: RoomMembersFlowCoordinator?
     
     private let stateMachine: StateMachine<State, Event> = .init(state: .initial)
@@ -432,13 +430,12 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                 }
                 presentMediaUploadPickerWithMode(mode, caption: caption, timelineController: timelineController, animated: animated)
                 
-            case (_, .presentEmojiPicker, .emojiPicker(let itemID, let selectedEmoji, _)):
-                guard let timelineController = (context.userInfo as? EventUserInfo)?.timelineController else {
-                    fatalError("Missing required TimelineController")
+            case (_, .presentEmojiPicker, .emojiPicker(let selectedEmojis, _)):
+                guard let continuation = (context.userInfo as? EventUserInfo)?.emojiPickerContinuation else {
+                    fatalError("Missing required emoji continuation")
                 }
-                presentEmojiPicker(for: itemID,
-                                   selectedEmoji: selectedEmoji,
-                                   timelineController: timelineController,
+                presentEmojiPicker(selectedEmojis: selectedEmojis,
+                                   emojiPickerContinuation: continuation,
                                    animated: animated)
                 
             case (_, .presentMessageForwarding(let forwardingItem), .messageForwarding):
@@ -708,9 +705,9 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                 case .presentMediaUploadPreviewScreen(let url, let caption):
                     stateMachine.tryEvent(.presentMediaUploadPreview(mediaURLs: url, caption: caption),
                                           userInfo: EventUserInfo(animated: animated, timelineController: timelineController))
-                case .presentEmojiPicker(let itemID, let selectedEmojis):
-                    stateMachine.tryEvent(.presentEmojiPicker(itemID: itemID, selectedEmojis: selectedEmojis),
-                                          userInfo: EventUserInfo(animated: animated, timelineController: timelineController))
+                case .presentEmojiPicker(let selectedEmojis, let continuation):
+                    stateMachine.tryEvent(.presentEmojiPicker(selectedEmojis: selectedEmojis),
+                                          userInfo: EventUserInfo(animated: animated, emojiPickerContinuation: continuation))
                 case .presentLocationPicker:
                     stateMachine.tryEvent(.presentMapNavigator(interactionMode: .picker(shouldShowLiveLocationOption: true)),
                                           userInfo: EventUserInfo(animated: animated, timelineController: timelineController))
@@ -833,9 +830,9 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                 stateMachine.tryEvent(.presentMapNavigator(interactionMode: .viewStatic(location)),
                                       userInfo: EventUserInfo(animated: animated,
                                                               timelineController: timelineController))
-            case .presentEmojiPicker(let itemID, let selectedEmojis):
-                stateMachine.tryEvent(.presentEmojiPicker(itemID: itemID, selectedEmojis: selectedEmojis),
-                                      userInfo: EventUserInfo(animated: animated, timelineController: timelineController))
+            case .presentEmojiPicker(let selectedEmojis, let continuation):
+                stateMachine.tryEvent(.presentEmojiPicker(selectedEmojis: selectedEmojis),
+                                      userInfo: EventUserInfo(animated: animated, emojiPickerContinuation: continuation))
             case .presentRoomMemberDetails(let userID):
                 stateMachine.tryEvent(.startMembersFlow(entryPoint: .roomMember(userID: userID)))
             case .presentMessageForwarding(let forwardingItem):
@@ -943,11 +940,11 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
     private func presentRoomDetails(isRoot: Bool, animated: Bool) async {
         let params = RoomDetailsScreenCoordinatorParameters(roomProxy: roomProxy,
                                                             userSession: userSession,
+                                                            appHooks: flowParameters.appHooks,
                                                             analyticsService: flowParameters.analytics,
                                                             userIndicatorController: flowParameters.userIndicatorController,
                                                             notificationSettings: userSession.clientProxy.notificationSettings,
-                                                            attributedStringBuilder: AttributedStringBuilder(mentionBuilder: PlainMentionBuilder()),
-                                                            appSettings: flowParameters.appSettings)
+                                                            attributedStringBuilder: AttributedStringBuilder(mentionBuilder: PlainMentionBuilder()))
         let coordinator = RoomDetailsScreenCoordinator(parameters: params)
         coordinator.actions.sink { [weak self] action in
             guard let self else { return }
@@ -1025,8 +1022,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                                                                                    mediaUploadingPreprocessor: MediaUploadingPreprocessor(appSettings: flowParameters.appSettings),
                                                                                    navigationStackCoordinator: stackCoordinator,
                                                                                    userIndicatorController: flowParameters.userIndicatorController,
-                                                                                   orientationManager: flowParameters.appMediator.windowManager,
-                                                                                   appSettings: flowParameters.appSettings)
+                                                                                   orientationManager: flowParameters.appMediator.windowManager)
         let roomDetailsEditCoordinator = RoomDetailsEditScreenCoordinator(parameters: roomDetailsEditParameters)
         
         roomDetailsEditCoordinator.actions.sink { [weak self] action in
@@ -1123,8 +1119,8 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         let parameters = MediaUploadPreviewScreenCoordinatorParameters(mediaURLs: mediaURLs,
                                                                        caption: caption,
                                                                        title: title,
-                                                                       isRoomEncrypted: roomProxy.infoPublisher.value.isEncrypted,
                                                                        shouldShowCaptionWarning: flowParameters.appSettings.shouldShowMediaCaptionWarning,
+                                                                       galleryEnabled: flowParameters.appSettings.galleryEnabled,
                                                                        mediaUploadingPreprocessor: MediaUploadingPreprocessor(appSettings: flowParameters.appSettings),
                                                                        timelineController: timelineController,
                                                                        clientProxy: userSession.clientProxy,
@@ -1150,14 +1146,13 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         }
     }
     
-    private func presentEmojiPicker(for itemID: TimelineItemIdentifier,
-                                    selectedEmoji: Set<String>,
-                                    timelineController: TimelineControllerProtocol,
+    private func presentEmojiPicker(selectedEmojis: Set<String>,
+                                    emojiPickerContinuation: EmojiPickerScreenContinuation,
                                     animated: Bool) {
-        let params = EmojiPickerScreenCoordinatorParameters(itemID: itemID,
-                                                            selectedEmojis: selectedEmoji,
+        let params = EmojiPickerScreenCoordinatorParameters(mode: .reaction,
+                                                            selectedEmojis: selectedEmojis,
                                                             emojiProvider: flowParameters.emojiProvider,
-                                                            timelineController: timelineController)
+                                                            continuation: emojiPickerContinuation)
         let coordinator = EmojiPickerScreenCoordinator(parameters: params)
         
         coordinator.actions.sink { [weak self] action in
@@ -1170,7 +1165,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         }
         .store(in: &cancellables)
         
-        navigationStackCoordinator.setSheetCoordinator(coordinator) { [weak self] in
+        navigationStackCoordinator.setSheetCoordinator(coordinator, animated: animated) { [weak self] in
             self?.stateMachine.tryEvent(.dismissEmojiPicker)
         }
     }
@@ -1181,7 +1176,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         let stackCoordinator = NavigationStackCoordinator()
         
         let params = LocationSharingScreenCoordinatorParameters(interactionMode: interactionMode,
-                                                                mapURLBuilder: flowParameters.appSettings.mapTilerSettings.publisher.value,
+                                                                mapURLBuilder: flowParameters.appSettings.mapTilerConfiguration.publisher.value,
                                                                 roomProxy: roomProxy,
                                                                 timelineController: timelineController,
                                                                 liveLocationManager: flowParameters.userSession.liveLocationManager,
@@ -1203,7 +1198,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         
         stackCoordinator.setRootCoordinator(coordinator)
         
-        navigationStackCoordinator.setSheetCoordinator(stackCoordinator) { [weak self] in
+        navigationStackCoordinator.setSheetCoordinator(stackCoordinator, animated: animated) { [weak self] in
             self?.stateMachine.tryEvent(.dismissMapNavigator)
         }
     }
@@ -1351,8 +1346,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                                                                       roomType: roomType,
                                                                       isSkippable: false,
                                                                       userDiscoveryService: UserDiscoveryService(clientProxy: userSession.clientProxy),
-                                                                      userIndicatorController: flowParameters.userIndicatorController,
-                                                                      appSettings: flowParameters.appSettings)
+                                                                      userIndicatorController: flowParameters.userIndicatorController)
         
         let coordinator = InviteUsersScreenCoordinator(parameters: inviteParameters)
         stackCoordinator.setRootCoordinator(coordinator)

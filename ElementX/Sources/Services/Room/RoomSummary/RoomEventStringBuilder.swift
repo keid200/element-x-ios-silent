@@ -76,7 +76,8 @@ nonisolated struct RoomEventStringBuilder {
                                           previousDisplayName: prevDisplayName,
                                           avatarURLString: avatarUrl,
                                           previousAvatarURLString: prevAvatarUrl,
-                                          member: sender.id,
+                                          memberID: sender.id,
+                                          memberDisplayName: sender.disambiguatedDisplayName ?? sender.id,
                                           memberIsYou: isOutgoing)
                 .map(AttributedString.init)
         case .callInvite:
@@ -106,6 +107,7 @@ nonisolated struct RoomEventStringBuilder {
                                shouldPrefixSenderName: false)
     }
     
+    // periphery:ignore - might be useful to have
     static func threadListEventStringBuilder(userID: String) -> Self {
         RoomEventStringBuilder(stateEventStringBuilder: .init(userID: userID),
                                messageEventStringBuilder: .init(attributedStringBuilder: AttributedStringBuilder(cacheKey: "threadList", mentionBuilder: PlainMentionBuilder()),

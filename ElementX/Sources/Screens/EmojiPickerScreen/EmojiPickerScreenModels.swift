@@ -8,13 +8,24 @@
 
 import Foundation
 
+typealias EmojiPickerScreenContinuation = AsyncStream<String>.Continuation
+enum EmojiPickerScreenMode { case reaction, userStatus }
+
 enum EmojiPickerScreenViewModelAction {
     case dismiss
 }
 
 struct EmojiPickerScreenViewState: BindableState {
+    let mode: EmojiPickerScreenMode
     var categories: [EmojiPickerEmojiCategoryViewData]
     var selectedEmojis: Set<String>
+    
+    var title: String {
+        switch mode {
+        case .reaction: L10n.commonReactions
+        case .userStatus: L10n.a11yCustomEmoji
+        }
+    }
 }
 
 enum EmojiPickerScreenViewAction {

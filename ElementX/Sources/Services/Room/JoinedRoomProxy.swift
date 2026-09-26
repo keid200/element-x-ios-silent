@@ -18,7 +18,6 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
     private let analyticsService: AnalyticsServiceProtocol
     private let eventStringBuilder: RoomEventStringBuilder
     
-    // periphery:ignore - required for instance retention in the rust codebase
     private var roomInfoObservationToken: TaskHandle?
     // periphery:ignore - required for instance retention in the rust codebase
     private var typingNotificationObservationToken: TaskHandle?
@@ -42,12 +41,6 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
     
     /// The predecessor is set on room creation and never changes, so we lazily store it.
     lazy var predecessorRoom = room.predecessorRoom()
-    
-    /// The successor may change over time, so we access it dynamically.
-    /// It's suggested to observe it through the `infoPublisher`
-    var successorRoom: SuccessorRoom? {
-        room.successorRoom()
-    }
     
     let timeline: TimelineProxyProtocol
     
@@ -121,7 +114,7 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
         subscribedForUpdates = true
         
         do {
-            try await roomListService.subscribeToRooms(roomIds: [id])
+            try await roomListService.setRoomSubscriptions(roomIds: [id])
         } catch {
             MXLog.error("Failed subscribing to room with error: \(error)")
         }
@@ -234,6 +227,7 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
                 case .file: .file
                 case .image: .image
                 case .video: .video
+                case .gallery: .gallery
                 }
             }
             
@@ -297,16 +291,6 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
             return .success(())
         } catch {
             MXLog.error("Failed enabling encryption with error: \(error)")
-            return .failure(.sdkError(error))
-        }
-    }
-    
-    func redact(_ eventID: String) async -> Result<Void, RoomProxyError> {
-        do {
-            try await room.redact(eventId: eventID, reason: nil)
-            return .success(())
-        } catch {
-            MXLog.error("Failed redacting eventID: \(eventID) with error: \(error)")
             return .failure(.sdkError(error))
         }
     }
@@ -442,16 +426,6 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
         }
     }
     
-    func edit(eventID: String, newContent: RoomMessageEventContentWithoutRelation) async -> Result<Void, RoomProxyError> {
-        do {
-            try await room.edit(eventId: eventID, newContent: newContent)
-            return .success(())
-        } catch {
-            MXLog.error("Failed editing event id \(eventID), in room \(id) with error: \(error)")
-            return .failure(.sdkError(error))
-        }
-    }
-    
     func sendTypingNotification(isTyping: Bool) async -> Result<Void, RoomProxyError> {
         do {
             try await room.typingNotice(isTyping: isTyping)
@@ -581,15 +555,6 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
     
     // MARK: - Power Levels
     
-    func powerLevels() async -> Result<RoomPowerLevelsProxyProtocol?, RoomProxyError> {
-        do {
-            return try await .success(RoomPowerLevelsProxy(room.getPowerLevels()))
-        } catch {
-            MXLog.error("Failed building the current power level settings: \(error)")
-            return .failure(.sdkError(error))
-        }
-    }
-    
     func applyPowerLevelChanges(_ changes: RoomPowerLevelChanges) async -> Result<Void, RoomProxyError> {
         do {
             return try await .success(room.applyPowerLevelChanges(changes: changes))
@@ -605,15 +570,6 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
             return .success(())
         } catch {
             MXLog.error("Failed resetting the power levels: \(error)")
-            return .failure(.sdkError(error))
-        }
-    }
-    
-    func suggestedRole(for userID: String) async -> Result<RoomMemberRole, RoomProxyError> {
-        do {
-            return try await .success(room.suggestedRoleForUser(userId: userID))
-        } catch {
-            MXLog.error("Failed getting a user's role: \(error)")
             return .failure(.sdkError(error))
         }
     }
@@ -839,19 +795,19 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
     }
     
     private static let excludedEventsFilter: TimelineEventFilter = {
-        var stateEventFilters: [StateEventType] = [.roomCanonicalAlias,
-                                                   .roomGuestAccess,
-                                                   .roomHistoryVisibility,
-                                                   .roomJoinRules,
-                                                   .roomPinnedEvents,
-                                                   .roomPowerLevels,
-                                                   .roomServerAcl,
-                                                   .roomTombstone,
-                                                   .spaceChild,
-                                                   .spaceParent,
-                                                   .policyRuleRoom,
-                                                   .policyRuleServer,
-                                                   .policyRuleUser]
-        return .excludeEventTypes(eventTypes: stateEventFilters.map { FilterTimelineEventType.state(eventType: $0) })
+        var stateEventFilters: [TimelineEventType] = [.roomCanonicalAlias,
+                                                      .roomGuestAccess,
+                                                      .roomHistoryVisibility,
+                                                      .roomJoinRules,
+                                                      .roomPinnedEvents,
+                                                      .roomPowerLevels,
+                                                      .roomServerAcl,
+                                                      .roomTombstone,
+                                                      .spaceChild,
+                                                      .spaceParent,
+                                                      .policyRuleRoom,
+                                                      .policyRuleServer,
+                                                      .policyRuleUser]
+        return .exclude(stateEventFilters.map { TimelineEventCondition.eventType($0) })
     }()
 }

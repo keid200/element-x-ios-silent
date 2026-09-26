@@ -1,13 +1,13 @@
 {
-  "originHash" : "38092aeb975b0dafe051df313112892dfbe3eb3329c38308856befdf6843cddb",
+  "originHash" : "7a6117b3894e217e5bc0fe7497b0b868c49d51f41e0d8be554dc766cb9566ec9",
   "pins" : [
     {
       "identity" : "compound-design-tokens",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/element-hq/compound-design-tokens",
       "state" : {
-        "revision" : "6e33c5bf3cbb4c29dbe5fc063d24b375849c0fac",
-        "version" : "10.2.2"
+        "revision" : "86c15ef71798581d1e0cc39a7f99e598ad572419",
+        "version" : "11.0.0"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
       "state" : {
-        "revision" : "ad5e3190cc63dc288f28546f9c6827efc1e9d495",
-        "version" : "1.19.2"
+        "revision" : "59a99c458de4d2dee580529b61b4f78dca7b7fa6",
+        "version" : "1.19.4"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/SwiftUI-Introspect",
       "state" : {
-        "revision" : "26986a57e31c813f98262ddb62d4b07d40008535",
-        "version" : "26.0.1"
+        "revision" : "a37eca1db7bebc9437ee89508e7b4433ff34adb4",
+        "version" : "27.0.0"
       }
     },
     {

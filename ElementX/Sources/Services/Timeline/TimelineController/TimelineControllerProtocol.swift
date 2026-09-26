@@ -26,6 +26,7 @@ enum TimelineControllerAction {
     }
     
     case displayMediaPreview(item: EventBasedMessageTimelineItemProtocol, timelineViewModel: TimelineViewModelKind)
+    case displayGalleryPreview(galleryItem: GalleryRoomTimelineItem, timelineViewModel: TimelineViewModelKind)
     case displayLocation(StaticLocationData)
     case displayLiveLocation(sender: TimelineItemSender, initialLiveLocationShare: LiveLocationShare)
     case none
@@ -44,8 +45,10 @@ enum TimelineControllerError: Error {
 /// timeline items, grouping together state events, donating intents to the larger system etc.
 @MainActor
 protocol TimelineControllerProtocol: Sendable {
-    var roomID: String { get }
     var timelineKind: TimelineKind { get }
+    
+    /// The gallery attachments this timeline includes, or `nil` when it isn't filtered.
+    var allowedGalleryItemTypes: [TimelineAllowedGalleryItemType]? { get }
     
     /// The currently known items, use only for setting up the intial state.
     var timelineItems: [RoomTimelineItemProtocol] { get }
@@ -81,7 +84,7 @@ protocol TimelineControllerProtocol: Sendable {
     
     func toggleReaction(_ reaction: String, to eventOrTransactionID: TimelineItemIdentifier.EventOrTransactionID) async
     
-    func redact(_ eventOrTransactionID: TimelineItemIdentifier.EventOrTransactionID) async
+    func redact(_ eventOrTransactionID: TimelineItemIdentifier.EventOrTransactionID, reason: String?) async
     
     func pin(eventID: String) async
     
@@ -134,6 +137,10 @@ protocol TimelineControllerProtocol: Sendable {
                           audioInfo: AudioInfo,
                           waveform: [Float],
                           requestHandle: @MainActor (SendAttachmentJoinHandleProtocol) -> Void) async -> Result<Void, TimelineControllerError>
+    
+    func sendGallery(itemInfos: [GalleryItemInfo],
+                     caption: String?,
+                     inReplyToEventID: String?) async -> Result<Void, TimelineControllerError>
     
     // MARK: - Poll
     

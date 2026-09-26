@@ -18,6 +18,22 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>a11y_gallery_more_media</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>Galerie, %1$d weitere Mediendatei</string>
+			<key>other</key>
+			<string>Galerie, %1$d weitere Mediendateien</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>a11y_polls_percent_of_total</key>
 	<dict>
 		<key>COUNT</key>
@@ -43,9 +59,41 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>Gelesen von %1$@ und %2$d weiteren</string>
+			<string>Vorherige Nachricht gelesen von %1$@ und %2$d weiteren Person</string>
 			<key>other</key>
-			<string>Gelesen von %1$@ und %2$d weiteren</string>
+			<string>Vorherige Nachricht gelesen von %1$@ und %2$d weiteren Personen</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
+	<key>common_gallery_reply_attachments</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%1$d Anhang…</string>
+			<key>other</key>
+			<string>%1$d Anhänge…</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
+	<key>common_gallery_reply_media_items</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%1$d Mediendatei…</string>
+			<key>other</key>
+			<string>%1$d Mediendateien…</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -210,6 +258,22 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>notification_gallery_body</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>Hat %1$d Anhang geteilt</string>
+			<key>other</key>
+			<string>Hat %1$d Anhänge geteilt</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>notification_invitations</key>
 	<dict>
 		<key>COUNT</key>
@@ -274,6 +338,22 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>screen.room.timeline_redacted_messages</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%1$d entfernte Nachricht</string>
+			<key>other</key>
+			<string>%1$d entfernte Nachrichten</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>screen_advanced_settings_live_location_update_distance</key>
 	<dict>
 		<key>COUNT</key>
@@ -283,9 +363,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>Every %1$d meter</string>
+			<string>Alle %1$d Meter</string>
 			<key>other</key>
-			<string>Every %1$d meters</string>
+			<string>Alle %1$d Meter</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -331,9 +411,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>Minimum %1$d character. Do not use your account password</string>
+			<string>Mindestens %1$d Zeichen. Verwende nicht dein Konto-Passwort</string>
 			<key>other</key>
-			<string>Minimum %1$d characters. Do not use your account password</string>
+			<string>Mindestens %1$d Zeichen. Verwende nicht dein Konto-Passwort</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -347,9 +427,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>%1$d degree</string>
+			<string>%1$d Grad</string>
 			<key>other</key>
-			<string>%1$d degrees</string>
+			<string>%1$d Grad</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -379,9 +459,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>%1$d person</string>
+			<string>%1$d Person</string>
 			<key>other</key>
-			<string>%1$d people</string>
+			<string>%1$d Leute</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -466,6 +546,22 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>screen_room_selection_count</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%1$d Nachricht ausgewählt</string>
+			<key>other</key>
+			<string>%1$d Nachrichten ausgewählt</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>screen_room_timeline_reaction_a11y</key>
 	<dict>
 		<key>COUNT</key>
@@ -525,7 +621,7 @@
 			<key>one</key>
 			<string>%1$@, %2$@ und %3$d weitere Person</string>
 			<key>other</key>
-			<string>%1$@, %2$@ und %3$d weitere Person</string>
+			<string>%1$@, %2$@ und %3$d weitere Personen</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -562,7 +658,7 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
-	<key>screen_timeline_active_call_extra_joined_count</key>
+	<key>screen_timeline_active_call_joined_count</key>
 	<dict>
 		<key>COUNT</key>
 		<dict>
@@ -571,9 +667,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>+ %1$d joined</string>
+			<string>%1$d ist beigetreten</string>
 			<key>other</key>
-			<string>+ %1$d joined</string>
+			<string>%1$d sind beigetreten</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -605,7 +701,7 @@
 			<key>one</key>
 			<string>%1$d Push-Dienst gefunden: %2$@</string>
 			<key>other</key>
-			<string>%1$d Push-Dienst gefunden: %2$@</string>
+			<string>%1$d Push-Dienste gefunden: %2$@</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>

@@ -5,6 +5,7 @@ settings:
   BASE_BUNDLE_IDENTIFIER: com.cybershield.silent
   ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: "colors/accent-color"
   DEVELOPMENT_TEAM: 4GWA4C9LKJ
+  IS_NIGHTLY_BUILD: false
 
   # Optional configuration to load accounts from Element Classic.
   CLASSIC_APP_GROUP_IDENTIFIER: group.com.cyber50defense.silent

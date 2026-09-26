@@ -8,7 +8,7 @@
 
 import Foundation
 
-nonisolated enum EventBasedMessageTimelineItemContentType: Hashable {
+nonisolated enum EventBasedMessageTimelineItemContentType: Hashable, CustomStringConvertible {
     case audio(AudioRoomTimelineItemContent)
     case emote(EmoteRoomTimelineItemContent)
     case file(FileRoomTimelineItemContent)
@@ -18,6 +18,32 @@ nonisolated enum EventBasedMessageTimelineItemContentType: Hashable {
     case video(VideoRoomTimelineItemContent)
     case location(LocationRoomTimelineItemContent)
     case voice(AudioRoomTimelineItemContent)
+    case gallery(GalleryRoomTimelineItemContent)
+    
+    var description: String {
+        switch self {
+        case .audio:
+            "audio"
+        case .emote:
+            "emote"
+        case .file:
+            "file"
+        case .image:
+            "image"
+        case .notice:
+            "notice"
+        case .text:
+            "text"
+        case .video:
+            "video"
+        case .location:
+            "location"
+        case .voice:
+            "voice"
+        case .gallery:
+            "gallery"
+        }
+    }
 }
 
 nonisolated protocol EventBasedMessageTimelineItemProtocol: EventBasedTimelineItemProtocol {
@@ -27,7 +53,7 @@ nonisolated protocol EventBasedMessageTimelineItemProtocol: EventBasedTimelineIt
 nonisolated extension EventBasedMessageTimelineItemProtocol {
     var supportsMediaCaption: Bool {
         switch contentType {
-        case .audio, .file, .image, .video:
+        case .audio, .file, .image, .video, .gallery:
             true
         case .emote, .notice, .text, .location, .voice:
             false
@@ -35,7 +61,7 @@ nonisolated extension EventBasedMessageTimelineItemProtocol {
     }
     
     var hasMediaCaption: Bool {
-        mediaCaption != nil
+        mediaCaption?.isBlank == false
     }
     
     var mediaCaption: String? {
@@ -47,6 +73,8 @@ nonisolated extension EventBasedMessageTimelineItemProtocol {
         case .image(let content):
             content.caption
         case .video(let content):
+            content.caption
+        case .gallery(let content):
             content.caption
         case .emote, .notice, .text, .location, .voice:
             nil
@@ -62,6 +90,8 @@ nonisolated extension EventBasedMessageTimelineItemProtocol {
         case .image(let content):
             content.formattedCaption
         case .video(let content):
+            content.formattedCaption
+        case .gallery(let content):
             content.formattedCaption
         case .emote, .notice, .text, .location, .voice:
             nil

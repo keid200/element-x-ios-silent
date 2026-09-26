@@ -94,7 +94,7 @@ final class TimelineProxy: TimelineProxyProtocol {
     }
     
     func messageEventContent(for timelineItemID: TimelineItemIdentifier) async -> RoomMessageEventContentWithoutRelation? {
-        guard let content = timelineItemProvider.itemProxies.firstEventTimelineItemUsingStableID(timelineItemID)?.content,
+        guard let content = timelineItemProvider.itemProxies.firstEventTimelineItem(matching: timelineItemID)?.content,
               case let .msgLike(messageLikeContent) = content,
               case let .message(messageContent) = messageLikeContent.kind else {
             return nil
@@ -374,6 +374,27 @@ final class TimelineProxy: TimelineProxyProtocol {
         return .success(())
     }
     
+    func sendGallery(itemInfos: [GalleryItemInfo],
+                     caption: String?,
+                     inReplyToEventID: String?) async -> Result<Void, TimelineProxyError> {
+        MXLog.info("Sending gallery with \(itemInfos.count) items")
+        
+        do {
+            let handle = try timeline.sendGallery(params: .init(caption: caption,
+                                                                formattedCaption: nil, // Rust will build this from the caption's markdown.
+                                                                mentions: nil,
+                                                                inReplyTo: inReplyToEventID),
+                                                  itemInfos: itemInfos)
+            try await handle.join()
+            MXLog.info("Finished sending gallery")
+        } catch {
+            MXLog.error("Failed sending gallery with error: \(error)")
+            return .failure(.sdkError(error))
+        }
+        
+        return .success(())
+    }
+    
     func sendVoiceMessage(url: URL,
                           audioInfo: AudioInfo,
                           waveform: [Float],
@@ -420,7 +441,7 @@ final class TimelineProxy: TimelineProxyProtocol {
         
         do {
             if let inReplyToEventID {
-                try await timeline.sendReply(msg: messageContent, eventId: inReplyToEventID)
+                _ = try await timeline.sendReply(msg: messageContent, eventId: inReplyToEventID)
                 MXLog.info("Finished sending reply to eventID: \(inReplyToEventID)")
             } else {
                 _ = try await timeline.send(msg: messageContent)
@@ -642,27 +663,19 @@ private extension MatrixRustSDK.PollKind {
 }
 
 extension Array where Element == TimelineItemProxy {
-    func firstEventTimelineItemUsingStableID(_ id: TimelineItemIdentifier) -> EventTimelineItem? {
-        for item in self {
-            if case let .event(eventTimelineItem) = item {
-                if eventTimelineItem.id.uniqueID == id.uniqueID {
-                    return eventTimelineItem.item
-                }
-            }
+    /// The event matching the given identifier, found by the event itself as that is the only part of
+    /// the identifier that can be compared across timelines. Identifiers that don't represent an event
+    /// fall back to the unique ID.
+    func firstEventTimelineItem(matching id: TimelineItemIdentifier) -> EventTimelineItem? {
+        let eventTimelineItems = compactMap { item -> EventTimelineItemProxy? in
+            guard case let .event(eventTimelineItem) = item else { return nil }
+            return eventTimelineItem
         }
         
-        return nil
-    }
-    
-    func firstEventTimelineItemUsingEventOrTransactionID(_ eventOrTransactionID: TimelineItemIdentifier.EventOrTransactionID) -> EventTimelineItem? {
-        for item in self {
-            if case let .event(eventTimelineItem) = item,
-               case let .event(_, identifier) = eventTimelineItem.id,
-               identifier == eventOrTransactionID {
-                return eventTimelineItem.item
-            }
+        guard let eventOrTransactionID = id.eventOrTransactionID else {
+            return eventTimelineItems.first { $0.id.uniqueID == id.uniqueID }?.item
         }
         
-        return nil
+        return eventTimelineItems.first { $0.id.eventOrTransactionID == eventOrTransactionID }?.item
     }
 }

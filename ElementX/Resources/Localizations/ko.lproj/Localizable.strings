@@ -6,16 +6,23 @@
 "a11y_collapse_message_text_field" = "메시지 텍스트 필드 최소화";
 "a11y_create_poll_votes_allowed_decrease" = "Decrease votes allowed per person";
 "a11y_create_poll_votes_allowed_increase" = "Increase votes allowed per person";
+"a11y_custom_emoji" = "Custom emoji";
 "a11y_delete" = "삭제";
 "a11y_duration" = "소요 시간: %1$@";
 "a11y_edit_avatar" = "아바타 편집";
 "a11y_edit_room_address_hint" = "전체 주소는 다음과 같습니다 %1$@";
 "a11y_expand_message_text_field" = "메시지 텍스트 필드 확장";
+"a11y_gallery_attachment" = "Gallery, attachment %1$d";
+"a11y_gallery_failed_scan" = "Gallery, failed scan %1$d";
+"a11y_gallery_image" = "Gallery, image %1$d";
+"a11y_gallery_scanning" = "Gallery, scanning %1$d";
+"a11y_gallery_video" = "Gallery, video %1$d";
 "a11y_hide_password" = "비밀번호 숨기기";
 "a11y_info" = "정보";
 "a11y_join_call" = "통화 참가";
 "a11y_jump_to_bottom" = "맨 아래로 이동";
 "a11y_jump_to_unread" = "읽지 않은 항목으로 이동";
+"a11y_jump_to_unread_messages" = "Jump to first unread message";
 "a11y_notifications_mentions_only" = "멘션만";
 "a11y_notifications_muted" = "음소거함";
 "a11y_notifications_new_mentions" = "새로운 언급";
@@ -50,6 +57,7 @@
 "a11y_start_call" = "통화 시작";
 "a11y_start_video_call" = "영상 통화 시작";
 "a11y_start_voice_call" = "음성 통화 시작";
+"a11y_status" = "Status";
 "a11y_tombstoned_room" = "묘비 방";
 "a11y_user_menu" = "사용자 메뉴";
 "a11y_video_preview" = "Video preview";
@@ -135,6 +143,7 @@
 "action_manage_account_and_devices" = "계정 및 기기 관리";
 "action_manage_devices" = "기기 관리";
 "action_manage_rooms" = "방 관리";
+"action_mark_as_read" = "Mark as read";
 "action_message" = "메시지";
 "action_minimize" = "최소화";
 "action_next" = "다음";
@@ -165,6 +174,7 @@
 "action_retry_decryption" = "복호화 재시도";
 "action_save" = "저장";
 "action_search" = "검색";
+"action_select" = "Select";
 "action_select_all" = "전체 선택";
 "action_send" = "보내기";
 "action_send_edited_message" = "편집한 메시지 보내기";
@@ -294,6 +304,7 @@
 "common_no_space_name" = "스페이스 이름 없음";
 "common_not_encrypted" = "암호화되지 않음";
 "common_offline" = "오프라인";
+"common_on_a_call" = "On a call";
 "common_open_source_licenses" = "오픈 소스 라이선스";
 "common_optic_id_ios" = "Optic ID";
 "common_or" = "또는";
@@ -365,6 +376,7 @@
 "common_success" = "성공";
 "common_suggested" = "공유된 스페이스";
 "common_suggestions" = "제안";
+"common_switch_accounts" = "Switch accounts";
 "common_syncing" = "동기화 중";
 "common_text" = "글자";
 "common_third_party_notices" = "제3자 고지";
@@ -410,7 +422,8 @@
 "confirm_recovery_key_banner_secondary_button_title" = "복구 키를 잊으셨나요?";
 "confirm_recovery_key_banner_title" = "귀하의 키 저장소가 동기화되지 않았습니다";
 "content_scanner_not_found" = "Download not available.";
-"content_scanner_not_found_title" = "File not found";
+"content_scanner_not_found_title" = "Something went wrong";
+"content_scanner_scanning" = "Scanning…";
 "content_scanner_unsafe_message" = "Preview and download have been disabled.";
 "content_scanner_unsafe_title" = "The file is not safe";
 "crash_detection_dialog_content" = "%1$@이(가) 이전에 마지막으로 사용할 때 충돌했습니다. 충돌 보고서를 공유해주실 수 있나요?";
@@ -484,6 +497,11 @@
 "error_no_compatible_app_found" = "이 동작을 수행할 수 있는 앱을 찾지 못했습니다.";
 "error_room_address_already_exists" = "이 방 주소는 이미 존재합니다. 방 주소 필드를 편집하거나 방 이름을 변경해 보세요.";
 "error_room_address_invalid_symbols" = "일부 문자는 허용되지 않습니다. 로마자, 숫자 및 다음 기호만 지원됩니다! $ &amp; &#39; ( ) * + / ; = ? @ [ ] - . _";
+"error_sending_failure_invalid_mime_type" = "Invalid mime type: %@";
+"error_sending_failure_missing_media_content" = "Missing media content";
+"error_sending_failure_other" = "Error details: %@";
+"error_sending_failure_sending_from_unverified_device" = "Sending from unverified device";
+"error_sending_failure_unknown" = "Unknown error";
 "error_some_messages_have_not_been_sent" = "일부 메시지가 전송되지 않았습니다";
 "error_unknown" = "이런, 오류가 발생했어요";
 "error.account_already_logged_in" = "이 기기에서 이미 %1$@님으로 로그인되어 있습니다.";
@@ -513,6 +531,8 @@
 "notification_invitation_action_reject" = "거부";
 "notification_invite_body" = "채팅에 초대됨";
 "notification_invite_body_with_sender" = "%1$@ 가 채팅에 초대했습니다";
+"notification_knock_request_body" = "Requested to join";
+"notification_live_location_started_body" = "Started sharing their live location";
 "notification_mentioned_you_body" = "당신을 언급했습니다: %1$@";
 "notification_new_messages" = "새 메시지";
 "notification_reaction_body" = "%1$@로 반응함";
@@ -703,8 +723,16 @@
 "screen_change_server_error_unauthorized_homeserver_title" = "계정 제공자 %1$@ 는 허용되지 않습니다.";
 "screen_change_server_form_header" = "홈서버 URL";
 "screen_change_server_form_notice" = "도메인 주소를 입력하세요.";
+"screen_change_server_navigation_title_login" = "Sign in";
+"screen_change_server_navigation_title_register" = "Create account";
 "screen_change_server_subtitle" = "서버의 주소는 무엇인가요?";
+"screen_change_server_textfield_footer_login" = "If your account is provided by your company or a community, then change the account provider (example: companyname.com).";
+"screen_change_server_textfield_footer_register" = "Create an account on matrix.org for free. If you want to create an account with a different provider, then change it accordingly (example: communityname.org).";
+"screen_change_server_textfield_header" = "Account provider";
+"screen_change_server_textfield_placeholder" = "example.com";
 "screen_change_server_title" = "서버 선택";
+"screen_change_server_title_login" = "Enter your account provider";
+"screen_change_server_title_register" = "Choose an account provider";
 "screen_chat_backup_key_backup_action_disable" = "백업 비활성화";
 "screen_chat_backup_key_backup_action_enable" = "백업 활성화";
 "screen_chat_backup_key_backup_description" = "이 설정을 통해 새로운 기기에서도 대화 기록을 확인할 수 있으며, 대화 및 디지털 신원 백업을 위해 반드시 필요합니다. %1$@.";
@@ -924,6 +952,10 @@
 "screen_knock_requests_list_empty_state_title" = "보류 중인 가입 요청이 없습니다.";
 "screen_knock_requests_list_initial_loading_title" = "가입 요청을 로딩 중…";
 "screen_knock_requests_list_title" = "참여 요청";
+"screen_labs_enable_gallery" = "Gallery messages";
+"screen_labs_enable_gallery_description" = "Send multiple images or videos in one go. Stable on mobile, but not yet supported by web.";
+"screen_labs_enable_knocking" = "Ask to join";
+"screen_labs_enable_knocking_description" = "Users can request access to a room that is not open for anyone to join. Stable on mobile, web implementation exists but is experimental.";
 "screen_labs_enable_threads" = "스레드 답글 활성화";
 "screen_labs_enable_threads_description" = "이 변경 사항을 적용하려면 앱을 다시 시작해야 합니다.";
 "screen_labs_header_description" = "개발 중인 최신 아이디어들을 미리 체험해 보세요. 이 기능들은 아직 완성되지 않았으므로 불안정할 수 있으며, 언제든 변경될 수 있습니다.";
@@ -944,6 +976,7 @@
 "screen_link_new_device_desktop_step3" = "이 기기로 QR 코드를 스캔하세요.";
 "screen_link_new_device_desktop_submit" = "스캔 준비 완료";
 "screen_link_new_device_desktop_title" = "QR 코드를 확인하려면 데스크톱 컴퓨터에서 %1$@을(를) 여세요.";
+"screen_link_new_device_desktop_warning" = "Only scan a QR code after following the steps above on your own device. Never scan a code sent by another person.";
 "screen_link_new_device_enter_number_error_numbers_do_not_match" = "숫자가 일치하지 않습니다";
 "screen_link_new_device_enter_number_notice" = "2자리 코드를 입력하세요";
 "screen_link_new_device_enter_number_subtitle" = "이 절차를 통해 다른 기기와의 연결이 안전한지 확인합니다.";
@@ -970,6 +1003,8 @@
 "screen_live_location_sheet_nobody_sharing" = "위치를 공유 중인 사용자가 없습니다.";
 "screen_live_location_sheet_sharing_live_location" = "실시간 위치 공유 중";
 "screen_live_location_sheet_title" = "지도 보기";
+"screen_local_network_opt_in_subtitle" = "Your homeserver is on your local network. To connect, %1$@ needs permission to reach devices on this network.";
+"screen_local_network_opt_in_title" = "Allow access to local network";
 "screen_login_error_deactivated_account" = "삭제된 계정입니다.";
 "screen_login_error_invalid_credentials" = "잘못된 아이디/비밀번호";
 "screen_login_error_invalid_user_id" = "이 사용자 ID는 유효하지 않습니다. 예상 형식: ‘@user:homeserver.org’";
@@ -1056,7 +1091,7 @@
 "screen_notification_settings_sound_custom_sound_button_title" = "소리 사용자 지정";
 "screen_notification_settings_sound_delete_sound_error_title" = "파일 삭제 오류";
 "screen_notification_settings_sound_element_default" = "Element 기본 설정";
-"screen_notification_settings_sound_element_fade" = "엘리먼트 페이드";
+"screen_notification_settings_sound_element_fade" = "Element Fade";
 "screen_notification_settings_sound_import_sound_error_title" = "파일 가져오기 오류";
 "screen_notification_settings_sound_preview_sound_error_title" = "알림음 미리듣기 문제 발생";
 "screen_notification_settings_sound_section_title" = "소리";
@@ -1103,7 +1138,7 @@
 "screen_onboarding_welcome_back" = "다시 오신 것을 환영합니다";
 "screen_onboarding_welcome_message" = "%1$@ 에 오신 것을 환영합니다. 속도와 단순성을 극대화한 가장 빠른 버전입니다.";
 "screen_onboarding_welcome_subtitle" = "%1$@ 에 오신 것을 환영합니다. 속도와 단순성을 위해 최적화된 앱입니다.";
-"screen_onboarding_welcome_title" = "당신의 엘리먼트에 있어";
+"screen_onboarding_welcome_title" = "가장 나다운 공간, Element에서";
 "screen_pinned_timeline_empty_state_description" = "메시지를 누르고 \"%1$@\" 를 선택하여 여기에 포함합니다.";
 "screen_pinned_timeline_empty_state_headline" = "중요한 메시지를 고정하여 쉽게 찾을 수 있도록 합니다";
 "screen_pinned_timeline_screen_title_empty" = "고정된 메세지";
@@ -1256,6 +1291,11 @@
 "screen_room_change_role_section_users" = "회원들";
 "screen_room_change_role_unsaved_changes_description" = "저장되지 않은 변경 사항이 있습니다.";
 "screen_room_change_role_unsaved_changes_title" = "변경 사항을 저장하시겠습니까?";
+"screen_room_confirm_removal_message" = "Are you sure you wish to remove this message?";
+"screen_room_confirm_removal_reason_label" = "Reason (optional)";
+"screen_room_confirm_removal_reason_placeholder" = "Enter…";
+"screen_room_confirm_removal_reason_supporting_text" = "(Optional)";
+"screen_room_confirm_removal_title" = "Confirm removal";
 "screen_room_details_add_topic_title" = "화제 추가";
 "screen_room_details_badge_encrypted" = "암호화됨";
 "screen_room_details_badge_not_encrypted" = "암호화되지 않음";
@@ -1301,6 +1341,7 @@
 "screen_room_invite_again_alert_message" = "그들을 다시 초대하시겠습니까?";
 "screen_room_invite_again_alert_title" = "이 채팅에는 귀하만 있습니다.";
 "screen_room_live_location_banner" = "실시간 위치 공유 중";
+"screen_room_maximum_messages_selected" = "Maximum messages selected";
 "screen_room_member_details_block_alert_action" = "차단";
 "screen_room_member_details_block_alert_description" = "차단된 사용자는 메시지를 보낼 수 없으며, 그들의 모든 메시지는 숨겨집니다. 언제든지 차단 해제할 수 있습니다.";
 "screen_room_member_details_block_user" = "사용자 차단하기";
@@ -1341,7 +1382,8 @@
 "screen_room_notification_settings_error_setting_mode" = "모드 설정이 실패했습니다. 다시 시도해 주세요.";
 "screen_room_notification_settings_mentions_only_disclaimer" = "귀하의 홈 서버는 암호화된 방에서 이 옵션을 지원하지 않으므로, 이 방에서 알림을 받지 못합니다.";
 "screen_room_notification_settings_mode_all_messages" = "모든 메시지";
-"screen_room_notification_settings_mode_mentions_and_keywords" = "언급 및 키워드만";
+"screen_room_notification_settings_mode_mentions_and_keywords" = "Mentions and replies only";
+"screen_room_notification_settings_mode_mute" = "Mute";
 "screen_room_notification_settings_room_custom_settings_title" = "이 방에서, 알림을 주세요";
 "screen_room_pinned_banner_indicator" = "%2$@ 의 %1$@";
 "screen_room_pinned_banner_indicator_description" = "%1$@ 고정된 메시지";
@@ -1402,6 +1444,8 @@
 "screen_roomlist_filter_invites_empty_state_title" = "보류 중인 초대가 없습니다.";
 "screen_roomlist_filter_low_priority" = "낮은 우선순위";
 "screen_roomlist_filter_low_priority_empty_state_title" = "아직 낮은 우선순위 채팅이 없습니다.";
+"screen_roomlist_filter_mention" = "Mention";
+"screen_roomlist_filter_mention_empty_state_title" = "You don’t have any unread mentions";
 "screen_roomlist_filter_mixed_empty_state_subtitle" = "다른 채팅을 보려면 필터 선택을 해제하세요.";
 "screen_roomlist_filter_mixed_empty_state_title" = "이 선택 항목에 대한 채팅이 없습니다.";
 "screen_roomlist_filter_people" = "사람";
@@ -1488,6 +1532,8 @@
 "screen_session_verification_request_title" = "검증 요청";
 "screen_session_verification_they_dont_match" = "일치하지 않습니다";
 "screen_session_verification_they_match" = "일치합니다";
+"screen_session_verification_unavailable_subtitle" = "Please use another device or recovery key.";
+"screen_session_verification_unavailable_title" = "Verification with this device is currently unavailable";
 "screen_session_verification_use_another_device_subtitle" = "여기에서 검증을 시작하기 전에 다른 기기에서 앱이 실행되어 있는지 확인하십시오.";
 "screen_session_verification_use_another_device_title" = "다른 검증된 장치에서 앱을 실행하세요";
 "screen_session_verification_user_initiator_subtitle" = "보안을 강화하려면, 기기에 표시된 이모티콘을 비교하여 이 사용자를 확인하세요. 신뢰할 수 있는 통신 수단을 사용하여 확인하시기 바랍니다.";
@@ -1500,6 +1546,14 @@
 "screen_session_verification_waiting_subtitle" = "승인 후에는 검증 과정을 계속 진행할 수 있습니다.";
 "screen_session_verification_waiting_to_accept_subtitle" = "계속하려면 다른 세션에서 검증 과정을 시작하라는 요청을 수락하세요.";
 "screen_session_verification_waiting_to_accept_title" = "요청 수락을 기다리는 중";
+"screen_settings_user_status_away" = "Away";
+"screen_settings_user_status_be_right_back" = "Be right back";
+"screen_settings_user_status_custom" = "Custom…";
+"screen_settings_user_status_custom_hint" = "Custom status…";
+"screen_settings_user_status_focus_time" = "Focus time";
+"screen_settings_user_status_in_a_meeting" = "In a meeting";
+"screen_settings_user_status_on_the_road" = "On the road";
+"screen_settings_user_status_placeholder" = "What's your status?";
 "screen_share_location_live_location_disclaimer_title" = "실시간 위치 기록은 대화방에 저장되며, 공유 종료 후에도 멤버들이 확인할 수 있습니다.";
 "screen_share_location_live_location_duration_picker_title" = "실시간 위치를 공유할 시간을 선택해 주세요.";
 "screen_share_location_live_location_missing_permissions" = "이 방에서는 실시간 위치를 공유할 권한이 없습니다.";
@@ -1690,6 +1744,7 @@
 "troubleshoot_notifications_test_push_loop_back_failure_2" = "오류: %1$@.";
 "troubleshoot_notifications_test_push_loop_back_failure_3" = "오류, 푸시 테스트가 불가능합니다.";
 "troubleshoot_notifications_test_push_loop_back_failure_4" = "오류, 푸시 대기 중 시간 초과.";
+"troubleshoot_notifications_test_push_loop_back_failure_rate_limit" = "Error: the push gateway is rate limiting this device, so notifications won't be reliable. Please set up a different push gateway.";
 "troubleshoot_notifications_test_push_loop_back_success" = "푸시 루프백이 %1$d ms 소요되었습니다.";
 "troubleshoot_notifications_test_push_loop_back_title" = "테스트 푸시 루프백";
 "troubleshoot_notifications_test_unified_push_description" = "UnifiedPush 배포자가 사용할 수 있는지 확인하세요.";

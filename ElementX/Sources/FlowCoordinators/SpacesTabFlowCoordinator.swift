@@ -24,8 +24,9 @@ class SpacesTabFlowCoordinator: FlowCoordinatorProtocol {
     private let navigationSplitCoordinator: NavigationSplitCoordinator
     private let sidebarNavigationStackCoordinator: NavigationStackCoordinator
     private let detailNavigationStackCoordinator: NavigationStackCoordinator
-
+    // periphery:ignore - retaining purpose
     private var spaceFlowCoordinator: SpaceFlowCoordinator?
+    // periphery:ignore - retaining purpose
     private var startChatFlowCoordinator: StartChatFlowCoordinator?
 
     enum State: StateType {
@@ -147,7 +148,6 @@ class SpacesTabFlowCoordinator: FlowCoordinatorProtocol {
     private func presentSpacesScreen() {
         let parameters = SpacesScreenCoordinatorParameters(userSession: userSession,
                                                            selectedSpacePublisher: selectedSpaceSubject.asCurrentValuePublisher(),
-                                                           appSettings: flowParameters.appSettings,
                                                            userIndicatorController: flowParameters.userIndicatorController)
         let coordinator = SpacesScreenCoordinator(parameters: parameters)
         coordinator.actionsPublisher

@@ -8,11 +8,6 @@
 
 import Foundation
 
-enum BlockquoteAttribute: AttributedStringKey {
-    typealias Value = Bool
-    static let name = "MXBlockquoteAttribute"
-}
-
 enum UserIDAttribute: AttributedStringKey {
     typealias Value = String
     static let name = "MXUserIDAttribute"
@@ -43,6 +38,7 @@ enum RoomAliasAttribute: AttributedStringKey {
 enum EventOnRoomIDAttribute: AttributedStringKey {
     struct Value: Hashable {
         let roomID: String
+        // periphery:ignore - used via the synthesized Hashable conformance
         let eventID: String
     }
     
@@ -52,6 +48,7 @@ enum EventOnRoomIDAttribute: AttributedStringKey {
 enum EventOnRoomAliasAttribute: AttributedStringKey {
     struct Value: Hashable {
         let alias: String
+        // periphery:ignore - used via the synthesized Hashable conformance
         let eventID: String
     }
     
@@ -61,6 +58,17 @@ enum EventOnRoomAliasAttribute: AttributedStringKey {
 enum AllUsersMentionAttribute: AttributedStringKey {
     typealias Value = Bool
     static let name = "MXAllUsersMentionAttribute"
+}
+
+enum BlockquoteAttribute: AttributedStringKey {
+    typealias Value = Bool
+    static let name = "MXBlockquoteAttribute"
+}
+
+/// Marks the content of a `<details>` element, carrying its `<summary>` as the value.
+enum DetailsAttribute: AttributedStringKey {
+    typealias Value = String
+    static let name = "MXDetailsAttribute"
 }
 
 enum CodeBlockAttribute: AttributedStringKey {
@@ -73,25 +81,33 @@ enum InlineCodeAttribute: AttributedStringKey {
     static let name = "MXInlineCodeAttribute"
 }
 
-// periphery: ignore - required to make NSAttributedString to AttributedString conversion even if not used directly
 nonisolated extension AttributeScopes {
     struct ElementXAttributes: AttributeScope {
         let blockquote: BlockquoteAttribute
+        let details: DetailsAttribute
         
         let userID: UserIDAttribute
+        // periphery:ignore - required to make NSAttributedString to AttributedString conversion even if not used directly
         let userDisplayName: UserDisplayNameAttribute
+        // periphery:ignore - required to make NSAttributedString to AttributedString conversion even if not used directly
         let roomDisplayName: RoomDisplayNameAttribute
         let roomID: RoomIDAttribute
         let roomAlias: RoomAliasAttribute
         let eventOnRoomID: EventOnRoomIDAttribute
         let eventOnRoomAlias: EventOnRoomAliasAttribute
         
+        // periphery:ignore - required to make NSAttributedString to AttributedString conversion even if not used directly
+        
         let allUsersMention: AllUsersMentionAttribute
         
         let codeBlock: CodeBlockAttribute
+        // periphery:ignore - required to make NSAttributedString to AttributedString conversion even if not used directly
         let inlineCode: InlineCodeAttribute
         
+        // periphery:ignore - required to make NSAttributedString to AttributedString conversion even if not used directly
+        
         let swiftUI: SwiftUIAttributes
+        // periphery:ignore - required to make NSAttributedString to AttributedString conversion even if not used directly
         let uiKit: UIKitAttributes
     }
     

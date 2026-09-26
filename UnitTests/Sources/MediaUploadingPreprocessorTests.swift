@@ -36,11 +36,11 @@ final class MediaUploadingPreprocessorTests {
         #expect(audioURL.lastPathComponent == "test_audio.mp3")
         
         #expect(audioInfo.mimetype == "audio/mpeg")
-        #expect(isEqual(audioInfo.duration ?? 0, 27, within: 100))
+        #expect(isEqual(audioInfo.duration ?? 0, 10.03, within: 0.1))
         #expect(isEqual(audioInfo.size ?? 0, 194_811, within: 100))
     }
     
-    @Test
+    @Test(.timeLimit(.minutes(2))) // Transcoding videos can be slow on a busy CI runner.
     func landscapeMovVideoProcessing() async throws {
         let url = try #require(Bundle(for: Self.self).url(forResource: "landscape_test_video.mov", withExtension: nil), "Failed retrieving test asset")
         
@@ -67,15 +67,19 @@ final class MediaUploadingPreprocessorTests {
         #expect(isEqual(videoInfo.size ?? 0, 4_016_620, within: 100))
         #expect(videoInfo.width == 1280)
         #expect(videoInfo.height == 720)
-        #expect(isEqual(videoInfo.duration ?? 0, 30, within: 100))
+        #expect(isEqual(videoInfo.duration ?? 0, 5.03, within: 0.1))
         
         #expect(videoInfo.thumbnailInfo != nil)
         #expect(videoInfo.thumbnailInfo?.mimetype == "image/jpeg")
         #expect(isEqual(videoInfo.thumbnailInfo?.size ?? 0, 183_093, within: 100))
         #expect(videoInfo.thumbnailInfo?.width == 800)
         #expect(videoInfo.thumbnailInfo?.height == 450)
+    }
+    
+    @Test(.timeLimit(.minutes(2))) // Transcoding videos can be slow on a busy CI runner.
+    func landscapeMovVideoOptimizedProcessing() async throws {
+        let url = try #require(Bundle(for: Self.self).url(forResource: "landscape_test_video.mov", withExtension: nil), "Failed retrieving test asset")
         
-        // Repeat with optimised media setting
         appSettings.optimizeMediaUploads = true
         
         guard case let .success(optimizedResult) = await mediaUploadingPreprocessor.processMedia(at: url, maxUploadSize: maxUploadSize),
@@ -92,10 +96,10 @@ final class MediaUploadingPreprocessorTests {
         #expect(isEqual(optimizedVideoInfo.size ?? 0, 4_016_620, within: 100)) // Note: The video is already 720p so it doesn't change size.
         #expect(optimizedVideoInfo.width == 1280)
         #expect(optimizedVideoInfo.height == 720)
-        #expect(isEqual(optimizedVideoInfo.duration ?? 0, 30, within: 100))
+        #expect(isEqual(optimizedVideoInfo.duration ?? 0, 5.03, within: 0.1))
     }
     
-    @Test
+    @Test(.timeLimit(.minutes(2))) // Transcoding videos can be slow on a busy CI runner.
     func portraitMp4VideoProcessing() async throws {
         let url = try #require(Bundle(for: Self.self).url(forResource: "portrait_test_video.mp4", withExtension: nil), "Failed retrieving test asset")
         
@@ -118,19 +122,23 @@ final class MediaUploadingPreprocessorTests {
         
         // Check resulting video info
         #expect(videoInfo.mimetype == "video/mp4")
-        #expect(videoInfo.blurhash == "KSB{R8O]MuwQS4oJvcaIt8")
-        #expect(isEqual(videoInfo.size ?? 0, 5_824_946, within: 100))
+        #expect(videoInfo.blurhash == "KRB{K[TLMtw7S4oez,emtS")
+        #expect(isEqual(videoInfo.size ?? 0, 2_004_134, within: 100))
         #expect(videoInfo.width == 1080)
         #expect(videoInfo.height == 1920)
-        #expect(isEqual(videoInfo.duration ?? 0, 21, within: 100))
+        #expect(isEqual(videoInfo.duration ?? 0, 3.07, within: 0.1))
         
         #expect(videoInfo.thumbnailInfo != nil)
         #expect(videoInfo.thumbnailInfo?.mimetype == "image/jpeg")
         #expect(isEqual(videoInfo.thumbnailInfo?.size ?? 0, 40976, within: 100))
         #expect(videoInfo.thumbnailInfo?.width == 337)
         #expect(videoInfo.thumbnailInfo?.height == 600)
+    }
+    
+    @Test(.timeLimit(.minutes(2))) // Transcoding videos can be slow on a busy CI runner.
+    func portraitMp4VideoOptimizedProcessing() async throws {
+        let url = try #require(Bundle(for: Self.self).url(forResource: "portrait_test_video.mp4", withExtension: nil), "Failed retrieving test asset")
         
-        // Repeat with optimised media setting
         appSettings.optimizeMediaUploads = true
         
         guard case let .success(optimizedResult) = await mediaUploadingPreprocessor.processMedia(at: url, maxUploadSize: maxUploadSize),
@@ -143,11 +151,11 @@ final class MediaUploadingPreprocessorTests {
         
         // Check optimised video info
         #expect(optimizedVideoInfo.mimetype == "video/mp4")
-        #expect(optimizedVideoInfo.blurhash == "KSC5.vO]MuwQS4oJvcaIt8")
-        #expect(isEqual(optimizedVideoInfo.size ?? 0, 12_169_117, within: 100)) // Note: This is slightly stupid because it is larger now 🤦‍♂️
+        #expect(optimizedVideoInfo.blurhash == "KRB{K[TLMtw7S4oez,emtS")
+        #expect(isEqual(optimizedVideoInfo.size ?? 0, 3_779_866, within: 100)) // Note: This is slightly stupid because it is larger now 🤦‍♂️
         #expect(optimizedVideoInfo.width == 720)
         #expect(optimizedVideoInfo.height == 1280)
-        #expect(isEqual(optimizedVideoInfo.duration ?? 0, 30, within: 100))
+        #expect(isEqual(optimizedVideoInfo.duration ?? 0, 3.07, within: 0.1))
     }
     
     @Test

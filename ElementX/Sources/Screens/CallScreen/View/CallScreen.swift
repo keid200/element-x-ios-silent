@@ -26,6 +26,9 @@ struct CallScreen: View {
                 .toolbar { toolbar }
         }
         .alert(item: $context.alertInfo)
+        // Force dark mode for calls. Don't use .preferredColorScheme
+        // otherwise the whole app changes, visible when using the PiP.
+        .environment(\.colorScheme, .dark)
     }
 
     @ViewBuilder
@@ -50,7 +53,7 @@ struct CallScreen: View {
     }
 }
 
-private struct CallView: UIViewRepresentable {
+struct CallView: UIViewRepresentable {
     /// The top-level view this representable displays. It wraps the web view when picture in picture isn't running.
     typealias WebViewWrapper = UIView
 
@@ -62,7 +65,13 @@ private struct CallView: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(viewModelContext: viewModelContext)
+        if let existing = viewModelContext.viewState.swiftUICallViewCoordinator {
+            return existing
+        }
+        // When the screen is rotated, the pro max models regenerate the swiftui view tree, destroying and
+        // rebuilding this view. For that reason, we need to create and store the coordinator in the view model
+        // (and by extension the UIView) to persist between rotations to retain state
+        fatalError("CallView.Coordinator must be initialized in the context view state")
     }
 
     func updateUIView(_ callWebView: WebViewWrapper, context: Context) {
@@ -108,6 +117,7 @@ private struct CallView: UIViewRepresentable {
             configuration.userContentController = userContentController
             configuration.allowsInlineMediaPlayback = true
             configuration.allowsPictureInPictureMediaPlayback = true
+            configuration.applicationNameForUserAgent = InfoPlistReader.main.bundleDisplayName
 
             if let script = viewModelContext.viewState.script {
                 let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
@@ -151,6 +161,7 @@ private struct CallView: UIViewRepresentable {
         }
 
         func load(_ url: URL) {
+            guard self.url != url else { return }
             self.url = url
             // The only file URL we allow is the one coming from our own local ElementCall bundle, so it's okay to allow read permission only to our local EC bundle
             if url.isFileURL {
@@ -178,7 +189,7 @@ private struct CallView: UIViewRepresentable {
                 }
             }
         }
-
+        // periphery:ignore:parameters userContentController - delegate convention
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             guard let handlerID = CallScreenJavaScriptMessageName(rawValue: message.name) else {
                 return
@@ -292,7 +303,6 @@ private struct CallView: UIViewRepresentable {
             pictureInPictureController.startPictureInPicture()
             return .success(())
         }
-
         func stopPictureInPicture() {
             pictureInPictureController?.stopPictureInPicture()
         }

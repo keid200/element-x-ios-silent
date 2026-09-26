@@ -13,7 +13,6 @@ class WindowManager: SecureWindowManagerProtocol {
     private let silentBrandBlue = UIColor(red: 0.082, green: 0.333, blue: 0.878, alpha: 1.0)
     private let appDelegate: AppDelegate
     weak var mainScene: UIWindowScene?
-    weak var mainSession: UISceneSession?
     weak var delegate: SecureWindowManagerDelegate?
 
     private(set) var mainWindow: UIWindow!
@@ -34,8 +33,6 @@ class WindowManager: SecureWindowManagerProtocol {
     var windows: [UIWindow] {
         [mainWindow, overlayWindow, alternateWindow]
     }
-
-    // periphery:ignore - auto cancels when reassigned
     /// The task used to switch windows, so that we don't get stuck in the wrong state with a quick switch.
     @CancellableTask private var switchTask: Task<Void, Error>?
     /// A duration that allows window switching to wait a couple of frames to avoid a transition through black.
@@ -63,7 +60,6 @@ class WindowManager: SecureWindowManagerProtocol {
         }
 
         mainScene = scene
-        mainSession = session
 
         // Restore the previous window size on macOS as this isn't automatic.
         if let previousSize = mainWindow?.frame.size {
@@ -95,7 +91,6 @@ class WindowManager: SecureWindowManagerProtocol {
     func handleSceneDisconnection(_ scene: UIWindowScene) {
         if scene == mainScene {
             mainScene = nil
-            mainSession = nil
             // Leave the mainWindow so we can reapply it's size on macOS.
         }
     }

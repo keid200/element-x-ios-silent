@@ -26,7 +26,7 @@ class BugReportService: NSObject, BugReportServiceProtocol {
         rageshakeURL != .disabled
     }
     
-    var lastCrashEventID: String?
+    let lastCrashEventIDSubject = CurrentValueSubject<String?, Never>(nil)
     
     init(rageshakeURLPublisher: CurrentValuePublisher<RageshakeConfiguration, Never>,
          applicationID: String,
@@ -47,10 +47,6 @@ class BugReportService: NSObject, BugReportServiceProtocol {
     }
     
     // MARK: - BugReportServiceProtocol
-    
-    var crashedLastRun: Bool {
-        SentrySDK.lastRunStatus == .didCrash
-    }
     
     // swiftlint:disable:next cyclomatic_complexity
     func submitBugReport(_ bugReport: BugReport,
@@ -81,14 +77,14 @@ class BugReportService: NSObject, BugReportServiceProtocol {
             params.append(.init(key: "device_keys", type: .text(value: compactKeys)))
         }
         
-        if let crashEventID = lastCrashEventID {
+        if let crashEventID = lastCrashEventIDSubject.value {
             params.append(MultipartFormData(key: "crash_report", type: .text(value: "<https://sentry.tools.element.io/organizations/element/issues/?project=44&query=\(crashEventID)>")))
             bugReport.githubLabels.append("crash")
         }
         
         params.append(contentsOf: defaultParams)
         
-        if InfoPlistReader.main.baseBundleIdentifier == "io.element.elementx.nightly" {
+        if AppBuildType.current == .nightly {
             bugReport.githubLabels.append("Nightly")
         }
         
@@ -155,7 +151,7 @@ class BugReportService: NSObject, BugReportServiceProtocol {
             let decoder = JSONDecoder()
             let uploadResponse = try decoder.decode(SubmitBugReportResponse.self, from: data)
             
-            lastCrashEventID = nil
+            lastCrashEventIDSubject.send(nil)
             
             MXLog.info("Feedback submitted.")
             
@@ -296,7 +292,7 @@ nonisolated extension BugReportService: URLSessionTaskDelegate {
     /// where the service lives.
     func urlSession(_ session: URLSession, didCreateTask task: URLSessionTask) {
         Task { @MainActor [weak self] in
-            for await value in task.progress.publisher(for: \.fractionCompleted).values {
+            for await value in task.progress.publisher(for: \.fractionCompleted).buffer(size: 1, prefetch: .byRequest, whenFull: .dropOldest).values {
                 self?.progressSubject.send(value)
             }
         }

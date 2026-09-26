@@ -6,16 +6,23 @@
 "a11y_collapse_message_text_field" = "Minimalizovat textové pole zprávy";
 "a11y_create_poll_votes_allowed_decrease" = "Decrease votes allowed per person";
 "a11y_create_poll_votes_allowed_increase" = "Increase votes allowed per person";
+"a11y_custom_emoji" = "Custom emoji";
 "a11y_delete" = "Smazat";
 "a11y_duration" = "Duration: %1$@";
 "a11y_edit_avatar" = "Upravit avatar";
 "a11y_edit_room_address_hint" = "Úplná adresa bude %1$@";
 "a11y_expand_message_text_field" = "Rozbalit textové pole zprávy";
+"a11y_gallery_attachment" = "Gallery, attachment %1$d";
+"a11y_gallery_failed_scan" = "Gallery, failed scan %1$d";
+"a11y_gallery_image" = "Gallery, image %1$d";
+"a11y_gallery_scanning" = "Gallery, scanning %1$d";
+"a11y_gallery_video" = "Gallery, video %1$d";
 "a11y_hide_password" = "Skrýt heslo";
 "a11y_info" = "Informace";
 "a11y_join_call" = "Připojit se k hovoru";
 "a11y_jump_to_bottom" = "Přejít dolů";
 "a11y_jump_to_unread" = "Jump to unread";
+"a11y_jump_to_unread_messages" = "Jump to first unread message";
 "a11y_notifications_mentions_only" = "Pouze zmínky";
 "a11y_notifications_muted" = "Ztišeno";
 "a11y_notifications_new_mentions" = "Nové zmínky";
@@ -50,6 +57,7 @@
 "a11y_start_call" = "Zahájit hovor";
 "a11y_start_video_call" = "Zahájit videohovor";
 "a11y_start_voice_call" = "Zahájit hlasový hovor";
+"a11y_status" = "Status";
 "a11y_tombstoned_room" = "Místnost s náhrobkem";
 "a11y_user_menu" = "Uživatelské menu";
 "a11y_video_preview" = "Video preview";
@@ -135,6 +143,7 @@
 "action_manage_account_and_devices" = "Správa účtu a zařízení";
 "action_manage_devices" = "Spravovat zařízení";
 "action_manage_rooms" = "Spravovat místnosti";
+"action_mark_as_read" = "Mark as read";
 "action_message" = "Zpráva";
 "action_minimize" = "Minimalizovat";
 "action_next" = "Další";
@@ -165,6 +174,7 @@
 "action_retry_decryption" = "Opakovat dešifrování";
 "action_save" = "Uložit";
 "action_search" = "Hledat";
+"action_select" = "Select";
 "action_select_all" = "Vybrat vše";
 "action_send" = "Odeslat";
 "action_send_edited_message" = "Odeslat upravenou zprávu";
@@ -294,6 +304,7 @@
 "common_no_space_name" = "Žádný název prostoru";
 "common_not_encrypted" = "Nešifrováno";
 "common_offline" = "Offline";
+"common_on_a_call" = "On a call";
 "common_open_source_licenses" = "Licence s otevřeným zdrojovým kódem";
 "common_optic_id_ios" = "Optic ID";
 "common_or" = "nebo";
@@ -365,6 +376,7 @@
 "common_success" = "Úspěch";
 "common_suggested" = "Doporučeno";
 "common_suggestions" = "Návrhy";
+"common_switch_accounts" = "Switch accounts";
 "common_syncing" = "Synchronizace";
 "common_text" = "Text";
 "common_third_party_notices" = "Oznámení třetích stran";
@@ -410,7 +422,8 @@
 "confirm_recovery_key_banner_secondary_button_title" = "Zapomněli jste klíč pro obnovení?";
 "confirm_recovery_key_banner_title" = "Vaše úložiště klíčů není synchronizováno";
 "content_scanner_not_found" = "Download not available.";
-"content_scanner_not_found_title" = "File not found";
+"content_scanner_not_found_title" = "Something went wrong";
+"content_scanner_scanning" = "Scanning…";
 "content_scanner_unsafe_message" = "Preview and download have been disabled.";
 "content_scanner_unsafe_title" = "The file is not safe";
 "crash_detection_dialog_content" = "%1$@ havaroval při posledním použití. Chcete se s námi podělit o zprávu o selhání?";
@@ -484,6 +497,11 @@
 "error_no_compatible_app_found" = "Nebyla nalezena žádná kompatibilní aplikace, která by tuto akci zpracovala.";
 "error_room_address_already_exists" = "Tato adresa místnosti již existuje, zkuste prosím upravit pole adresy místnosti nebo změnit název místnosti";
 "error_room_address_invalid_symbols" = "Některé znaky nejsou povoleny. Podporovány jsou pouze písmena, číslice a následující symboly ! $ & ‘ ( ) * + / ; = ? @ [ ] - . _";
+"error_sending_failure_invalid_mime_type" = "Invalid mime type: %@";
+"error_sending_failure_missing_media_content" = "Missing media content";
+"error_sending_failure_other" = "Error details: %@";
+"error_sending_failure_sending_from_unverified_device" = "Sending from unverified device";
+"error_sending_failure_unknown" = "Unknown error";
 "error_some_messages_have_not_been_sent" = "Některé zprávy nebyly odeslány";
 "error_unknown" = "Omlouváme se, došlo k chybě";
 "error.account_already_logged_in" = "Na tomto zařízení jste již přihlášeni jako %1$@.";
@@ -513,6 +531,8 @@
 "notification_invitation_action_reject" = "Odmítnout";
 "notification_invite_body" = "Vás pozval(a) do chatu";
 "notification_invite_body_with_sender" = "%1$@ vás pozval(a) do chatu";
+"notification_knock_request_body" = "Requested to join";
+"notification_live_location_started_body" = "Started sharing their live location";
 "notification_mentioned_you_body" = "Zmínili vás: %1$@";
 "notification_new_messages" = "Nové zprávy";
 "notification_reaction_body" = "Reagoval(a) s %1$@";
@@ -703,8 +723,16 @@
 "screen_change_server_error_unauthorized_homeserver_title" = "Poskytovatel účtu %1$@ není povolen.";
 "screen_change_server_form_header" = "Adresa URL domovského serveru";
 "screen_change_server_form_notice" = "Zadejte adresu domény.";
+"screen_change_server_navigation_title_login" = "Sign in";
+"screen_change_server_navigation_title_register" = "Create account";
 "screen_change_server_subtitle" = "Jaká je adresa vašeho serveru?";
+"screen_change_server_textfield_footer_login" = "If your account is provided by your company or a community, then change the account provider (example: companyname.com).";
+"screen_change_server_textfield_footer_register" = "Create an account on matrix.org for free. If you want to create an account with a different provider, then change it accordingly (example: communityname.org).";
+"screen_change_server_textfield_header" = "Account provider";
+"screen_change_server_textfield_placeholder" = "example.com";
 "screen_change_server_title" = "Vyberte váš server";
+"screen_change_server_title_login" = "Enter your account provider";
+"screen_change_server_title_register" = "Choose an account provider";
 "screen_chat_backup_key_backup_action_disable" = "Vypnout zálohování";
 "screen_chat_backup_key_backup_action_enable" = "Zapnout zálohování";
 "screen_chat_backup_key_backup_description" = "To vám umožní zobrazit historii chatu na všech nových zařízeních a je to nutné pro zálohování chatů a digitální identity. %1$@ .";
@@ -924,6 +952,10 @@
 "screen_knock_requests_list_empty_state_title" = "Žádná čekající žádost o vstup";
 "screen_knock_requests_list_initial_loading_title" = "Načítání žádostí o vstup...";
 "screen_knock_requests_list_title" = "Žádosti o vstup";
+"screen_labs_enable_gallery" = "Gallery messages";
+"screen_labs_enable_gallery_description" = "Send multiple images or videos in one go. Stable on mobile, but not yet supported by web.";
+"screen_labs_enable_knocking" = "Ask to join";
+"screen_labs_enable_knocking_description" = "Users can request access to a room that is not open for anyone to join. Stable on mobile, web implementation exists but is experimental.";
 "screen_labs_enable_threads" = "Povolit odpovědi ve vlákně";
 "screen_labs_enable_threads_description" = "Aplikace se restartuje, aby se tato změna projevila.";
 "screen_labs_header_description" = "Vyzkoušejte naše nejnovější nápady, které jsou ve vývoji. Tyto funkce nejsou finalizované; mohou být nestabilní a mohou se změnit.";
@@ -944,6 +976,7 @@
 "screen_link_new_device_desktop_step3" = "Naskenujte QR kód pomocí tohoto zařízení";
 "screen_link_new_device_desktop_submit" = "Připraveno ke skenování";
 "screen_link_new_device_desktop_title" = "Otevřete %1$@ na stolním počítači a získejte QR kód";
+"screen_link_new_device_desktop_warning" = "Only scan a QR code after following the steps above on your own device. Never scan a code sent by another person.";
 "screen_link_new_device_enter_number_error_numbers_do_not_match" = "Čísla se neshodují";
 "screen_link_new_device_enter_number_notice" = "Zadejte dvoumístný kód";
 "screen_link_new_device_enter_number_subtitle" = "Tím ověříte, zda je připojení k druhému zařízení bezpečné.";
@@ -970,6 +1003,8 @@
 "screen_live_location_sheet_nobody_sharing" = "Nikdo nesdílí svou polohu";
 "screen_live_location_sheet_sharing_live_location" = "Sdílení aktuální polohy";
 "screen_live_location_sheet_title" = "Na mapě";
+"screen_local_network_opt_in_subtitle" = "Your homeserver is on your local network. To connect, %1$@ needs permission to reach devices on this network.";
+"screen_local_network_opt_in_title" = "Allow access to local network";
 "screen_login_error_deactivated_account" = "Tento účet byl smazán.";
 "screen_login_error_invalid_credentials" = "Nesprávné uživatelské jméno nebo heslo";
 "screen_login_error_invalid_user_id" = "Toto není platný identifikátor uživatele. Očekávaný formát: '@user:homeserver.org'";
@@ -1256,6 +1291,11 @@
 "screen_room_change_role_section_users" = "Členové";
 "screen_room_change_role_unsaved_changes_description" = "Máte neuložené změny.";
 "screen_room_change_role_unsaved_changes_title" = "Uložit změny?";
+"screen_room_confirm_removal_message" = "Are you sure you wish to remove this message?";
+"screen_room_confirm_removal_reason_label" = "Reason (optional)";
+"screen_room_confirm_removal_reason_placeholder" = "Enter…";
+"screen_room_confirm_removal_reason_supporting_text" = "(Optional)";
+"screen_room_confirm_removal_title" = "Confirm removal";
 "screen_room_details_add_topic_title" = "Přidat téma";
 "screen_room_details_badge_encrypted" = "Šifrováno";
 "screen_room_details_badge_not_encrypted" = "Není šifrováno";
@@ -1301,6 +1341,7 @@
 "screen_room_invite_again_alert_message" = "Chtěli byste je pozvat zpět?";
 "screen_room_invite_again_alert_title" = "V tomto chatu jste sami";
 "screen_room_live_location_banner" = "Sdílení aktuální polohy";
+"screen_room_maximum_messages_selected" = "Maximum messages selected";
 "screen_room_member_details_block_alert_action" = "Zablokovat";
 "screen_room_member_details_block_alert_description" = "Blokovaní uživatelé vám nebudou moci posílat zprávy a všechny jejich zprávy budou skryty. Můžete je kdykoli odblokovat.";
 "screen_room_member_details_block_user" = "Zablokovat uživatele";
@@ -1342,6 +1383,7 @@
 "screen_room_notification_settings_mentions_only_disclaimer" = "Váš domovský server tuto možnost nepodporuje v šifrovaných místnostech, v této místnosti nebudete dostávat upozornění.";
 "screen_room_notification_settings_mode_all_messages" = "Všechny zprávy";
 "screen_room_notification_settings_mode_mentions_and_keywords" = "Pouze zmínky a klíčová slova";
+"screen_room_notification_settings_mode_mute" = "Mute";
 "screen_room_notification_settings_room_custom_settings_title" = "V této místnosti mě upozornit na";
 "screen_room_pinned_banner_indicator" = "%1$@ z %2$@";
 "screen_room_pinned_banner_indicator_description" = "%1$@ Připnuté zprávy";
@@ -1402,6 +1444,8 @@
 "screen_roomlist_filter_invites_empty_state_title" = "Nemáte žádné nevyřízené pozvánky.";
 "screen_roomlist_filter_low_priority" = "Nízká priorita";
 "screen_roomlist_filter_low_priority_empty_state_title" = "Zatím nemáte žádné chaty s nízkou prioritou";
+"screen_roomlist_filter_mention" = "Mention";
+"screen_roomlist_filter_mention_empty_state_title" = "You don’t have any unread mentions";
 "screen_roomlist_filter_mixed_empty_state_subtitle" = "Můžete zrušit výběr filtrů, abyste viděli své další chaty";
 "screen_roomlist_filter_mixed_empty_state_title" = "Nemáte chaty pro tento výběr";
 "screen_roomlist_filter_people" = "Lidé";
@@ -1488,6 +1532,8 @@
 "screen_session_verification_request_title" = "Požadováno ověření";
 "screen_session_verification_they_dont_match" = "Neshodují se";
 "screen_session_verification_they_match" = "Shodují se";
+"screen_session_verification_unavailable_subtitle" = "Please use another device or recovery key.";
+"screen_session_verification_unavailable_title" = "Verification with this device is currently unavailable";
 "screen_session_verification_use_another_device_subtitle" = "Před zahájením ověřování se ujistěte, že máte aplikaci otevřenou na druhém zařízení.";
 "screen_session_verification_use_another_device_title" = "Otevřete aplikaci na jiném ověřeném zařízení";
 "screen_session_verification_user_initiator_subtitle" = "Pro větší bezpečnost ověřte tohoto uživatele porovnáním sady emotikonů na svých zařízeních. Proveďte to pomocí důvěryhodného způsobu komunikace.";
@@ -1500,6 +1546,14 @@
 "screen_session_verification_waiting_subtitle" = "Po přijetí budete moci pokračovat v ověřování.";
 "screen_session_verification_waiting_to_accept_subtitle" = "Pro pokračování přijměte požadavek na zahájení ověření v jiné relaci.";
 "screen_session_verification_waiting_to_accept_title" = "Čekání na přijetí žádosti";
+"screen_settings_user_status_away" = "Away";
+"screen_settings_user_status_be_right_back" = "Be right back";
+"screen_settings_user_status_custom" = "Custom…";
+"screen_settings_user_status_custom_hint" = "Custom status…";
+"screen_settings_user_status_focus_time" = "Focus time";
+"screen_settings_user_status_in_a_meeting" = "In a meeting";
+"screen_settings_user_status_on_the_road" = "On the road";
+"screen_settings_user_status_placeholder" = "What's your status?";
 "screen_share_location_live_location_disclaimer_title" = "Vaše historie aktuální polohy bude uložena v místnosti a bude viditelná pro členy i po skončení relace.";
 "screen_share_location_live_location_duration_picker_title" = "Zvolte, jak dlouho chcete sdílet svou aktuální polohu.";
 "screen_share_location_live_location_missing_permissions" = "Nemáte oprávnění sdílet svou aktuální polohu v této místnosti.";
@@ -1690,6 +1744,7 @@
 "troubleshoot_notifications_test_push_loop_back_failure_2" = "Chyba: %1$@.";
 "troubleshoot_notifications_test_push_loop_back_failure_3" = "Chyba, nelze otestovat push.";
 "troubleshoot_notifications_test_push_loop_back_failure_4" = "Chyba, časový limit čekání na push.";
+"troubleshoot_notifications_test_push_loop_back_failure_rate_limit" = "Error: the push gateway is rate limiting this device, so notifications won't be reliable. Please set up a different push gateway.";
 "troubleshoot_notifications_test_push_loop_back_success" = "Push zpětná smyčka trvala %1$d ms.";
 "troubleshoot_notifications_test_push_loop_back_title" = "Otestovat push pomocí zpětného volání";
 "troubleshoot_notifications_test_unified_push_description" = "Ujistěte se, že jsou k dispozici distributoři UnifiedPush.";

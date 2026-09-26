@@ -28,7 +28,17 @@ nonisolated extension EventBasedTimelineItemProtocol {
     }
     
     var isForwardable: Bool {
-        isRemoteMessage && !(self is PollRoomTimelineItem)
+        isRemoteMessage && !(self is PollRoomTimelineItem) && !(self is LiveLocationRoomTimelineItem)
+    }
+    
+    /// Whether the item can be part of a multi-selection of messages.
+    var isBulkSelectable: Bool {
+        isRemoteMessage
+            && !isRedacted
+            && !hasFailedDecryption
+            && !(self is StateRoomTimelineItem)
+            && !(self is UnsupportedRoomTimelineItem)
+            && !(self is LiveLocationRoomTimelineItem)
     }
     
     var isRemoteMessage: Bool {
@@ -103,7 +113,7 @@ nonisolated extension EventBasedTimelineItemProtocol {
         }
         
         switch messageBasedItem.contentType {
-        case .audio, .file, .image, .video, .location, .voice:
+        case .audio, .file, .image, .video, .location, .voice, .gallery:
             return false
         case .text, .emote, .notice:
             return true

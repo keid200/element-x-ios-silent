@@ -76,7 +76,7 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
         self.initialSelectedPinnedEventID = initialSelectedPinnedEventID
         pinnedEventStringBuilder = .pinnedEventStringBuilder(userID: roomProxy.ownUserID)
         
-        let viewState = RoomScreenViewState(roomTitle: roomProxy.infoPublisher.value.displayName ?? roomProxy.id,
+        let viewState = RoomScreenViewState(roomTitle: roomProxy.infoPublisher.value.displayNameOrID,
                                             roomAvatar: roomProxy.infoPublisher.value.avatar,
                                             hasOngoingCall: roomProxy.infoPublisher.value.hasRoomCall,
                                             isDM: roomProxy.infoPublisher.value.isDM,
@@ -133,9 +133,12 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
     }
     
     func stop() {
-        // When navigating away from the room, we need to mark the room as fully read.
-        // This does not affect the read receipts only the notification count.
-        Task { await roomProxy.markAsRead(receiptType: .fullyRead) }
+        Task {
+            // When navigating away from the room, we need to mark the room as both read
+            // and fully read for Synapse to clear this room from the app's badge count.
+            _ = await roomProxy.markAsRead(receiptType: appSettings.sharePresence ? .read : .readPrivate)
+            _ = await roomProxy.markAsRead(receiptType: .fullyRead)
+        }
         presenceTask?.cancel()
         screenshotNotificationTask?.cancel()
         // Work around QLPreviewController dismissal issues, see the InteractiveQuickLookModifier.
@@ -174,7 +177,7 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
     // MARK: - Private
     
     private func setupSubscriptions(ongoingCallRoomIDPublisher: CurrentValuePublisher<String?, Never>) {
-        appSettings.roomThreadListEnabledPublisher
+        appSettings.threadsEnabledPublisher
             .weakAssign(to: \.state.roomThreadListEnabled, on: self)
             .store(in: &cancellables)
         
@@ -306,17 +309,17 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
         guard roomProxy.infoPublisher.value.isDM,
               let dmRecipient = roomProxy.membersPublisher.value.first(where: { $0.userID != roomProxy.ownUserID }),
               case let .success(userIdentity) = await clientProxy.userIdentity(for: dmRecipient.userID, fallBackToServer: true) else {
-            state.dmRecipientVerificationState = .notVerified
+            state.dmRecipientDetails.verification = .notVerified
             return
         }
         
         guard let userIdentity else {
             MXLog.failure("User identity should be known at this point")
-            state.dmRecipientVerificationState = .notVerified
+            state.dmRecipientDetails.verification = .notVerified
             return
         }
         
-        state.dmRecipientVerificationState = userIdentity.verificationState
+        state.dmRecipientDetails.verification = userIdentity.verificationState
     }
     
     private func updatePresence() {
@@ -443,8 +446,9 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
     }
     
     private func updateRoomInfo(_ roomInfo: RoomInfoProxyProtocol) {
-        state.roomTitle = roomInfo.displayName ?? roomProxy.id
+        state.roomTitle = roomInfo.displayNameOrID
         state.roomAvatar = roomInfo.avatar
+        state.dmRecipientDetails.statusEmoji = roomInfo.statusEmoji
         state.hasOngoingCall = roomInfo.hasRoomCall
         state.activeRoomCallIntent = roomInfo.activeRoomCallIntent
         state.hasSuccessor = roomInfo.successor != nil

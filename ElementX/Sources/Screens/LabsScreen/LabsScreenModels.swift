@@ -20,7 +20,6 @@ struct LabsScreenViewState: BindableState {
     var bindings: LabsScreenViewStateBindings
 }
 
-// periphery: ignore - subscripts are seen as false positive
 @dynamicMemberLookup
 struct LabsScreenViewStateBindings {
     private let labsOptions: LabsOptionsProtocol
@@ -37,6 +36,8 @@ struct LabsScreenViewStateBindings {
 
 protocol LabsOptionsProtocol: AnyObject {
     var threadsEnabled: Bool { get set }
+    var galleryEnabled: Bool { get set }
+    var knockingEnabled: Bool { get set }
 }
 
 extension AppSettings: LabsOptionsProtocol { }

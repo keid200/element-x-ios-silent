@@ -43,6 +43,7 @@ struct UserProfileScreen: View {
                 context.send(viewAction: .displayAvatar(url))
             } footer: {
                 otherUserFooter
+                    .padding(.top, 8)
             }
         } else {
             AvatarHeaderView(user: UserProfile(userID: context.viewState.userID),
@@ -64,7 +65,7 @@ struct UserProfileScreen: View {
                 .accessibilityIdentifier(A11yIdentifiers.roomMemberDetailsScreen.directChat)
             }
             
-            if let roomID = context.viewState.dmRoomID {
+            if let roomID = context.viewState.dmRoomID, context.viewState.isCallingEnabled {
                 Button {
                     context.send(viewAction: .startCall(roomID: roomID, isVoiceCall: true))
                 } label: {
@@ -89,7 +90,6 @@ struct UserProfileScreen: View {
                 .buttonStyle(FormActionButtonStyle(title: L10n.actionShare))
             }
         }
-        .padding(.top, 32)
     }
     
     @ToolbarContentBuilder
@@ -147,8 +147,8 @@ struct UserProfileScreen_Previews: PreviewProvider, TestablePreview {
         return UserProfileScreenViewModel(userID: userID,
                                           isPresentedModally: false,
                                           userSession: UserSessionMock(.init(clientProxy: clientProxyMock)),
-                                          userIndicatorController: UserIndicatorControllerMock(),
+                                          appHooks: AppHooks(),
                                           analytics: AnalyticsServiceMock(.init()),
-                                          appSettings: .volatile())
+                                          userIndicatorController: UserIndicatorControllerMock())
     }
 }

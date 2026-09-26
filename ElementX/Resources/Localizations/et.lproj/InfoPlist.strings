@@ -1,6 +1,6 @@
 "NSCameraUsageDescription" = "Pildistamiseks ja videote salvestamiseks sõnumite saatmise kontekstis vajab Silent ligipääsu kaamerale.";
 "NSFaceIDUsageDescription" = "Ligipääsu sinu rakendusele kaitseb Face ID";
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "Reaalajas asukoha jagamiseks vajab Silent õigust asukoha tuvastamiseks, kui rakendus töötab taustal.";
-"NSLocationWhenInUseUsageDescription" = "Oma asukoha jagamisel luba rakendusel Silent tuvastada sinu asukohta.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Reaalajas asukoha vestlustesse jagamiseks vajab rakendus taustal töötamise ajal õigust asukoha tuvastamiseks.";
+"NSLocationWhenInUseUsageDescription" = "See võimaldab sul vestlustesse edastada oma praegust asukohta või lähedalasuvaid kohti.";
 "NSMicrophoneUsageDescription" = "Heli salvestamiseks sõnumite saatmise kontekstis vajab Silent ligipääsu mikrofonile.";
 "NSPhotoLibraryUsageDescription" = "Võimaldab salvestada fotosid ja videoid nutiseadme meediapanka.";

@@ -7,11 +7,12 @@
 //
 
 import CompoundDesignTokens
+import Synchronization
 import UIKit
 
 public extension UIColor {
     /// The colours used by Element as defined in Compound Design Tokens.
-    static let compound = CompoundUIColors()
+    nonisolated static let compound = CompoundUIColors()
 }
 
 /// The colours used by Element as defined in Compound Design Tokens.
@@ -20,7 +21,7 @@ public extension UIColor {
 /// The object needs to be nonisolated.
 @Observable
 @dynamicMemberLookup
-public final nonisolated class CompoundUIColors {
+public final nonisolated class CompoundUIColors: Sendable {
     /// The base colour tokens that form the palette of available colours.
     ///
     /// Normally these shouldn't be necessary, however in practice we may need
@@ -29,35 +30,37 @@ public final nonisolated class CompoundUIColors {
     /// The main semantic tokens generated from the Style Dictionary.
     private let tokens = CompoundUIColorTokens()
     /// Runtime overrides for the `tokens` property.
-    private var overrides = [KeyPath<CompoundUIColorTokens, UIColor>: UIColor]()
+    private let overrides = Mutex<[KeyPath<CompoundUIColorTokens, UIColor> & Sendable: UIColor]>(.init())
 
     init() {
         let silentBrandBlue = UIColor(red: 0.082, green: 0.333, blue: 0.878, alpha: 1.0)
         let silentBrandBluePressed = UIColor(red: 0.051, green: 0.247, blue: 0.706, alpha: 1.0)
         let silentBrandBlueSoft = UIColor(red: 0.91, green: 0.95, blue: 1.0, alpha: 1.0)
 
-        overrides[\.bgActionPrimaryRest] = silentBrandBlue
-        overrides[\.bgActionPrimaryPressed] = silentBrandBluePressed
-        overrides[\.bgAccentRest] = silentBrandBlue
-        overrides[\.bgAccentSelected] = silentBrandBlueSoft
-        overrides[\.iconAccentPrimary] = silentBrandBlue
-        overrides[\.iconAccentTertiary] = silentBrandBlue
-        overrides[\.textActionPrimary] = silentBrandBlue
-        overrides[\.textActionAccent] = silentBrandBlue
-        overrides[\.gradientActionStop1] = silentBrandBlue
-        overrides[\.gradientActionStop2] = silentBrandBlue
-        overrides[\.gradientActionStop3] = silentBrandBluePressed
-        overrides[\.gradientActionStop4] = silentBrandBluePressed
+        overrides.withLock {
+            $0[\.bgActionPrimaryRest] = silentBrandBlue
+            $0[\.bgActionPrimaryPressed] = silentBrandBluePressed
+            $0[\.bgAccentRest] = silentBrandBlue
+            $0[\.bgAccentSelected] = silentBrandBlueSoft
+            $0[\.iconAccentPrimary] = silentBrandBlue
+            $0[\.iconAccentTertiary] = silentBrandBlue
+            $0[\.textActionPrimary] = silentBrandBlue
+            $0[\.textActionAccent] = silentBrandBlue
+            $0[\.gradientActionStop1] = silentBrandBlue
+            $0[\.gradientActionStop2] = silentBrandBlue
+            $0[\.gradientActionStop3] = silentBrandBluePressed
+            $0[\.gradientActionStop4] = silentBrandBluePressed
+        }
     }
 
-    public subscript(dynamicMember keyPath: KeyPath<CompoundUIColorTokens, UIColor>) -> UIColor {
-        overrides[keyPath] ?? tokens[keyPath: keyPath]
+    public subscript(dynamicMember keyPath: KeyPath<CompoundUIColorTokens, UIColor> & Sendable) -> UIColor {
+        overrides.withLock { $0[keyPath] } ?? tokens[keyPath: keyPath]
     }
 
     /// Customise the colour at the specified key path with the supplied colour.
     /// Supplying `nil` as the colour will remove any existing customisation.
-    public func override(_ keyPath: KeyPath<CompoundUIColorTokens, UIColor>, with color: UIColor?) {
-        overrides[keyPath] = color
+    public func override(_ keyPath: KeyPath<CompoundUIColorTokens, UIColor> & Sendable, with color: UIColor?) {
+        overrides.withLock { $0[keyPath] = color }
     }
 
     // MARK: - Awaiting Semantic Tokens

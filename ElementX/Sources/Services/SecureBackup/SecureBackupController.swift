@@ -19,10 +19,9 @@ class SecureBackupController: SecureBackupControllerProtocol {
     
     // periphery:ignore - retaining purpose
     private var backupStateListenerTaskHandle: TaskHandle?
-    // periphery:ignore - retaining purpose
+    // periphery:ignore - required for instance retention in the rust codebase
     private var recoveryStateListenerTaskHandle: TaskHandle?
     
-    // periphery:ignore - auto cancels when reassigned
     /// Used to dedupe remote backup state requests
     @CancellableTask private var remoteBackupStateTask: Task<Void, Error>?
     
@@ -80,8 +79,6 @@ class SecureBackupController: SecureBackupControllerProtocol {
             
             MXLog.info("Recovery state changed to: \(state), setting local state to \(recoveryStateSubject.value)")
         })
-        
-        updateBackupStateFromRemote()
     }
     
     func enable() async -> Result<Void, SecureBackupControllerError> {

@@ -20,6 +20,24 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>a11y_gallery_more_media</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>Галерея, ещё %1$d медиа</string>
+			<key>many</key>
+			<string>Галерея, ещё %1$d медиа</string>
+			<key>one</key>
+			<string>Галерея, ещё %1$d медиа</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>a11y_polls_percent_of_total</key>
 	<dict>
 		<key>COUNT</key>
@@ -47,11 +65,47 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>few</key>
-			<string>Прочитано %1$@ и %2$d другими</string>
+			<string>Предыдущее сообщение прочитано пользователями %1$@ и %2$d.</string>
 			<key>many</key>
-			<string>Прочитано %1$@ и %2$d другими</string>
+			<string>Предыдущие сообщения прочитаны пользователями %1$@ и %2$d.</string>
 			<key>one</key>
-			<string>Прочитано %1$@ и %2$d другим</string>
+			<string>Предыдущее сообщение прочитано пользователями %1$@ и %2$d.</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
+	<key>common_gallery_reply_attachments</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>%1$d вложения...</string>
+			<key>many</key>
+			<string>%1$d вложений...</string>
+			<key>one</key>
+			<string>%1$d вложение...</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
+	<key>common_gallery_reply_media_items</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>%1$d медиа...</string>
+			<key>many</key>
+			<string>%1$d медиа...</string>
+			<key>one</key>
+			<string>%1$d медиа...</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -236,6 +290,24 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>notification_gallery_body</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>Поделился(ась) %1$d вложениями</string>
+			<key>many</key>
+			<string>Поделился(ась) %1$d вложениями</string>
+			<key>one</key>
+			<string>Поделился(ась) %1$d вложением</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>notification_invitations</key>
 	<dict>
 		<key>COUNT</key>
@@ -308,6 +380,24 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>screen.room.timeline_redacted_messages</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>%1$d удалённых сообщения</string>
+			<key>many</key>
+			<string>%1$d удалённых сообщений</string>
+			<key>one</key>
+			<string>%1$d удалённое сообщение</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>screen_advanced_settings_live_location_update_distance</key>
 	<dict>
 		<key>COUNT</key>
@@ -370,10 +460,12 @@
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
+			<key>few</key>
+			<string>Минимальное количество символов: %1$d. Не используйте пароль от своей учетной записи.</string>
+			<key>many</key>
+			<string>Минимальное количество символов: %1$d. Не используйте пароль от своей учетной записи.</string>
 			<key>one</key>
-			<string>Minimum %1$d character. Do not use your account password</string>
-			<key>other</key>
-			<string>Minimum %1$d characters. Do not use your account password</string>
+			<string>Минимальное количество символов: %1$d. Не используйте пароль от своей учетной записи.</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
@@ -522,6 +614,24 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
+	<key>screen_room_selection_count</key>
+	<dict>
+		<key>COUNT</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>Выбрано %1$d сообщения</string>
+			<key>many</key>
+			<string>Выбрано %1$d сообщений</string>
+			<key>one</key>
+			<string>Выбрано %1$d сообщение</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@COUNT@</string>
+	</dict>
 	<key>screen_room_timeline_reaction_a11y</key>
 	<dict>
 		<key>COUNT</key>
@@ -630,7 +740,7 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
-	<key>screen_timeline_active_call_extra_joined_count</key>
+	<key>screen_timeline_active_call_joined_count</key>
 	<dict>
 		<key>COUNT</key>
 		<dict>
@@ -638,10 +748,12 @@
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
+			<key>few</key>
+			<string>%1$d присоединились</string>
+			<key>many</key>
+			<string>%1$d присоединилось</string>
 			<key>one</key>
-			<string>+ %1$d joined</string>
-			<key>other</key>
-			<string>+ %1$d joined</string>
+			<string>%1$d присоединился</string>
 		</dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>

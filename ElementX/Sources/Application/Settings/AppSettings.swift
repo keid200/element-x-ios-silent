@@ -19,16 +19,19 @@ import SwiftUI
 nonisolated protocol CommonSettingsProtocol: AnyObject, Sendable {
     var lastNotificationBootTime: TimeInterval? { get set }
     var selectedNotificationTone: NotificationTone? { get set }
+    var lastKnownBadgeCount: Int { get set }
     
     var logLevel: LogLevel { get }
     var traceLogPacks: Set<TraceLogPack> { get }
     var bugReportRageshakeURL: RemotePreference<RageshakeConfiguration> { get }
     var contentScannerURL: RemotePreference<URL?> { get }
+    var forceDisableE2EE: RemotePreference<Bool> { get }
+    var mapTilerConfiguration: RemotePreference<MapTilerConfiguration> { get }
     
     var enableOnlySignedDeviceIsolationMode: Bool { get }
     var threadsEnabled: Bool { get }
-    var globalSearchEnabled: Bool { get }
     var hideQuietNotificationAlerts: Bool { get }
+    var roomListNotificationCountEnabled: Bool { get }
 }
 
 nonisolated enum AppBuildType {
@@ -40,11 +43,10 @@ nonisolated enum AppBuildType {
         #if DEBUG
         return .debug
         #else
-        switch InfoPlistReader.main.baseBundleIdentifier {
-        case "io.element.elementx.nightly":
-            return .nightly
-        default:
-            return .release
+        if InfoPlistReader.main.isNightlyBuild {
+            .nightly
+        } else {
+            .release
         }
         #endif
     }
@@ -71,16 +73,18 @@ final nonisolated class AppSettings: @unchecked Sendable {
     func resetSessionSpecificSettings() {
         MXLog.warning("Resetting the user session specific AppSettings.")
         resetHasRunIdentityConfirmationOnboarding()
+        resetSearchBreadcrumbs()
     }
     
     // MARK: - Hooks
     
     // swiftlint:disable:next function_parameter_count
-    func override(accountProviders: [String],
+    func override(accountProviders: [AccountProvider],
                   allowOtherAccountProviders: Bool,
                   hideBrandChrome: Bool,
                   pushGatewayBaseURL: URL,
                   oAuthRedirectURL: URL,
+                  oAuthClientURIPath: String?,
                   websiteURL: URL,
                   logoURL: URL,
                   copyrightURL: URL,
@@ -95,12 +99,13 @@ final nonisolated class AppSettings: @unchecked Sendable {
                   accountProvisioningHost: String,
                   bugReportApplicationID: String,
                   analyticsTermsURL: URL?,
-                  mapTilerConfiguration: MapTilerSettings.Configuration) {
+                  mapTilerConfiguration: MapTilerConfiguration) {
         self.accountProviders = accountProviders
         self.allowOtherAccountProviders = allowOtherAccountProviders
         self.hideBrandChrome = hideBrandChrome
         self.pushGatewayBaseURL = pushGatewayBaseURL
         self.oAuthRedirectURL = oAuthRedirectURL
+        self.oAuthClientURIPath = oAuthClientURIPath
         self.websiteURL = websiteURL
         self.logoURL = logoURL
         self.copyrightURL = copyrightURL
@@ -115,7 +120,7 @@ final nonisolated class AppSettings: @unchecked Sendable {
         self.accountProvisioningHost = accountProvisioningHost
         self.bugReportApplicationID = bugReportApplicationID
         self.analyticsTermsURL = analyticsTermsURL
-        mapTilerSettings = RemotePreference(.configuration(mapTilerConfiguration))
+        self.mapTilerConfiguration = RemotePreference(mapTilerConfiguration)
     }
     
     // MARK: - Application
@@ -139,7 +144,8 @@ final nonisolated class AppSettings: @unchecked Sendable {
     ///
     /// Account provider is the friendly term for the server name. It should not contain an `https` prefix and should
     /// match the last part of the user ID. For example `example.com` and not `https://matrix.example.com`.
-    private(set) var accountProviders = ["matrix.cybershieldits.com"]
+    private(set) var accountProviders: [AccountProvider] = [.managed(serverName: "matrix.cybershieldits.com",
+                                                                     baseURL: "https://matrix.cybershieldits.com")]
     /// Whether or not the user is allowed to manually enter their own account provider or must select from one of `defaultAccountProviders`.
     private(set) var allowOtherAccountProviders = true
     /// Whether the components surrounding the app brand/logo should be hidden or not
@@ -180,6 +186,18 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference(defaultValue: AppAppearance.light)
     var appAppearance: AppAppearance
     
+    /// Tracks previous servers the user connected to for autocompletion purposes. Entries are made lowercase on write.
+    @UserPreference(key: "previousServers", defaultValue: [])
+    var previousServers: [String]
+    
+    var defaultAccountProvider: AccountProvider {
+        if allowOtherAccountProviders {
+            previousServers.first.map { .generic($0) } ?? accountProviders[0]
+        } else {
+            accountProviders[0]
+        }
+    }
+    
     // MARK: - Security
     
     /// The app must be locked with a PIN code as part of the authentication flow.
@@ -199,11 +217,15 @@ final nonisolated class AppSettings: @unchecked Sendable {
     /// The redirect URL used for OAuth. For the normal case we don't actually need the bundle ID as the web authentication session handles the redirect internally.
     /// However in the case where MAS sends the user to an external app, we need to make sure that the system will open the correct variant of the app (e.g. Nightly).
     private(set) nonisolated(unsafe) var oAuthRedirectURL: URL! = URL(string: "https://cybershieldits.com/oauth/ios/\(InfoPlistReader.main.bundleIdentifier)")
+    /// A path that is appended to `websiteURL` to form the OAuth `clientURI`. MAS uses `clientURI` as the identifier for a specific app, allowing us to
+    /// distinguish the various clients we have for Android, iOS and Web from each other.
+    /// Intentionally a distinct property so it can be easily overridden without having to manipulate the website URL.
+    private(set) var oAuthClientURIPath: String? = "apps/ios"
     
     var oAuthConfiguration: OAuthConfiguration {
         OAuthConfiguration(clientName: InfoPlistReader.main.bundleDisplayName,
                            redirectURI: oAuthRedirectURL,
-                           clientURI: websiteURL,
+                           clientURI: oAuthClientURIPath.map { websiteURL.appending(path: $0) } ?? websiteURL,
                            logoURI: logoURL,
                            tosURI: acceptableUseURL,
                            policyURI: privacyURL,
@@ -247,6 +269,10 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference
     var lastNotificationBootTime: TimeInterval?
     
+    /// The app icon badge value the app last computed from the SDK's unread notification counts.
+    @UserPreference(defaultValue: 0)
+    var lastKnownBadgeCount: Int
+    
     /// The sound played when delivering noisy notifications. If nil, use the ElementX default
     @UserPreference
     var selectedNotificationTone: NotificationTone?
@@ -272,6 +298,12 @@ final nonisolated class AppSettings: @unchecked Sendable {
     /// The base URL of the content scanner server used to scan media before it is downloaded.
     /// `nil` when content scanning is disabled.
     let contentScannerURL: RemotePreference<URL?> = .init(nil)
+    
+    // MARK: - Encryption
+    
+    /// Whether the server forbids the use of E2EE: new rooms are created unencrypted and
+    /// enabling encryption on existing rooms is not offered.
+    let forceDisableE2EE: RemotePreference<Bool> = .init(false)
     
     // MARK: - Analytics
     
@@ -327,6 +359,15 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference(defaultValue: RoomListActivityVisibility.current)
     var roomListActivityVisibility: RoomListActivityVisibility
     
+    @UserPreference(defaultValue: false)
+    var roomListNotificationCountEnabled: Bool
+    
+    // MARK: - Search Screen
+    
+    /// The queries the user searched for and the rooms they opened from the results, most recent first.
+    @UserPreference(defaultValue: [SearchBreadcrumb]())
+    var searchBreadcrumbs: [SearchBreadcrumb]
+    
     // MARK: - Room Screen
     
     @UserPreference(defaultValue: AppBuildType.current == .debug)
@@ -365,15 +406,13 @@ final nonisolated class AppSettings: @unchecked Sendable {
     // MARK: - Maps
     
     /// The locally-bundled MapTiler configuration.
-    static let bundledMapTilerConfiguration = MapTilerSettings.Configuration(baseURL: "https://api.maptiler.com/maps",
-                                                                             apiKey: Secrets.mapLibreAPIKey,
-                                                                             lightStyleID: "9bc819c8-e627-474a-a348-ec144fe3d810",
-                                                                             darkStyleID: "dea61faf-292b-4774-9660-58fcef89a7f3")
+    static let bundledMapTilerConfiguration = MapTilerConfiguration(baseURL: "https://api.maptiler.com/maps",
+                                                                    apiKey: Secrets.mapLibreAPIKey,
+                                                                    lightStyleID: "9bc819c8-e627-474a-a348-ec144fe3d810",
+                                                                    darkStyleID: "dea61faf-292b-4774-9660-58fcef89a7f3")
     
-    /// The resolved map tile settings. Defaults to ``MapTilerSettings.configuration(_:)`` with the
-    /// bundled configuration and is remotely overridden with ``MapTilerSettings.url(_:)`` when
-    /// the homeserver advertises a `style.json` URL via the matrix client well-known.
-    private(set) var mapTilerSettings = RemotePreference<MapTilerSettings>(.configuration(AppSettings.bundledMapTilerConfiguration))
+    /// The MapTiler configuration used to build map URLs, which defaults to the bundled one.
+    private(set) var mapTilerConfiguration = RemotePreference(AppSettings.bundledMapTilerConfiguration)
     
     // MARK: - Presence
     
@@ -389,6 +428,9 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference(defaultValue: false)
     var lowPriorityFilterEnabled: Bool
     
+    @UserPreference(defaultValue: false)
+    var mentionsFilterEnabled: Bool
+    
     /// Configuration to enable only signed device isolation mode for  crypto. In this mode only devices signed by their owner will be considered in e2ee rooms.
     @UserPreference(defaultValue: false)
     var enableOnlySignedDeviceIsolationMode: Bool
@@ -400,7 +442,7 @@ final nonisolated class AppSettings: @unchecked Sendable {
     var threadsEnabled: Bool
     
     @UserPreference(defaultValue: false)
-    var roomThreadListEnabled: Bool
+    var messageMultiSelectEnabled: Bool
     
     @UserPreference(defaultValue: ProcessInfo().isiOSAppOnMac)
     var globalSearchEnabled: Bool
@@ -411,6 +453,11 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference(defaultValue: false)
     var linkPreviewsEnabled: Bool
     
+    /// Enables *sending* gallery messages (multiple media in a single message).
+    /// Received galleries are always rendered regardless of this flag.
+    @UserPreference(defaultValue: false)
+    var galleryEnabled: Bool
+    
     @UserPreference(defaultValue: false)
     var jumpToReadMarkerEnabled: Bool
     
@@ -420,14 +467,15 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference(defaultValue: false)
     var automaticBackPaginationEnabled: Bool
     
-    @UserPreference(defaultValue: AppBuildType.current != .release, volatile: true)
+    @UserPreference(key: "clientPausingAndResumingEnabledV2", defaultValue: false, volatile: true)
     var clientPausingAndResumingEnabled: Bool
-    
-    @UserPreference(defaultValue: false)
-    var userStatusEnabled: Bool
     
     @UserPreference(defaultValue: AppBuildType.current != .release)
     var developerOptionsEnabled: Bool
+    
+    /// Runs calls through the native matrix-rust-rtc stack instead of the Element Call web view.
+    @UserPreference(defaultValue: false)
+    var nativeCallEnabled: Bool
     
     init(store: UserDefaultsProtocol) {
         self.store = store

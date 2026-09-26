@@ -142,6 +142,7 @@ class MockScreen: Identifiable {
             let coordinator = ServerSelectionScreenCoordinator(parameters: .init(authenticationService: AuthenticationService.mock,
                                                                                  authenticationFlow: .login,
                                                                                  appSettings: appSettings,
+                                                                                 homeserverHistoryManager: HomeserverHistoryManager(appSettings: appSettings),
                                                                                  userIndicatorController: userIndicatorController))
             navigationStackCoordinator.setRootCoordinator(coordinator)
             return navigationStackCoordinator
@@ -149,12 +150,18 @@ class MockScreen: Identifiable {
             let appSettings: AppSettings! = appSettings
             
             if id == .singleProviderAuthenticationFlow || id == .multipleProvidersAuthenticationFlow {
-                let accountProviders = id == .singleProviderAuthenticationFlow ? ["example.com"] : ["guest.example.com", "example.com"]
+                let accountProviders: [AccountProvider] = if id == .singleProviderAuthenticationFlow {
+                    [.managed(serverName: "example.com", baseURL: "https://matrix.example.com")]
+                } else {
+                    [.managed(serverName: "guest.example.com", baseURL: "https://matrix.guest.example.com"),
+                     .managed(serverName: "example.com", baseURL: "https://matrix.example.com")]
+                }
                 appSettings.override(accountProviders: accountProviders,
                                      allowOtherAccountProviders: false,
                                      hideBrandChrome: false,
                                      pushGatewayBaseURL: appSettings.pushGatewayBaseURL,
                                      oAuthRedirectURL: appSettings.oAuthRedirectURL,
+                                     oAuthClientURIPath: appSettings.oAuthClientURIPath,
                                      websiteURL: appSettings.websiteURL,
                                      logoURL: appSettings.logoURL,
                                      copyrightURL: appSettings.copyrightURL,
@@ -178,7 +185,6 @@ class MockScreen: Identifiable {
                                                                 appMediator: AppMediatorMock(.init()),
                                                                 appSettings: appSettings,
                                                                 appHooks: AppHooks(),
-                                                                analytics: analytics,
                                                                 userIndicatorController: userIndicatorController)
             flowCoordinator.start()
             retainedState.append(flowCoordinator)
@@ -853,8 +859,7 @@ class MockScreen: Identifiable {
                                                         mediaProvider: MediaProviderMock(.init()),
                                                         appSettings: appSettings)
             
-            let flowCoordinator = ChatsTabFlowCoordinator(isNewLogin: false,
-                                                          navigationSplitCoordinator: navigationSplitCoordinator,
+            let flowCoordinator = ChatsTabFlowCoordinator(navigationSplitCoordinator: navigationSplitCoordinator,
                                                           flowParameters: CommonFlowParameters(userSession: UserSessionMock(.init(clientProxy: clientProxy)),
                                                                                                bugReportService: BugReportServiceMock(.init()),
                                                                                                elementCallService: ElementCallServiceMock(.init()),

@@ -6,8 +6,6 @@
 // Please see LICENSE files in the repository root for full details.
 //
 
-// periphery:ignore:all
-
 import Combine
 import Foundation
 import MatrixRustSDK
@@ -20,6 +18,7 @@ struct TimelineControllerMockConfiguration {
     var timelineProxy: TimelineProxyProtocol?
     var timelineItemsTimestamps: [TimelineItemIdentifier: Date] = [:]
     var paginationState: TimelinePaginationState = .initial
+    var allowedGalleryItemTypes: [TimelineAllowedGalleryItemType]?
 }
 
 @MainActor extension TimelineControllerMock {
@@ -45,8 +44,8 @@ struct TimelineControllerMockConfiguration {
         let timelineItemsTimestamps = configuration.timelineItemsTimestamps
         
         callbacks = PassthroughSubject()
-        roomID = roomProxy?.id ?? "MockRoomIdentifier"
         timelineKind = configuration.timelineKind
+        allowedGalleryItemTypes = configuration.allowedGalleryItemTypes
         paginationState = configuration.paginationState
         timelineItems = configuration.timelineItems
         
@@ -75,9 +74,9 @@ struct TimelineControllerMockConfiguration {
             _ = await timelineProxy.toggleReaction(reaction, to: eventOrTransactionID)
         }
         
-        redactClosure = { [timelineProxy] eventOrTransactionID in
+        redactReasonClosure = { [timelineProxy] eventOrTransactionID, reason in
             guard let timelineProxy else { return }
-            _ = await timelineProxy.redact(eventOrTransactionID, reason: nil)
+            _ = await timelineProxy.redact(eventOrTransactionID, reason: reason)
         }
         
         editMessageHtmlIntentionalMentionsClosure = { [weak self] _, message, _, _ in
@@ -161,6 +160,16 @@ struct TimelineControllerMockConfiguration {
                                                      videoInfo: videoInfo,
                                                      caption: caption,
                                                      requestHandle: requestHandle).mapError(TimelineControllerError.timelineProxyError)
+            }
+            return .success(())
+        }
+        
+        sendGalleryItemInfosCaptionInReplyToEventIDClosure = { [weak self, timelineProxy] itemInfos, caption, inReplyToEventID in
+            self?.callbacks.send(.messageSentOrEdited)
+            if let timelineProxy {
+                return await timelineProxy.sendGallery(itemInfos: itemInfos,
+                                                       caption: caption,
+                                                       inReplyToEventID: inReplyToEventID).mapError(TimelineControllerError.timelineProxyError)
             }
             return .success(())
         }

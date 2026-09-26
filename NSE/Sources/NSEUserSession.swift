@@ -14,15 +14,11 @@ nonisolated protocol NSEUserSessionProtocol {
     var inviteAvatarsVisibility: InviteAvatars { get async }
     var mediaPreviewVisibility: MediaPreviews { get async }
     var threadsEnabled: Bool { get }
-    
-    func notificationItemProxy(roomID: String, eventID: String) async -> NotificationItemProxyProtocol?
-    func roomForIdentifier(_ roomID: String) -> Room?
 }
 
 final nonisolated class NSEUserSession: NSEUserSessionProtocol {
-    private let sessionDirectories: SessionDirectories
     private let appSettings: CommonSettingsProtocol
-    private let baseClient: Client
+    private let baseClient: ClientProtocol
     private let notificationClient: NotificationClient
     private let userID: String
     private(set) lazy var mediaProvider: MediaProviderProtocol = MediaProvider(mediaLoader: MediaLoader(client: baseClient),
@@ -59,35 +55,30 @@ final nonisolated class NSEUserSession: NSEUserSessionProtocol {
     init(credentials: KeychainCredentials,
          roomID: String,
          clientSessionDelegate: ClientSessionDelegate,
-         appHooks: AppHooks,
-         appSettings: CommonSettingsProtocol) async throws {
-        sessionDirectories = credentials.restorationToken.sessionDirectories
+         clientFactory: ClientFactoryProtocol = ClientFactory(),
+         appSettings: CommonSettingsProtocol,
+         appHooks: AppHooks) async throws {
         userID = credentials.userID
         self.appSettings = appSettings
         
-        let homeserverURL = credentials.restorationToken.session.homeserverUrl
-        let clientBuilder = ClientBuilder
-            .baseBuilder(setupEncryption: false,
-                         httpProxy: URL(string: homeserverURL)?.globalProxy,
-                         slidingSync: .restored,
-                         sessionDelegate: clientSessionDelegate,
-                         appHooks: appHooks,
-                         enableOnlySignedDeviceIsolationMode: appSettings.enableOnlySignedDeviceIsolationMode,
-                         requestTimeout: 15000,
-                         maxRequestRetryTime: 5000,
-                         threadsEnabled: appSettings.threadsEnabled)
-            .systemIsMemoryConstrained()
-            .sqliteStore(config: .init(dataPath: credentials.restorationToken.sessionDirectories.dataPath,
-                                       cachePath: credentials.restorationToken.sessionDirectories.cachePath)
-                    .passphrase(passphrase: credentials.restorationToken.passphrase))
-            .username(username: credentials.userID)
-            .homeserverUrl(url: homeserverURL)
+        baseClient = try await clientFactory.makeNSEClient(credentials: credentials,
+                                                           roomID: roomID,
+                                                           clientSessionDelegate: clientSessionDelegate,
+                                                           appSettings: appSettings,
+                                                           appHooks: appHooks)
         
-        baseClient = try await clientBuilder.build()
+        do {
+            try await baseClient.setPresence(presence: .offline, immediate: false)
+        } catch {
+            MXLog.error("Failed configuring offline presence before notification processing with error: \(error)")
+        }
         delegateHandle = try baseClient.setDelegate(delegate: ClientDelegateWrapper())
         
-        try await baseClient.restoreSessionWith(session: credentials.restorationToken.session,
-                                                roomLoadSettings: .one(roomId: roomID))
+        // Inject the content scanner so the SDK gates the media it downloads whilst building the notification.
+        if let contentScannerURL = appSettings.contentScannerURL.publisher.value {
+            let contentScanner = ContentScanner(scannerUrl: contentScannerURL.absoluteString)
+            await baseClient.setContentScanner(contentScanner: contentScanner)
+        }
         
         notificationClient = try await baseClient.notificationClient(processSetup: .multipleProcesses)
     }
@@ -99,7 +90,6 @@ final nonisolated class NSEUserSession: NSEUserSessionProtocol {
             switch notificationStatus {
             case .event(let notification):
                 return NotificationItemProxy(notificationItem: notification,
-                                             eventID: eventID,
                                              receiverID: userID,
                                              roomID: roomID)
             case .eventNotFound:
@@ -114,7 +104,7 @@ final nonisolated class NSEUserSession: NSEUserSessionProtocol {
             }
         } catch {
             MXLog.error("Could not get notification's content creating an empty notification instead, error: \(error)")
-            return EmptyNotificationItemProxy(eventID: eventID, roomID: roomID, receiverID: userID)
+            return EmptyNotificationItemProxy(roomID: roomID, receiverID: userID)
         }
     }
     
@@ -139,6 +129,7 @@ private final nonisolated class ClientDelegateWrapper: ClientDelegate {
         MXLog.error("Received authentication error, the NSE can't handle this.")
     }
     
+    // periphery:ignore - required by the SDK's delegate protocol
     func didRefreshTokens() {
         MXLog.info("Delegating session updates to the ClientSessionDelegate.")
     }

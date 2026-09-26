@@ -7,6 +7,7 @@
 //
 
 import Combine
+import ElementCall
 import Foundation
 import MatrixRustSDK
 
@@ -29,12 +30,19 @@ enum ClientProxyLoadingState {
     case notLoading
 }
 
+enum ClientProxyPresence: Equatable, Sendable {
+    case online
+    case unavailable
+    case offline
+}
+
 enum ClientProxyError: Error {
     case sdkError(Error)
     case forbiddenAccess
     
     case invalidMedia
     case invalidServerName
+    case invalidHomeserverURL
     case invalidResponse
     case failedUploadingMedia(ErrorKind)
     case roomPreviewIsPrivate
@@ -163,6 +171,9 @@ protocol ClientProxyProtocol: AnyObject {
     
     var pusherNotificationClientIdentifier: String? { get }
     
+    /// The total number of unread notifications across all joined, non-muted rooms, as computed by the SDK.
+    var totalUnreadNotifications: UInt64 { get }
+    
     var mediaLoader: MediaLoaderProtocol { get }
     
     var contentScanner: ContentScannerProxyProtocol? { get }
@@ -192,8 +203,10 @@ protocol ClientProxyProtocol: AnyObject {
     var capabilities: HomeserverCapabilitiesProxyProtocol { get }
     
     var isReportRoomSupported: Bool { get async }
-    
     var isLiveKitRTCSupported: Bool { get async }
+    
+    /// Builds a Matrix transport for the call package, `nil` when not backed by a real SDK client.
+    func makeNativeCallTransport() -> ElementCallMatrixTransportProtocol?
     
     var isLoginWithQRCodeSupported: Bool { get async }
     
@@ -246,13 +259,18 @@ protocol ClientProxyProtocol: AnyObject {
     /// Will only work for rooms that are in our room list/local store
     func reportRoomForIdentifier(_ identifier: String, reason: String) async -> Result<Void, ClientProxyError>
     
-    @discardableResult func loadUserProfile() async -> Result<Void, ClientProxyError>
-    
+    /// Loads the user's own profile when the server doesn't support MSC4262 and both returns the profile
+    /// as well as publishing it via ``userProfilePublisher``.
+    ///
+    /// When the server does support the MSC, then the client automatically publishes profile and keeps it up to date.
+    @discardableResult func loadUserProfileIfNeeded() async -> Result<Void, ClientProxyError>
     func setUserDisplayName(_ name: String) async -> Result<Void, ClientProxyError>
-    
     func setUserAvatar(media: MediaInfo) async -> Result<Void, ClientProxyError>
-    
     func removeUserAvatar() async -> Result<Void, ClientProxyError>
+    func isUserStatusSupported() async -> Result<Bool, ClientProxyError>
+    func setUserStatus(_ status: UserStatus.Raw) async -> Result<Void, ClientProxyError>
+    /// Removes both the `m.status` and `m.call` fields from the user's profile.
+    func clearUserStatus() async -> Result<Void, ClientProxyError>
     
     func linkNewDeviceService() -> LinkNewDeviceServiceProtocol
     
@@ -317,4 +335,10 @@ protocol ClientProxyProtocol: AnyObject {
     
     func setTimelineMediaVisibility(_ value: TimelineMediaVisibility) async -> Result<Void, ClientProxyError>
     func setHideInviteAvatars(_ value: Bool) async -> Result<Void, ClientProxyError>
+    
+    // MARK: - Presence
+    
+    /// Configures the client-owned presence used by future sync requests and shared with clones and notification children.
+    /// When `sendImmediately` is `true` this also asks the SDK to send a direct presence update.
+    func configurePresence(_ presence: ClientProxyPresence, sendImmediately: Bool) async -> Result<Void, ClientProxyError>
 }

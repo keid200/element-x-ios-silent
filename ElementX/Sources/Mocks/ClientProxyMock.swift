@@ -14,8 +14,9 @@ struct ClientProxyMockConfiguration {
     var homeserver = ""
     var userIDServerName: String?
     var userID: String = RoomMemberProxyMock.mockMe.userID
-    var displayName: String? = "User display name"
     var deviceID: String?
+    var displayName: String? = "User display name"
+    var status: UserStatus = .init()
     var roomSummaryProvider: RoomSummaryProviderProtocol = RoomSummaryProviderMock(.init())
     var spaceServiceConfiguration: SpaceServiceProxyMock.Configuration = .init()
     var roomPreviews: [RoomPreviewProxyProtocol]?
@@ -35,6 +36,8 @@ struct ClientProxyMockConfiguration {
     
     var maxMediaUploadSize: UInt = 100 * 1024 * 1024
     
+    var totalUnreadNotifications: UInt64 = 0
+    
     class Overrides {
         var joinedRoomIDs: Set<String> = []
     }
@@ -45,6 +48,7 @@ enum ClientProxyMockError: Error {
 }
 
 extension ClientProxyMock {
+    // swiftlint:disable:next function_body_length
     convenience init(_ configuration: ClientProxyMockConfiguration) {
         self.init()
         
@@ -53,6 +57,8 @@ extension ClientProxyMock {
         
         homeserver = configuration.homeserver
         userIDServerName = configuration.userIDServerName
+        
+        totalUnreadNotifications = configuration.totalUnreadNotifications
         
         roomSummaryProvider = configuration.roomSummaryProvider
         alternateRoomSummaryProvider = RoomSummaryProviderMock(.init())
@@ -65,7 +71,9 @@ extension ClientProxyMock {
         verificationStatePublisher = .init(.unknown)
         homeserverReachabilityPublisher = .init(.reachable)
         
-        userProfilePublisher = .init(UserProfile(userID: configuration.userID, displayName: configuration.displayName))
+        userProfilePublisher = .init(UserProfile(userID: configuration.userID,
+                                                 displayName: configuration.displayName,
+                                                 status: configuration.status))
         
         ignoredUsersPublisher = .init([RoomMemberProxyMock].allMembers.map(\.userID))
         
@@ -85,9 +93,11 @@ extension ClientProxyMock {
         }
         joinRoomAliasReturnValue = .success(())
         uploadMediaReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
-        loadUserProfileReturnValue = .success(())
+        loadUserProfileIfNeededReturnValue = .success(())
         setUserDisplayNameReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
         setUserAvatarMediaReturnValue = .success(())
+        isUserStatusSupportedReturnValue = .success(true)
+        setUserStatusReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
         removeUserAvatarReturnValue = .success(())
         isAliasAvailableReturnValue = .success(true)
         searchUsersSearchTermLimitReturnValue = .success(.init(results: [], limited: false))
@@ -165,5 +175,7 @@ extension ClientProxyMock {
         underlyingMaxMediaUploadSize = .success(configuration.maxMediaUploadSize)
         
         storeSizesReturnValue = .success(.init(cryptoStore: 1, stateStore: 9, eventCacheStore: 8, mediaStore: 6))
+        
+        configurePresenceSendImmediatelyReturnValue = .success(())
     }
 }

@@ -19,7 +19,7 @@ enum TimelineFixtures {
                              isOutgoing: false,
                              isEditable: false,
                              canBeRepliedTo: true,
-                             sender: .init(id: "", displayName: "Jacob"),
+                             sender: .init(id: "", displayName: "Jacob", status: .mock(text: "Rowing", emoji: "🚣‍♂️")),
                              content: .init(body: "That looks so good!"),
                              properties: RoomTimelineItemProperties(isEdited: true)),
         TextRoomTimelineItem(id: .event(uniqueID: .init("TimelineFixtures.default.1"),
@@ -126,11 +126,6 @@ enum TimelineFixtures {
         singleMessageChunkProxies.buildRoomTimelineItems()
     }
     
-    /// A single text item.
-    static var incomingMessage: RoomTimelineItemProtocol {
-        incomingMessageProxy.buildRoomTimelineItem()
-    }
-    
     /// A large chunk of events, containing 40 text items which should fill an iPad
     /// with enough items so that it won't perform another back pagination.
     static var largeChunk: [RoomTimelineItemProtocol] {
@@ -170,7 +165,15 @@ enum TimelineFixtures {
             VideoRoomTimelineItem(isOutgoing: false, caption: "Woah, it was incredible!"),
             VideoRoomTimelineItem(isOutgoing: true),
             VoiceMessageRoomTimelineItem(isOutgoing: false),
-            VoiceMessageRoomTimelineItem(isOutgoing: true)
+            VoiceMessageRoomTimelineItem(isOutgoing: true),
+            GalleryRoomTimelineItem(isOutgoing: false,
+                                    items: [.mockImage(index: 0), .mockVideo(index: 1), .mockImage(index: 2)]),
+            GalleryRoomTimelineItem(isOutgoing: true,
+                                    items: [.mockImage(index: 0),
+                                            .mockVideo(index: 1),
+                                            .mockFile(index: 2, source: try? .init(url: .mockMXCFile, mimeType: nil)),
+                                            .mockAudio(index: 3, source: try? .init(url: .mockMXCAudio, mimeType: nil))],
+                                    caption: "Everything from the trip!")
         ]
     }
     
@@ -261,7 +264,6 @@ extension TimelineItemProxy {
                                                                                                body: body,
                                                                                                isEdited: isEdited,
                                                                                                mentions: nil)),
-                                                                 reactions: [],
                                                                  inReplyTo: nil,
                                                                  threadRoot: nil,
                                                                  threadSummary: nil))
@@ -286,12 +288,15 @@ private extension TimelineItemProxy {
                                                                                                body: body,
                                                                                                isEdited: false,
                                                                                                mentions: nil)),
-                                                                 reactions: [],
                                                                  inReplyTo: nil,
                                                                  threadRoot: nil,
                                                                  threadSummary: nil))
         let configuration = EventTimelineItemSDKMockConfiguration(sender: "@\(sender.lowercased()):matrix.org",
-                                                                  senderProfile: .ready(displayName: sender, displayNameAmbiguous: false, avatarUrl: nil),
+                                                                  senderProfile: .ready(displayName: sender,
+                                                                                        displayNameAmbiguous: false,
+                                                                                        avatarUrl: nil,
+                                                                                        status: nil,
+                                                                                        call: nil),
                                                                   isOwn: isOwn,
                                                                   canBeRepliedTo: true,
                                                                   content: content)
@@ -356,6 +361,18 @@ private extension FileRoomTimelineItem {
                                  fileSize: nil,
                                  thumbnailSource: nil,
                                  contentType: .pdf))
+    }
+}
+
+private extension GalleryRoomTimelineItem {
+    init(isOutgoing: Bool, items: [GalleryItem], caption: String? = nil) {
+        self.init(id: .randomEvent,
+                  timestamp: .mock,
+                  isOutgoing: isOutgoing,
+                  isEditable: isOutgoing,
+                  canBeRepliedTo: true,
+                  sender: .init(id: isOutgoing ? "@alice:matrix.org" : "@bob:matrix.org"),
+                  content: .init(body: "Gallery", caption: caption, items: items))
     }
 }
 

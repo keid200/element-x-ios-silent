@@ -27,6 +27,8 @@ final class CompletionSuggestionService: CompletionSuggestionServiceProtocol {
     
     private var cancellables = Set<AnyCancellable>()
     
+    private var updateMembersTask: Task<Void, Never>?
+    
     init(roomProxy: JoinedRoomProxyProtocol,
          roomListPublisher: AnyPublisher<[RoomSummary], Never>) {
         self.roomProxy = roomProxy
@@ -66,13 +68,23 @@ final class CompletionSuggestionService: CompletionSuggestionServiceProtocol {
     }
     
     func setSuggestionTrigger(_ suggestionTrigger: SuggestionTrigger?) {
+        let isNewUserMention = suggestionTrigger?.type == .user && suggestionTriggerSubject.value?.type != .user
+        
         suggestionTriggerSubject.value = suggestionTrigger
+        
+        // Refresh the members each time a new user suggestion is triggered to pull in the latest profiles.
+        guard isNewUserMention, updateMembersTask == nil else { return }
+        
+        updateMembersTask = Task { [weak self, roomProxy] in
+            await roomProxy.updateMembers()
+            self?.updateMembersTask = nil
+        }
     }
     
     // MARK: - Private
     
     private func updateRoomInfo(_ roomInfo: RoomInfoProxyProtocol) {
-        if let powerLevels = roomProxy.infoPublisher.value.powerLevels {
+        if let powerLevels = roomInfo.powerLevels {
             canMentionAllUsers = powerLevels.canOwnUserTriggerRoomNotification()
         }
     }
@@ -87,7 +99,8 @@ final class CompletionSuggestionService: CompletionSuggestionServiceProtocol {
                       Self.shouldIncludeMember(userID: member.userID, displayName: member.displayName, searchText: suggestionTrigger.text) else {
                     return nil
                 }
-                return .init(suggestionType: .user(.init(id: member.userID, displayName: member.displayName, avatarURL: member.avatarURL)), range: suggestionTrigger.range, rawSuggestionText: suggestionTrigger.text)
+                return .init(suggestionType: .user(.init(id: member.userID, displayName: member.displayName, avatarURL: member.avatarURL, status: member.status)),
+                             range: suggestionTrigger.range, rawSuggestionText: suggestionTrigger.text)
             }
         
         if canMentionAllUsers,

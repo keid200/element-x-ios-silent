@@ -36,6 +36,10 @@ final nonisolated class RoomMemberProxy: RoomMemberProxyProtocol {
         member.avatarUrl.flatMap(URL.init(string:))
     }
     
+    var status: UserStatus {
+        UserStatus(rustStatus: member.status, rustCall: member.call)
+    }
+    
     var membership: MembershipState {
         member.membership
     }
@@ -52,6 +56,7 @@ final nonisolated class RoomMemberProxy: RoomMemberProxyProtocol {
         .init(rustPowerLevel: member.powerLevel)
     }
     
+    // periphery:ignore - might be useful to have
     var isServiceMember: Bool {
         member.isServiceMember
     }

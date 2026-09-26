@@ -99,7 +99,7 @@ class RoomMembersListScreenViewModel: RoomMembersListScreenViewModelType, RoomMe
                 hideLoadingIndicator(Self.updateStateLoadingIndicatorIdentifier)
             }
             
-            let members = members.sorted()
+            let members = members.sorted(prioritisingRoomCallParticipants: roomProxy.infoPublisher.value.activeRoomCallParticipants)
             let roomMembersDetails = await buildMembersDetails(members: members)
             self.members = members
             self.currentUserProxy = members.first { $0.userID == roomProxy.ownUserID }
@@ -125,6 +125,7 @@ class RoomMembersListScreenViewModel: RoomMembersListScreenViewModelType, RoomMe
     private func buildMembersDetails(members: [RoomMemberProxyProtocol]) async -> RoomMembersDetails {
         // We don't care about identity statuses on non-encrypted rooms
         let isEncrypted = roomProxy.infoPublisher.value.isEncrypted
+        let activeRoomCallParticipants = Set(roomProxy.infoPublisher.value.activeRoomCallParticipants)
         
         return await Task.detached { [weak self] in
             // accessing RoomMember's properties is very slow. We need to do it in a background thread.
@@ -137,14 +138,15 @@ class RoomMembersListScreenViewModel: RoomMembersListScreenViewModelType, RoomMe
                 if isEncrypted, let fetchedState = await self?.userIdentityVerificationState(for: member.userID) {
                     verificationState = fetchedState
                 }
+                let isActiveRoomCallParticipant = activeRoomCallParticipants.contains(member.userID)
                 
                 switch member.membership {
                 case .invite:
-                    invitedMembers.append(.init(member: .init(withProxy: member), verificationState: verificationState))
+                    invitedMembers.append(.init(member: .init(withProxy: member), verificationState: verificationState, isActiveRoomCallParticipant: isActiveRoomCallParticipant))
                 case .join:
-                    joinedMembers.append(.init(member: .init(withProxy: member), verificationState: verificationState))
+                    joinedMembers.append(.init(member: .init(withProxy: member), verificationState: verificationState, isActiveRoomCallParticipant: isActiveRoomCallParticipant))
                 case .ban:
-                    bannedMembers.append(.init(member: .init(withProxy: member), verificationState: verificationState))
+                    bannedMembers.append(.init(member: .init(withProxy: member), verificationState: verificationState, isActiveRoomCallParticipant: isActiveRoomCallParticipant))
                 default:
                     continue
                 }
@@ -217,22 +219,6 @@ class RoomMembersListScreenViewModel: RoomMembersListScreenViewModelType, RoomMe
     
     private func hideLoadingIndicator(_ identifier: String) {
         userIndicatorController.retractIndicatorWithId(identifier)
-    }
-    
-    private func showManageMemberIndicator(title: String) {
-        userIndicatorController.submitIndicator(UserIndicator(id: title,
-                                                              type: .toast(progress: .indeterminate),
-                                                              title: title,
-                                                              persistent: true))
-    }
-    
-    private func hideManageMemberIndicator(title: String) {
-        userIndicatorController.retractIndicatorWithId(title)
-    }
-    
-    private func showManageMemberFailure(title: String) {
-        userIndicatorController.retractIndicatorWithId(title)
-        userIndicatorController.submitIndicator(UserIndicator(title: L10n.commonFailed, icon: \.close))
     }
 }
 

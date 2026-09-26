@@ -33,6 +33,8 @@ enum RoomMembersListScreenMode {
 nonisolated struct RoomMemberListScreenEntry: Equatable {
     let member: RoomMemberDetails
     let verificationState: UserIdentityVerificationState
+    /// Whether the member is currently joined to the room's active MatrixRTC call (e.g. Element Call).
+    var isActiveRoomCallParticipant = false
 }
 
 struct RoomMembersListScreenViewState: BindableState {
@@ -104,8 +106,4 @@ enum RoomMembersListScreenViewAction {
     case invite
 }
 
-enum RoomMembersListScreenAlertType: Hashable {
-    case unbanConfirmation(RoomMemberDetails)
-    case kickConfirmation
-    case banConfirmation
-}
+enum RoomMembersListScreenAlertType: Hashable { }

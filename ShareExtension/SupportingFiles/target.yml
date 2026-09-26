@@ -49,15 +49,16 @@ targets:
         baseBundleIdentifier: $(BASE_BUNDLE_IDENTIFIER)
         keychainAccessGroupIdentifier: $(KEYCHAIN_ACCESS_GROUP_IDENTIFIER)
         productionAppName: $(PRODUCTION_APP_NAME)
+        isNightlyBuild: $(IS_NIGHTLY_BUILD)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareExtensionViewController
           NSExtensionAttributes:
             IntentsSupported: [INSendMessageIntent]
             NSExtensionActivationRule:
-              NSExtensionActivationSupportsFileWithMaxCount: 10
-              NSExtensionActivationSupportsImageWithMaxCount: 10
-              NSExtensionActivationSupportsMovieWithMaxCount: 10
+              NSExtensionActivationSupportsFileWithMaxCount: 60
+              NSExtensionActivationSupportsImageWithMaxCount: 60
+              NSExtensionActivationSupportsMovieWithMaxCount: 60
               NSExtensionActivationSupportsText: true
               NSExtensionActivationSupportsWebURLWithMaxCount: 10
 
@@ -94,9 +95,9 @@ targets:
     - path: ../../ElementX/Sources/ShareExtension
     - path: ../../ElementX/Sources/AppHooks/AppHooks.swift
     - path: ../../ElementX/Sources/AppHooks/Hooks/TracingHook.swift
-    - path: ../../ElementX/Sources/AppHooks/Hooks/ClientBuilderHook.swift
+    - path: ../../ElementX/Sources/AppHooks/Hooks/ClientFactoryHook.swift
     - path: ../../ElementX/Sources/AppHooks/Hooks/RemoteSettingsHook.swift
-    - path: ../../Secrets/Secrets.swift
+    - path: ../../Components/Secrets/Secrets.swift
     - path: ../../ElementX/Sources/Application/Settings
     - path: ../../ElementX/Sources/Application/TargetConfiguration.swift
     - path: ../../ElementX/Sources/Services/AlertTones/NotificationTone.swift

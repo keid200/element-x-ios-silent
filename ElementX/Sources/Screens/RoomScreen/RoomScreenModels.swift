@@ -43,7 +43,7 @@ struct RoomScreenViewState: BindableState {
     var roomTitle = ""
     var roomSubtitle: String?
     var roomAvatar: RoomAvatar
-    var dmRecipientVerificationState: UserIdentityVerificationState?
+    var dmRecipientDetails = RoomHeaderView.DMRecipientDetails()
     
     var lastScrollDirection: ScrollDirection?
     // This is used to control the banner

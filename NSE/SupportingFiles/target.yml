@@ -54,6 +54,7 @@ targets:
         baseBundleIdentifier: $(BASE_BUNDLE_IDENTIFIER)
         keychainAccessGroupIdentifier: $(KEYCHAIN_ACCESS_GROUP_IDENTIFIER)
         productionAppName: $(PRODUCTION_APP_NAME)
+        isNightlyBuild: $(IS_NIGHTLY_BUILD)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.usernotifications.service
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).NotificationServiceExtension
@@ -93,9 +94,9 @@ targets:
     - path: ../SupportingFiles
     - path: ../../ElementX/Sources/AppHooks/AppHooks.swift
     - path: ../../ElementX/Sources/AppHooks/Hooks/TracingHook.swift
-    - path: ../../ElementX/Sources/AppHooks/Hooks/ClientBuilderHook.swift
+    - path: ../../ElementX/Sources/AppHooks/Hooks/ClientFactoryHook.swift
     - path: ../../ElementX/Sources/AppHooks/Hooks/RemoteSettingsHook.swift
-    - path: ../../Secrets/Secrets.swift
+    - path: ../../Components/Secrets/Secrets.swift
     - path: ../../ElementX/Sources/Application/Settings
     - path: ../../ElementX/Sources/Application/TargetConfiguration.swift
     - path: ../../ElementX/Sources/Generated/Strings.swift
@@ -104,7 +105,6 @@ targets:
     - path: ../../ElementX/Sources/Other/ExpiringTaskRunner.swift
     - path: ../../ElementX/Sources/Other/Extensions/AttributedString.swift
     - path: ../../ElementX/Sources/Other/Extensions/Bundle.swift
-    - path: ../../ElementX/Sources/Other/Extensions/ClientBuilder.swift
     - path: ../../ElementX/Sources/Other/Extensions/Date.swift
     - path: ../../ElementX/Sources/Other/Extensions/Dictionary.swift
     - path: ../../ElementX/Sources/Other/Extensions/FileManager.swift
@@ -131,6 +131,8 @@ targets:
     - path: ../../ElementX/Sources/Services/AlertTones/NotificationTone.swift
     - path: ../../ElementX/Sources/Services/AlertTones/NotificationToneManager.swift
     - path: ../../ElementX/Sources/Services/AlertTones/NotificationToneManagerProtocol.swift
+    - path: ../../ElementX/Sources/Services/Client/ClientFactory.swift
+    - path: ../../ElementX/Sources/Services/Client/ClientFactoryProtocol.swift
     - path: ../../ElementX/Sources/Services/ElementCall/ElementCallServiceConstants.swift
     - path: ../../ElementX/Sources/Services/Keychain/KeychainController.swift
     - path: ../../ElementX/Sources/Services/Keychain/KeychainControllerProtocol.swift

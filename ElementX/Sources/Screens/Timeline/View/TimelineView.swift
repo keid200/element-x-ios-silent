@@ -27,6 +27,11 @@ struct TimelineView: View {
                 ManageRoomMemberSheetView(context: $0.context)
             }
             .sheet(item: $timelineContext.debugInfo) { TimelineItemDebugView(info: $0) }
+            .sheet(item: $timelineContext.redactConfirmationInfo) { info in
+                RedactConfirmationView { reason in
+                    timelineContext.send(viewAction: .redactConfirmed(itemID: info.id, reason: reason))
+                }
+            }
             .sheet(item: $timelineContext.actionMenuInfo) { info in
                 let actions = TimelineItemMenuActionProvider(timelineItem: info.item,
                                                              canCurrentUserSendMessage: timelineContext.viewState.canCurrentUserSendMessage,
@@ -34,9 +39,9 @@ struct TimelineView: View {
                                                              canCurrentUserRedactOthers: timelineContext.viewState.canCurrentUserRedactOthers,
                                                              canCurrentUserPin: timelineContext.viewState.canCurrentUserPin,
                                                              pinnedEventIDs: timelineContext.viewState.pinnedEventIDs,
-                                                             isDM: timelineContext.viewState.isDM,
                                                              isViewSourceEnabled: timelineContext.viewState.isViewSourceEnabled,
                                                              areThreadsEnabled: timelineContext.viewState.areThreadsEnabled,
+                                                             isMultiSelectEnabled: timelineContext.viewState.canSelectMessages,
                                                              timelineKind: timelineContext.viewState.timelineKind,
                                                              emojiProvider: timelineContext.viewState.emojiProvider)
                     .makeActions()
